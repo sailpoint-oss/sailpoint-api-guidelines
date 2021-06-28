@@ -4,6 +4,11 @@
 The titles are marked with the corresponding labels: {MUST},
 {SHOULD}, {MAY}.
 
+[#301]
+== {MUST} follow SailPoint API Guidelines
+You must design your APIs consistently with these guidelines; use our https://apilinter.sailpoint.com/[API Linter Service, role=external, window=_blank] for automated rule checks.
+
+You must also adhere to these guidelines.  Not everything will be automated
 
 [#100]
 == {SHOULD} follow API first principle
@@ -28,7 +33,7 @@ You <<192, must>> publish the component API specification with the deployment of
 make it discoverable for the appropriate group via our https://developer.sailpoint.com/[API Portal, role=external, window=_blank].
 
 
-[#301]
+[#302]
 == {MUST} provide detailed API description
 	
 Within the API specification, you must provide sufficient information in 
