@@ -56,6 +56,9 @@ scheduled for sunset must monitor the usage of the sunset API, API version, or
 API feature in order to observe migration progress and avoid uncontrolled
 breaking effects on ongoing consumers. See also <<193>>.
 
+Must notify customers using deprecated APIs on a timely basis to help them 
+move onto newer APIs, especially as the API moves closer to its sunset date.
+
 
 [#189]
 == {SHOULD} add `Deprecation` and `Sunset` header to responses
