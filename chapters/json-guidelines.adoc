@@ -19,23 +19,20 @@ This implies in turn that object names should be singular.
 
 
 [#118]
-== {MUST} property names must be ASCII snake_case (and never camelCase): `^[a-z_][a-z_0-9]*$`
+== {MUST} property names must be ASCII camelCase
 
-Property names are restricted to ASCII strings. The first
-character must be a letter, or an underscore, and subsequent
-characters can be a letter, an underscore, or a number.
+Property names are restricted to ASCII strings.  The first character must be a lower 
+case letter, there must not be any spaces, and new words should start with a capital 
+letter instead of a space.  For example, “new client table” would be “newClientTable” in camelCase.
 
-(It is recommended to use `_` at the start of property names only for keywords like `_links`.)
+“ID” is common in field names, and must be presented in camel case as follows:
 
-Rationale: No established industry standard exists, but many popular Internet
-companies prefer snake_case: e.g. GitHub, Stack Exchange, Twitter.
-Others, like Google and Amazon, use both - but not only camelCase. It’s
-essential to establish a consistent look and feel such that JSON looks
-as if it came from the same hand.
+* If “ID” appears as the first word, then it is entirely lowercase (ex. “id”).
 
-[#125]
+* If “ID” appears after the first word, then the “I” is capitalized and the “d” is lowercase (ex. “userId”).
+
 [#240]
-== {SHOULD} declare enum values using UPPER_SNAKE_CASE string 
+== {MUST} declare enum values using UPPER_SNAKE_CASE string 
 
 Enumerations should be represented as `string` typed OpenAPI definitions of 
 request parameters or model properties.
@@ -101,14 +98,17 @@ An actual JSON object described by this might then look like this:
 [#122]
 == {MUST} not use `null` for boolean properties
 
-Schema based JSON properties that are by design booleans must not be
-presented as nulls. A boolean is essentially a closed enumeration of two
-values, true and false. If the content has a meaningful null value,
-strongly prefer to replace the boolean with enumeration of named values
-or statuses - for example accepted_terms_and_conditions with true or
-false can be replaced with terms_and_conditions with values yes, no and
-unknown.
+Schema based JSON properties that are by design booleans must not be 
+presented as nulls. A boolean is essentially a closed enumeration of 
+two values, true and false. If the content has a meaningful null value, 
+strongly prefer to replace the boolean with enumeration of named values or 
+statuses - for example accepted_terms_and_conditions with true or false can 
+be replaced with terms_and_conditions with values yes, no and unknown.
 
+[NOTE]
+====
+All boolean values must have a default defined.
+====
 
 [#123]
 == {MUST} use same semantics for `null` and absent properties
@@ -162,7 +162,7 @@ ignored, i.e. not modified.
 
 
 [#124]
-== {SHOULD} not use `null` for empty arrays
+== {MUST} not use `null` for empty arrays
 
 Empty array values can unambiguously be represented as the empty list, `[]`.
 
