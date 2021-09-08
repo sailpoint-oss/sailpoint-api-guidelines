@@ -16,7 +16,7 @@ There are two techniques to change APIs without breaking them:
 * introduce new API versions and still support older versions
 
 We strongly encourage using compatible API extensions and discourage versioning
-(see <<113>> and <<114>> below). The following guidelines for service providers
+(see <<113>> and <<115>> below). The following guidelines for service providers
 (<<107>>) and consumers (<<108>>) enable us (having Postel’s Law in mind) to
 make compatible changes without versioning.
 
@@ -54,9 +54,6 @@ services in a backward-compatible way:
 * Enum ranges cannot be extended when used for output parameters — clients may
   not be prepared to handle it. However, enum ranges can be extended when used
   for input parameters.
-* Use {x-extensible-enum}, if range is used for output parameters and likely to
-  be extended with growing functionality. It defines an open list of explicit
-  values and clients must be agnostic to new values.
 * Support redirection in case an URL has to change {301} (Moved Permanently).
 
 
@@ -176,39 +173,6 @@ Note that this guideline concentrates on default extensibility and does not
 exclude the use of `additionalProperties` with a schema as a value, which might
 be appropriate in some circumstances, e.g. see <<216>>.
 
-
-[#112]
-== {SHOULD} used open-ended list of values (`x-extensible-enum`) for enumerations
-
-Enumerations are per definition closed sets of values, that are assumed to be
-complete and not intended for extension. This closed principle of enumerations
-imposes compatibility issues when an enumeration must be extended. To avoid
-these issues, we strongly recommend to use an open-ended list of values instead
-of an enumeration unless:
-
-1. the API has full control of the enumeration values, i.e. the list of values
-  does not depend on any external tool or interface, and
-2. the list of value is complete with respect to any thinkable and unthinkable
-  future feature.
-
-To specify an open-ended list of values use the marker {x-extensible-enum} as
-follows:
-
-[source,yaml]
-----
-delivery_methods:
-  type: string
-  x-extensible-enum:
-    - PARCEL
-    - LETTER
-    - EMAIL
-----
-
-*Note:* {x-extensible-enum} is not JSON Schema conform but will be ignored by
-most tools.
-
-See <<240>> about enum value naming conventions.
-
 [#113]
 == {SHOULD} avoid versioning
 
@@ -228,88 +192,54 @@ these three ways:
 * create a new API version supported in parallel with the old API by the same
   microservice
 
-As we discourage versioning by all means because of the manifold disadvantages,
-we strongly recommend to only use the first two approaches.
-
-
-[#114]
-== {MUST} use media type versioning
-
-However, when API versioning is unavoidable, you have to design your
-multi-version RESTful APIs using media type versioning (see <<115>>).
-Media type versioning is less tightly coupled since
-it supports content negotiation and hence reduces complexity of release
-management.
-
-Version information and media type are provided
-together via the HTTP `Content-Type` header — e.g.
-`application/x.zalando.cart+json;version=2`. For incompatible changes, a new
-media type version for the resource is created. To generate the new
-representation version, consumer and producer can do content negotiation using
-the HTTP `Content-Type` and `Accept` headers.
-
-NOTE: This versioning only applies to
-the request and response content schema, not to URI or method semantics.
-
-=== Custom media type format
-
-Custom media type format should have the following pattern:
-
-[source,http]
-----
-application/x.<custom-media-type>+json;version=<version>
-----
-
-* `custom-media-type` is a custom type name, e.g. `zalando.cart`
-* `version` is a number, e.g. `2`
-
-=== Example
-
-In this example, a client wants only the new version of the response:
-
-[source,http]
-----
-Accept: application/x.zalando.cart+json;version=2
-----
-
-A server responding to this, as well as a client sending a request with content
-should use the `Content-Type` header, declaring that one is sending the new
-version:
-
-[source,http]
-----
-Content-Type: application/x.zalando.cart+json;version=2
-----
-
-Using media type versioning should:
-
-* Use a custom media type, e.g. `application/x.zalando.cart+json`
-* Include versions in request and response headers to increase visibility
-* Include `Content-Type` in the `Vary` header to enable proxy caches to differ
-  between versions
-
-[source,http]
-----
-Vary: Content-Type
-----
-
-TIP: Until an incompatible change is necessary, it is recommended to stay
-with the standard `application/json` media type and do not use media type versioning.
-
-Further reading:
-https://blog.apisyouwonthate.com/api-versioning-has-no-right-way-f3c75457c0b7[API
-Versioning Has No "Right Way"] provides an overview on different versioning
-approaches to handle breaking changes without being opinionated.
-
-
 [#115]
-== {MUST} not use URI versioning
+== {MUST} use URI versioning
 
-With URI versioning a (major) version number is included in the path, e.g.
-`/v1/customers`. The consumer has to wait until the provider has been released
-and deployed. If the consumer also supports hypermedia links — even in their
-APIs — to drive workflows (HATEOAS), this quickly becomes complex. So does
-coordinating version upgrades — especially with hyperlinked service
-dependencies — when using URL versioning. To avoid this tighter coupling and
-complexer release management we do not use URI versioning, and go instead with
-media type versioning and content negotiation (see above).
+SailPoint uses URI versioning with the following structure:
+
+/v{version number}
+
+Ex. /v3, /v4, etc.
+
+Note: Beta APIs fall under /beta.  
+
+[#307]
+== {MUST} follow versioned API requirements
+
+All versioned APIs must adhere to the following requirements
+
+* Can be internal or external.
+* NO BREAKING CHANGES! (barring necessary security fixes)
+* Supported (sev-1!)
+* Documented in OpenAPI specification format
+* Minimum 2 year support obligation
+
+Breaking changes include, but are not limited to, the following:
+
+* Removal of fields on resource models
+* Changing an existing field on a post/put/patch from optional to required (or not permitted)
+* Removal of resources
+* URI changes
+* New or different response status codes
+* Other semantic changes (including new values in enumerated types if those values are part of the API contract)
+  * Example: Consider a list API that returns multiple object types with a common standardized representation and the objects have a TYPE field. Adding a new TYPE value would represent a breaking change UNLESS the the contract for the API specifies that new types may be added. If there is no means of filtering based on TYPE in this example, this is probably an unacceptable term for the API contract.
+
+If in doubt, ask! Call out any uncertainties during API review or during the design process.
+
+Non-breaking changes may be added to an existing live version.  Here are some examples of non-breaking changes:
+
+* New fields on response models (that do not change the meaning of the model)
+* Making a currently required field on an input model optional
+* Adding new optional fields to input models (as long as the default value of the field preserves the previous meaning of the model)
+* Net new resources
+* New query parameters and filterable/sortable fields (as long as they are optional and the existing behavior is preserved if the new parameters are not passed)
+
+[#308]
+== {MUST} follow beta API requirements
+
+* Beta route in styx (example: "beta/sim-integrations")
+* Supported (during business hours, no sev-1s)
+* Documented in OpenAPI specification format (and marked as beta)
+* Breaking changes must be announced ahead of time to all stakeholders
+* Can be internal or external.
+* This is expected to be a stable, usable API that is available for external and internal integration.
