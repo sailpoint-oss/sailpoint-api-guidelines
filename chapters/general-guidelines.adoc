@@ -6,17 +6,16 @@ The titles are marked with the corresponding labels: {MUST},
 
 [#301]
 == {MUST} follow SailPoint API Guidelines
-You must design your APIs consistently with these guidelines; use our https://apilinter.sailpoint.com/[API Linter Service, role=external, window=_blank] for automated rule checks.
 
-You must also adhere to these guidelines.  Not everything will be automated
+You must design your APIs consistently with these guidelines; use our API linter for automated rule checks, but not every rule can be automated.
 
 [#100]
 == {SHOULD} follow API first principle
 
-You must follow the <<api-first, API First Principle>>, more specifically: 
+You should follow the <<api-first, API First Principle>>, more specifically: 
 
-* You should define APIs first, before coding its implementation, 
-  using OpenAPI as specification language
+* You should define APIs first, before coding their implementation, 
+  using <<101, OpenAPI as the specification language>>
 
 * You should call for early review feedback from peers and client developers
 
@@ -65,6 +64,26 @@ manual into the API specification using the #/externalDocs/url property.
 This manual does not have to be created by engineering, but could be created by a documentation team, Developer Relations or by community effort.
 It is important to provide extra documentation for our developers to reduce the number of support related questions that come in. 
 ====
+
+[#303]
+== {MUST} describe every parameter and property
+
+Every query/path parameter and request/response property in the API specification must have a description
+
+[#304]
+== {MUST} provide an example for every parameter and property
+
+Every query/path parameter and request/response property in the API specification must have an accurate example.  
+An accurate example will show the API consumer what an input/output value will realistically look like, and could even be used in a real request/response.
+However, take care to not use personally identifiable information or secrets in examples.
+
+Every operation (POST, PUT, PATCH, etc) may define one or more operation level examples.
+
+[#305]
+== {SHOULD} keep operation summaries at five or less words
+
+Certain tools, like Postman, have a limit on how many words can be displayed within the operation summary.  
+It is helpful for consumers to have short summaries that describe the operation at its most basic level to improve readability for consumers.
 
 [#103]
 == {MUST} write APIs using U.S. English
