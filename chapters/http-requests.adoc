@@ -7,39 +7,92 @@
 
 Be compliant with the standardized HTTP method semantics summarized as follows:
 
+[[creating-an-object]]
+=== Creating an Object
 
-[[get]]
-=== GET
+{POST} requests are idiomatically used to *create* single resources on a
+collection resource endpoint, but other semantics on single resources endpoint
+are equally possible. The semantic for collection endpoints is best described
+as _"please add the enclosed representation to the collection resource
+identified by the URL"_. The semantic for single resource endpoints is best described 
+as _"please execute the given well specified request on the resource identified 
+by the URL"_.
 
-{GET} requests are used to *read* either a single or a collection resource.
+* Modeled as `POST /.../plural-noun`, where `plural-noun` indicates the type of object being created.
+* on a successful POST request, the server will create one or multiple new resources and provide their URI/URLs in the response
+* successful POST requests will usually generate 200 (if resources have been updated), 201 (if resources have been created), 
+202 (if the request was accepted but has not been finished yet), and exceptionally 204 with Location header (if the actual resource is not returned).
+* If the POST is used to create or update a resource, then the response payload needs to include every field from the request, and may include additional fields.
+* If the POST is used as an action, then the response may be different from the request schema.
+* Specifying a value for a system-generated field in the input results in a 400 Bad Request response.
 
-* {GET} requests for individual resources will usually generate a {404} if the
-resource does not exist
-* {GET} requests for collection resources may return either {200} (if the
-collection is empty) or {404} (if the collection is missing)
-* {GET} requests must NOT have a request body payload (see {GET-with-Body})
+*Note:* By using {POST} to create resources the resource ID must not be passed as 
+request input date by the client, but created and maintained by the service and 
+returned with the response payload. 
 
-*Note:* {GET} requests on collection resources should provide sufficient
-<<137, filter>> and <<pagination>> mechanisms.
+Apart from resource creation, {POST} should be also used for scenarios that cannot 
+be covered by the other methods sufficiently. However, in such cases make sure to 
+document the fact that {POST} is used as a workaround (see e.g. {GET-with-Body}). 
+
+*Hint:* Posting the same resource twice is *not* required to be <<idempotent>>
+(check <<149>>) and may result in multiple resources. However, you <<229>> to
+prevent this.
 
 
-[[get-with-body]]
-=== GET with body payload
+[[reading-a-single-object]]
+=== Reading a Single Object
 
-APIs sometimes face the problem, that they have to provide extensive structured
-request information with {GET}, that may conflict with the size limits of
-clients, load-balancers, and servers. As we require APIs to be standard conform
-(request body payload in {GET} must be ignored on server side), API designers have to check the
-following two options:
+* Modeled as `GET /.../plural-noun/{nounId}`
+* On success, returns a 200 with the DTO.
+* A 404 is returned if the referenced object is not found.
+* Query params are allowed, for example, to return the object at different levels of detail.
+* Is free of side-effects.
 
-1. {GET} with URL encoded query parameters: when it is possible to encode the
-   request information in query parameters, respecting the usual size limits of
-   clients, gateways, and servers, this should be the first choice. The request
-   information can either be provided via multiple query parameters or by a
-   single structured URL encoded string.
-2. {POST} with body payload content: when a {GET} with URL encoded query parameters
-   is not possible, a {POST} request with body payload must be used, and explicitly 
-   documented with a hint like in the following example:
+[[reading-a-list-of-objects]]
+=== Reading a List of Objects
+
+* Modeled as `GET /.../plural-noun`.
+* On success, returns a 200 with a JSON array of objects enveloped inside an object.  By returning 
+an object as the top level for all responses, we allow our APIs to extend without breaking backwards 
+compatibility.  If there was ever a need to add an additional field to a response that returns an 
+array (ex. pagination links in the body), then we would need to break the API by wrapping it in an 
+object.  By requiring objects at the top level from the start, we avoid this in the future.
+* A response object for a list of results must contain an array of `results`.  Other properties are
+optional.
+
+[source,json]
+----
+{
+  "results": [...],
+  "count": ...
+}
+----
+
+* Supports pagination via `limit` and `offset` query parameters unless the back end data store makes this impossible or prohibitively expensive.
+* The default value for `limit` is 250 unless the endpoint documentation states otherwise.
+* The standard `filters` query parameter is preferred over custom filtering query params.
+* If `filters` are used, the supported fields and operations are whitelisted. Unsupported filters should result in an error response.
+* If `filters` refer to fields in nested objects, then "." notation is used, for example `filters=owner.name eq "leah.pierce"`
+* Custom query params are allowed if filters cannot be used.
+* If at all possible, supports reading a list of objects by their ids, either in the form of a filter, i.e. `filters=id in (id0, id1, ..., idN)` or a custom query param.
+* Use of single boolean-valued params should be avoided; strings, enumerated values, or comma-separated values are preferred.
+* The standard `sorters` query parameter may be used for sorting.
+* If `sorters` are used, the supported fields are whitelisted.
+* Results are not implicitly filtered or scoped based on the current logged in user. If such filtering is required it is via an explicit query param taking an identity id. By convention, me can stand in for the currently logged in user's identity id as the value for such a param.
+* Is free of side-effects.
+
+[[get-with-body-payload]]
+=== Get with Body Payload
+
+APIs sometimes face the problem, that they have to provide extensive structured request information with GET, that may conflict 
+with the size limits of clients, load-balancers, and servers. As we require APIs to be standard conform (request body payload 
+in GET must be ignored on server side), API designers have to check the following two options:
+
+1. GET with URL encoded query parameters: when it is possible to encode the request information in query parameters, 
+respecting the usual size limits of clients, gateways, and servers, this should be the first choice. The 
+request information can either be provided via multiple query parameters or by a single structured URL encoded string.
+2. POST with body payload content: when a GET with URL encoded query parameters is not possible, a POST 
+request with body payload must be used, and explicitly documented with a hint like in the following example:
 
 [source,yaml]
 ----
@@ -55,26 +108,11 @@ paths:
           ...
 ----
 
-*Note:* It is no option to encode the lengthy structured request information
-using header parameters. From a conceptual point of view, the semantic of an
-operation should always be expressed by the resource names, as well as the
-involved path and query parameters. In other words by everything that goes into
-the URL. Request headers are reserved for general context information (see
-<<183>>). In addition, size limits on query parameters and headers are not
-reliable and depend on clients, gateways, server, and actual settings. Thus,
-switching to headers does not solve the original problem.
 
-*Hint:* As {GET-with-Body} is used to transport extensive query parameters,
-the {cursor} cannot any longer be used to encode the query filters in case of
-<<160, cursor-based pagination>>. As a consequence, it is best practice to
-transport the query filters in the body payload, while using <<161, pagination links>>
-containing the {cursor} that is only encoding the page position and direction.
-To protect the pagination sequence the {cursor} may contain a hash over all
-applied query filters (See also <<161>>).
+[[updating-an-object-by-full-replacement]]
+=== Updating an Object by Full Replacement
 
-
-[[put]]
-=== PUT
+Modeled as `PUT /.../plural-noun/{nounId}`
 
 {PUT} requests are used to *update* (and sometimes to create) *entire*
 resources – single or collection resources. The semantic is best described
@@ -91,6 +129,8 @@ reads will deliver the same payload)
 * successful {PUT} requests will usually generate {200} or {204} (if the
 resource was updated – with or without actual content returned), and {201} (if
 the resource was created)
+* Returns a 404 if the object does not exist and the endpoint does not support PUT as a means of creation.
+* Does a complete replacement of the referenced object and does not attempt to merge the input DTO with the existing object.
 
 *Important:* It is good practice to prefer {POST} over {PUT} for creation of
 (at least top-level) resources. This leaves the resource ID management under 
@@ -106,39 +146,8 @@ expose conflicts and prevent lost updates. See also <<optimistic-locking>> for
 details and options.
 
 
-[[post]]
-=== POST
-
-{POST} requests are idiomatically used to *create* single resources on a
-collection resource endpoint, but other semantics on single resources endpoint
-are equally possible. The semantic for collection endpoints is best described
-as _"please add the enclosed representation to the collection resource
-identified by the URL"_. The semantic for single resource endpoints is best described 
-as _"please execute the given well specified request on the resource identified 
-by the URL"_.
-
-* on a successful {POST} request, the server will create one or multiple new
-resources and provide their URI/URLs in the response
-* successful {POST} requests will usually generate {200} (if resources have
-been updated), {201} (if resources have been created), {202} (if the request
-was accepted but has not been finished yet), and exceptionally {204} with
-{Location} header (if the actual resource is not returned).
-
-*Note:* By using {POST} to create resources the resource ID must not be passed as 
-request input date by the client, but created and maintained by the service and 
-returned with the response payload. 
-
-Apart from resource creation, {POST} should be also used for scenarios that cannot 
-be covered by the other methods sufficiently. However, in such cases make sure to 
-document the fact that {POST} is used as a workaround (see e.g. {GET-with-Body}). 
-
-*Hint:* Posting the same resource twice is *not* required to be <<idempotent>>
-(check <<149>>) and may result in multiple resources. However, you <<229>> to
-prevent this.
-
-
-[[patch]]
-=== PATCH
+[[updating-an-object-by-targeted-modification]]
+=== Updating an Object by Targeted Modification
 
 {PATCH} requests are used to *update parts* of single resources, i.e. where only
 a specific subset of resource fields should be replaced. The semantic is best
@@ -147,6 +156,7 @@ change request"_. The semantic of the change request is not defined in the HTTP
 standard and must be described in the API specification by using suitable media
 types.
 
+* Modeled as `PATCH /../plural-noun/{nounId}`
 * {PATCH} requests are usually applied to single resources as patching entire
 collection is challenging
 * {PATCH} requests are usually not robust against non-existence of resource
@@ -155,46 +165,17 @@ instances
 addressed by the URL as defined by the change request in the payload
 * successful {PATCH} requests will usually generate {200} or {204} (if
 resources have been updated with or without updated content returned)
+* Returns a 404 if the object does not exist.
+* If synchronous, and the patch cannot be successfully applied, returns a 400.
+* Mutable DTO fields are documented.
 
-*Note:* since implementing {PATCH} correctly is a bit tricky, we strongly suggest
-to choose one and only one of the following patterns per endpoint, unless
-forced by a <<106,backwards compatible change>>. In preference order:
-
-1. use {PUT} with complete objects to update a resource as long as feasible
-  (i.e. do not use {PATCH} at all).
-2. use {PATCH} with partial objects to only update parts of a resource,
-   whenever possible. (This is basically {RFC-7396}[JSON Merge Patch], a
-   specialized media type `application/merge-patch+json` that is a partial
-   resource representation.)
-3. use {PATCH} with {RFC-6902}[JSON Patch], a specialized media type
-   `application/json-patch+json` that includes instructions on how to change
-   the resource.
-4. use {POST} (with a proper description of what is happening) instead of
-   {PATCH}, if the request does not modify the resource in a way defined by
-   the semantics of the media type.
-
-In practice {RFC-7396}[JSON Merge Patch] quickly turns out to be too limited,
-especially when trying to update single objects in large collections (as part
-of the resource). In this cases {RFC-6902}[JSON Patch] can shown its full
-power while still showing readable patch requests (see also
-http://erosb.github.io/post/json-patch-vs-merge-patch[JSON patch vs. merge]).
-
-*Note:* Patching the same resource twice is *not* required to be <<idempotent>>
-(check <<149>>) and may result in a changing result. However, you <<229>> to
-prevent this.
-
-*Hint:* To prevent unnoticed concurrent updates when using {PATCH} you <<182>>
-to allow the server to react on stricter demands that expose conflicts and
-prevent lost updates. See <<optimistic-locking>> and <<229>> for details and
-options.
-
-
-[#delete]
-=== DELETE
+[[deleting-an-object]]
+=== Deleting an Object
 
 {DELETE} requests are used to *delete* resources. The semantic is best
 described as _"please delete the resource identified by the URL"_.
 
+* Modeled as `DELETE /../plural-noun/{nounId}`
 * {DELETE} requests are usually applied to single resources, not on
   collection resources, as this would imply deleting the entire collection.
 * {DELETE} request can be applied to multiple resources at once using query
@@ -246,7 +227,7 @@ analog to how it is defined for {GET-with-Body}. The response status code of
 
 
 [[head]]
-=== HEAD
+=== HEAD (Optional)
 
 {HEAD} requests are used to *retrieve* the header information of single
 resources and resource collections.
@@ -260,7 +241,7 @@ resources or collection resources have been updated in conjunction with the
 
 
 [[options]]
-=== OPTIONS
+=== OPTIONS (Optional)
 
 {OPTIONS} requests are used to *inspect* the available operations (HTTP
 methods) of a given endpoint.
@@ -369,7 +350,7 @@ Idempotency Key>> pattern.
 
 
 [#231]
-== {Should} use secondary key for idempotent `POST` design
+== {MAY} use secondary key for idempotent `POST` design
 
 The most important pattern to design {POST} <<idempotent>> for creation is to
 introduce a resource specific *secondary key* provided in the request body, to
@@ -395,67 +376,17 @@ would be a similar well defined option.
 [#154]
 == {MUST} define collection format of header and query parameters
 
-Header and query parameters allow to provide a collection of values, either
-by providing a comma-separated list of values or by repeating the parameter
-multiple times with different values as follows:
-
-[,cols="14%,30%,39%,17%",options="header",]
-|=========================================================================
-| Parameter Type | Comma-separated Values | Multiple Parameters | Standard
-| Header | `Header: value1,value2` | `Header: value1, Header: value2`
-| {RFC-7230}#section-3.2.2[RFC 7230 Section 3.2.2]
-
-| Query | `?param=value1,value2` | `?param=value1&param=value2`
-| {RFC-6570}#section-3.2.8[RFC 6570 Section 3.2.8]
-|=========================================================================
-
-As OpenAPI does not support both schemas at once, an API specification must
-explicitly define the collection format to guide consumers as follows:
-
-[,cols="14%,40%,46%",options="header",]
-|===============================================================
-| Parameter Type | Comma-separated Values | Multiple Parameters
-| Header | `style: simple, explode: false` | not allowed (see
-  {RFC-7230}#section-3.2.2[RFC 7230 Section 3.2.2])
-| Query  | `style: form, explode: false`   | `style: form, explode: true`
-|===============================================================
-
-When choosing the collection format, take into account the tool support,
-the escaping of special characters and the maximal URL length.
+TBD
 
 
 [#236]
 == {SHOULD} design simple query languages using query parameters
 
-We prefer the use of query parameters to describe resource-specific
-query languages for the majority of APIs because it's native to HTTP,
-easy to extend and has excellent implementation support in HTTP clients
-and web frameworks.
-
-Query parameters should have the following aspects specified:
-
-* Reference to corresponding property, if any
-* Value range, e.g. inclusive vs. exclusive
-* Comparison semantics (equals, less than, greater than, etc)
-* Implications when combined with other queries, e.g. _and_ vs. _or_
-
-How query parameters are named and used is up to individual API designers.
-The following examples should serve as ideas:
-
-* `name=Zalando`, to query for elements based on property equality
-* `age=5`, to query for elements based on logical properties
-**  Assuming that elements don't actually have an `age` but rather a `birthday`
-* `max_length=5`, based on upper and lower bounds (`min` and `max`)
-* `shorter_than=5`, using terminology specific e.g. to _length_
-* `created_before=2019-07-17` or `not_modified_since=2019-07-17`
-** Using terminology specific e.g. to time: _before_, _after_, _since_ and _until_
-
-We don't advocate for or against certain names because in the end
-APIs should be free to choose the terminology that fits their domain the best.
+TBD
 
 
 [#237]
-== {SHOULD} design complex query languages using JSON
+== {MUST} design complex query languages using JSON
 
 Minimalistic query languages based on <<236, query parameters>> are suitable
 for simple use cases with a small set of available filters that are combined
