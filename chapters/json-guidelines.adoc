@@ -19,25 +19,20 @@ This implies in turn that object names should be singular.
 
 
 [#118]
-== {MUST} property names must be ASCII snake_case (and never camelCase): `^[a-z_][a-z_0-9]*$`
+== {MUST} property names must be ASCII camelCase
 
-Property names are restricted to ASCII strings. The first
-character must be a letter, or an underscore, and subsequent
-characters can be a letter, an underscore, or a number.
+Property names are restricted to ASCII strings.  The first character must be a lower case letter, there must not be any spaces, and new words should start with a capital letter instead of a space.  For example, “new client table” would be “newClientTable” in camelCase.
 
-(It is recommended to use `_` at the start of property names only for keywords like `_links`.)
+“ID” is common in field names, and must be presented in camel case as follows:
 
-Rationale: No established industry standard exists, but many popular Internet
-companies prefer snake_case: e.g. GitHub, Stack Exchange, Twitter.
-Others, like Google and Amazon, use both - but not only camelCase. It’s
-essential to establish a consistent look and feel such that JSON looks
-as if it came from the same hand.
+* If “ID” appears as the first word, then it is entirely lowercase (ex. “id”).
+* If “ID” appears after the first word, then the “I” is capitalized and the “d” is lowercase (ex. “userId”).
 
-[#125]
+
 [#240]
-== {SHOULD} declare enum values using UPPER_SNAKE_CASE string 
+== {MUST} declare enum values using UPPER_SNAKE_CASE string 
 
-Enumerations should be represented as `string` typed OpenAPI definitions of 
+Enumerations must be represented as `string` typed OpenAPI definitions of 
 request parameters or model properties.
 Enum values (using `enum` or {x-extensible-enum}) need to consistently use 
 the upper-snake case format, e.g. `VALUE` or `YET_ANOTHER_VALUE`. 
@@ -110,77 +105,171 @@ false can be replaced with terms_and_conditions with values yes, no and
 unknown.
 
 
+[#310]
+== {MUST} define a default value for boolean properties
+
+All boolean properties must have a default value defined
+
+
+[#311]
+== {SHOULD} avoid using qualifying verbs
+
+Avoid using qualifying verbs, especially on boolean fields, e.g. 
+
+* Discouraged: isEnabled
+* Recommended: enabled
+
+
+[#312]
+== {SHOULD} use positive semantics for boolean fields
+
+The name of a Boolean field should preferably express semantics such that true indicates a positive attribute, action, capability, etc. 
+
+* Discouraged: "disabled": true
+* Recommended: "enabled": false
+
+
+[#313]
+== {MUST} use a field name that suggests the value type when referencing an object
+
+When a field contains an ID or reference to an foreign object, not the parent object, the field name should suggest the value type: 
+
+* Discouraged: "owner": "2c90b0c06460804b016460f9f59b0015"
+* Recommended: "ownerId": "2c90b0c06460804b016460f9f59b0015"
+
+For example, the following request/response for an account object uses the proper naming for object references. 
+
+“id” refers to the account object being requested, and all other object references include the object reference name (i.e. sourceId, identityId, etc.)
+
+[source,json]
+----
+{
+    "id": "id12345",
+    "name": "aName",
+    "created": "2019-08-24T14:15:22Z",
+    "modified": "2019-08-24T14:15:22Z",
+    "sourceId": "2c9180835d2e5168015d32f890ca1581",
+    "identityId": "2c9180835d2e5168015d32f890ca1581",
+    "attributes": { },
+    "authoritative": true,
+    "description": "string",
+    "disabled": true,
+    "locked": true,
+    "nativeIdentity": "string",
+    "systemAccount": true,
+    "uncorrelated": true,
+    "uuid": "string",
+    "manuallyCorrelated": true,
+    "hasEntitlements": true
+}
+----
+
+[#314]
+== {SHOULD} name references to foreign objects as <objectName>Ref
+
+* Discouraged: "launcher": "frank.dogs"
+* Recommended: "launcherRef": {"resource": "identities", "type": "ALIAS", "value": "frank.dogs"}
+
+Example
+[source,json]
+----
+{
+    "id": "2c9180857182305e0171993735622948",
+    "name": "Alison Ferguso",
+    "alias": "alison.ferguso",
+    "email": "alison.ferguso@acme-solar.com",
+    "status": "Active",
+    "managerRef": {
+        "type": "IDENTITY",
+        "id": "2c9180a46faadee4016fb4e018c20639",
+        "name": "Thomas Edison"
+    },
+    "attributes":[]
+}
+----
+
+
+[#315]
+== {SHOULD} avoid using nested objects
+
+In general, we discourage nesting DTOs inside others. This has typically led to bloated DTOs and made it complicated to 
+enforce authorization requirements and other business rules around those nested objects. It is preferable instead for the 
+DTO to have a field containing an id or reference that allows the nested object to be separately fetched.
+
+It is recognized, of course, that particular use cases may require nesting objects inside each other. For example, if a 
+UI module needs to display data from a set of 100 IdentityRequests and their child IdentityRequestItems, it makes no 
+sense to require the UI to make one API call to get the list of IdentityRequests and then 100 additional calls to get the 
+IdentityRequestItems for each.
+
+It is preferable in these cases to use a summary DTO for the nested objects that contains the minimum amount of detail 
+required to support the known or plausible use case(s). For example, if the only reason I need to include the owner of 
+an object is so the caller can display their first and last name, then it is better to do something like the following:
+
+[source,json]
+----
+{
+    ...
+    "owner": {
+        "type": "IDENTITY",
+        "id": "2c90b0c06460804b016460f9f59b001",
+        "firstName": "Frank",
+        "lastName": "Dogs"
+    }
+}
+----
+
+One particular valid use of nested objects occurs when a DTO abstracts over a set of types that may have significantly 
+different attributes. In this case the non-general fields of the DTO should be pushed down to a nested object, with a 
+type field on the main object being used as a discriminator. For example, if a DTO could represent either an Access Profile 
+or a Role, the former case could be implemented as follows:
+
+[source,json]
+----
+{
+     ...
+     "type": "ACCESS_PROFILE",
+     ...
+     "accessProfileInfo": {
+          "appRefs": ["app1", "app2"]
+     },
+     "roleInfo": null
+}
+----
+
+[#316]
+== {MUST} define a default for optional values
+
+All properties must define a default value for optional properties.  This must documented in the specification so clients 
+know what value will be used should they ignore a property.
+
+
+[#317]
+== {MUST} define the “required” attribute for request/response objects and parameters
+
+All request/response schemas MUST define the “required” attribute for each property and parameter per the OpenAPI specification.  
+For request/response objects, see https://swagger.io/docs/specification/data-models/data-types/#required.  For path and query parameters, see 
+https://swagger.io/docs/specification/describing-parameters/
+
+Generally, query parameters should be optional, but there are cases where a query parameter is required.  In these cases, 
+make sure to set the “required” attribute for the query parameters to true.
+
+
 [#123]
 == {MUST} use same semantics for `null` and absent properties
 
-OpenAPI 3.x allows to mark properties as `required` and as `nullable` to
-specify whether properties may be absent (`{}`) or `null` (`{"example":null}`).
-If a property is defined to be not `required` and `nullable` (see
-<<required-nullable-row-2, 2nd row in Table below>>), this rule demands
-that both cases must be handled in the exact same manner by specification.
+TBD
 
-The following table shows all combinations and whether the examples are
-valid:
 
-[cols=",,,",options="header",]
-|===========================================
-| {CODE-START}required{CODE-END} | {CODE-START}nullable{CODE-END}
-| {CODE-START}{}{CODE-END} | {CODE-START}{"example":null}{CODE-END}
-| `true`  |`true`   | {NO}  | {YES}
-| `false` | `true`  | {YES} | {YES} [[required-nullable-row-2]]
-| `true`  |`false`  | {NO}  | {NO}
-| `false` |`false`  | {YES} | {NO}
-|===========================================
+[#318]
+== {MUST} use the “nullable” attribute for properties that can be null
 
-While API designers and implementers may be tempted to assign different
-semantics to both cases, we explicitly decide **against** that option, because we
-think that any gain in expressiveness is far outweighed by the risk of clients
-not understanding and implementing the subtle differences incorrectly.
-
-As an example, an API that provides the ability for different users to
-coordinate on a time schedule, e.g. a meeting, may have a resource for options
-in which every user has to make a `choice`. The difference between _undecided_
-and _decided against any of the options_ could be modeled as _absent_ and
-`null` respectively. It would be safer to express the `null` case with a
-dedicated https://en.wikipedia.org/wiki/Null_object_pattern[Null object], e.g.
-`{}` compared to `{"id":"42"}`.
-
-Moreover, many major libraries have somewhere between little to no support for
-a `null`/absent pattern (see
-https://stackoverflow.com/questions/48465005/gson-distinguish-null-value-field-and-missing-field[Gson],
-https://github.com/square/moshi#borrows-from-gson[Moshi],
-https://github.com/FasterXML/jackson-databind/issues/578[Jackson],
-https://developer.ibm.com/articles/j-javaee8-json-binding-3/[JSON-B]). Especially
-strongly-typed languages suffer from this since a new composite type is required
-to express the third state. Nullable `Option`/`Optional`/`Maybe` types could be
-used but having nullable references of these types completely contradicts their
-purpose.
-
-The only exception to this rule is JSON Merge Patch {RFC-7396}[RFC 7396]) which
-uses `null` to explicitly indicate property deletion while absent properties are
-ignored, i.e. not modified.
+If a property or parameter can return `null`, then it must have the `nullable: true` OpenAPI property.
 
 
 [#124]
-== {SHOULD} not use `null` for empty arrays
+== {MUST} not use `null` for empty arrays
 
 Empty array values can unambiguously be represented as the empty list, `[]`.
-
-
-[#235]
-== {SHOULD} name date/time properties with `_at` suffix
-
-Dates and date-time properties should end with `_at` to distinguish them from
-boolean properties which otherwise would have very similar or even identical
-names:
-
-- {created_at} rather than {created},
-- {modified_at} rather than {modified},
-- `occurred_at` rather than `occurred`, and
-- `returned_at` rather than `returned`.
-
-**Note:** {created} and {modified} were mentioned in an earlier version of the
-guideline and are therefore still accepted for APIs that predate this rule.
 
 
 [#126]
