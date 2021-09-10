@@ -23,49 +23,16 @@ The technical conception of pagination should also consider user experience
 related issues. As mentioned in this
 https://www.smashingmagazine.com/2016/03/pagination-infinite-scrolling-load-more-buttons/[article],
 jumping to a specific page is far less used than navigation via {next}/{prev}
-page links (See <<161>>). This favours cursor-based over offset-based
-pagination.
+page links.
+
+We currently prefer to use https://developer.infoconnect.com/paging-results[Offset/Limit-based pagination].
 
 **Note:** To provide a consistent look and feel of pagination patterns,
 you must stick to the common query parameter names defined in <<137>>.
 
 
-[#160]
-== {SHOULD} prefer cursor-based pagination, avoid offset-based pagination
-
-Cursor-based pagination is usually better and more efficient when compared to
-offset-based pagination. Especially when it comes to high-data volumes and/or
-storage in NoSQL databases.
-
-Before choosing cursor-based pagination, consider the following trade-offs:
-
-* Usability/framework support:
-  ** Offset-based pagination is more widely known than cursor-based pagination,
-    so it has more framework support and is easier to use for API clients
-* Use case - jump to a certain page:
-  ** If jumping to a particular page in a range (e.g., 51 of 100) is really a
-   required use case, cursor-based navigation is not feasible.
-* Data changes may lead to anomalies in result pages:
-  ** Offset-based pagination may create duplicates or lead to missing entries
-     if rows are inserted or deleted between two subsequent paging requests.
-  ** If implemented incorrectly, cursor-based pagination may fail when the
-     cursor entry has been deleted before fetching the pages.
-* Performance considerations - efficient server-side processing using
-  offset-based pagination is hardly feasible for:
-  ** Very big data sets, especially if they cannot reside in the main memory of
-     the database.
-  ** Sharded or NoSQL databases.
-* Cursor-based navigation may not work if you need the total count of results.
-
-The {cursor} used for pagination is an opaque pointer to a page, that must
-never be *inspected* or *constructed* by clients. It usually encodes (encrypts)
-the page position, i.e. the identifier of the first or last page element, the
-pagination direction, and the applied query filters - or a hash over these -
-to safely recreate the collection (see also <<cursor-based-pagination>>).
-
-
 [#161]
-== {SHOULD} use pagination links where applicable
+== {MAY} use pagination links where applicable
 
 To simplify client design, APIs should support <<165, simplified hypertext
 controls>> for paginating over collections whenever applicable as follows (see

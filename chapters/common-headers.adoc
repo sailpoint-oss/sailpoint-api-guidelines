@@ -10,7 +10,7 @@ but not widely known.
 [#133]
 == {MAY} use standardized headers
 
-Use http://en.wikipedia.org/wiki/List_of_HTTP_header_fields[this list] and
+Use https://datatracker.ietf.org/doc/html/rfc2616#section-4.2[this list] and
 explicitly mention its support in your OpenAPI definition.
 
 
