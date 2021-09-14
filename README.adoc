@@ -1,4 +1,4 @@
-= Developing Restful APIs: A Comprehensive Set of Guidelines by SailPoint, adapted from [Zalando's RESTful API Guidelines](https://github.com/zalando/restful-api-guidelines)
+= Developing Restful APIs: A Comprehensive Set of Guidelines by SailPoint, adapted from https://github.com/zalando/restful-api-guidelines[Zalando's RESTful API Guidelines]
 
 Latest published version:
 https://github.com/sailpoint-oss/sailpoint-api-guidelines/output/[*HTML*],
