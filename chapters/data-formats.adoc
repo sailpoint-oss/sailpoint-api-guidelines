@@ -30,13 +30,7 @@ As a consequence, a JSON payload must
 [#168]
 == {MAY} pass non-JSON media types using data specific standard formats
 
-Non-JSON media types may be supported, if you stick to a business object specific standard 
-format for the payload data, for instance, image data format (JPG, PNG, GIF), document 
-format (PDF, DOC, ODF, PPT), or archive format (TAR, ZIP). 
-
-Generic structured data interchange formats other than JSON (e.g. XML, CSV) 
-may be provided, but only additionally to JSON as default format using content negotiation, 
-for specific use cases where clients may not interpret the payload structure.
+TBD
 
 
 [#172]
@@ -51,12 +45,9 @@ You should avoid using custom media types like `application/x.zalando.article+js
 Custom media types beginning with `x` bring no advantage compared to the
 standard media type for JSON, and make automated processing more difficult.
 
-*Exception:* Custom media type should be only used in situations where you need to provide 
-<<114, API endpoint versioning>> (with content negotiation) due to incompatible changes.   
-
 
 [#239]
-=== {SHOULD} encode embedded binary data in `base64url`
+=== {MUST} encode embedded binary data in `base64url`
 
 Exposing binary data using an alternative media type is generally preferred.
 See <<168,the rule above>>.
@@ -67,7 +58,7 @@ following {RFC-7493}#section-4.4[RFC 7493 Section 4.4].
 
 
 [#238]
-== {SHOULD} use standardized property formats
+== {MUST} use standardized property formats
 
 https://json-schema.org/understanding-json-schema/reference/string.html#format[JSON Schema] 
 and https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types[OpenAPI] 
@@ -128,7 +119,7 @@ Http headers including the proprietary headers use the
 
 [#128]
 [#170]
-== {SHOULD} use standards for country, language and currency codes
+== {MUST} use standards for country, language and currency codes
 
 Use the following standard formats for country, language and currency
 codes:

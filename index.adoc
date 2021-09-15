@@ -6,9 +6,9 @@
 :sectlinks:
 :sectnumlevels: 1
 
-:creator: Zalando SE
+:creator: SailPoint
 :producer: Asciidoctor
-:keywords: Zalando, Guidelines, RESTful, API, Events, Schema
+:keywords: SailPoint, Guidelines, RESTful, API, Events, Schema
 :copyright: CC-BY-SA 4.0
 
 // Unified character short cut.
@@ -210,12 +210,12 @@
 :RFC-cacheable: pass:[<a href="https://tools.ietf.org/html/rfc7231#section-4.2.3">cacheable</a>]
 
 
-= Zalando RESTful API and Event Guidelines
-link:https://github.com/zalando/restful-api-guidelines[Github Repository], link:https://opensource.zalando.com/[Zalando SE Opensource]
+= SailPoint RESTful API and Event Guidelines
+link:https://github.com/sailpoint-oss/sailpoint-api-guidelines[Github Repository]
 
-image::assets/api-zalando-small.jpg[API Guild Logo]
+image::assets/api-guild.jpg[API Guild Logo]
 
-Other formats: link:zalando-guidelines.pdf[PDF], link:zalando-guidelines.epub[EPUB3] +
+Other formats: link:sailpoint-guidelines.pdf[PDF], link:sailpoint-guidelines.epub[EPUB3] +
 
 ifndef::ebook-format[]
 toc::[]
@@ -237,13 +237,13 @@ include::chapters/naming.adoc[]
 include::chapters/resources.adoc[]
 include::chapters/http-requests.adoc[]
 include::chapters/http-status-codes-and-errors.adoc[]
-include::chapters/performance.adoc[]
+//include::chapters/performance.adoc[]
 include::chapters/pagination.adoc[]
 include::chapters/hyper-media.adoc[]
 include::chapters/common-headers.adoc[]
-include::chapters/proprietary-headers.adoc[]
+//include::chapters/proprietary-headers.adoc[]
 include::chapters/api-operation.adoc[]
-include::chapters/events.adoc[]
+//include::chapters/events.adoc[]
 include::chapters/references.adoc[]
 include::chapters/tooling.adoc[]
 include::chapters/best-practices.adoc[]
@@ -318,56 +318,5 @@ document.body.classList.add('toc2');
 document.body.classList.add('toc-left');
 nav.append(ul);
 header.prepend(nav);
-</script>
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-130687305-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-130687305-1');
-
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-130687305-1', 'auto');
-
-  function trackPageview() {
-    var title = (location.hash && location.hash.length > 0) ?
-      document.getElementById(location.hash.replace('#','')).textContent :
-      document.title;
-
-    ga('send', 'pageview', {'page': location.pathname + location.hash, 'title': title});
-  }
-
-  if ("onhashchange" in window) 
-    window.onhashchange = trackPageview;
-
-  trackPageview(); // track user's first pageview
-</script>
-
-<!-- Cookies Consent -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
-<script>
-window.addEventListener("load", function(){
-window.cookieconsent.initialise({
-  "palette": {
-    "popup": {
-      "background": "#eaf7f7",
-      "text": "#5c7291"
-    },
-    "button": {
-      "background": "#56cbdb",
-      "text": "#ffffff"
-    }
-  },
-  "content": {
-    "message": "This web site uses cookies to analyze the general behavior of visitors."
-  }
-})});
 </script>
 ++++
