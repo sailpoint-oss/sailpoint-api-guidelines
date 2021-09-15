@@ -2,7 +2,7 @@ DOCKER := asciidoctor/docker-asciidoctor:latest
 DIRMOUNTS := /documents
 DIRCONTENTS := chapters
 DIRSCRIPTS := scripts
-DIRBUILDS := output
+DIRBUILDS := docs
 DIRWORK := $(shell pwd -P)
 
 .PHONY: all clean pull check assets
