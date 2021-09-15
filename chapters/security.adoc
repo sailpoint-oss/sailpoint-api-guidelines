@@ -13,7 +13,7 @@ The following code snippet shows how to define the authorization scheme using a 
 ----
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -24,7 +24,7 @@ The next code snippet applies this security scheme to all API endpoints. The bea
 [source,yaml]
 ----
 security:
-  - BearerAuth: [ scope_1, scope_2 ]
+  - bearerAuth: [ scope_1, scope_2 ]
 ----
 
 
