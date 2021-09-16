@@ -41,7 +41,7 @@ of Internet Assigned Numbers Authority (IANA)) as `content-type` (or `accept`) h
 information. More specifically, for JSON payload you should use the standard media type 
 `application/json` (or `application/problem+json` for <<176>>).
 
-You should avoid using custom media types like `application/x.zalando.article+json`. 
+You should avoid using custom media types like `application/x.sailpoint.article+json`. 
 Custom media types beginning with `x` bring no advantage compared to the
 standard media type for JSON, and make automated processing more difficult.
 
@@ -79,9 +79,9 @@ You *should* use these formats, whenever applicable.
 | `string` | `byte` | {RFC-7493}[RFC 7493] | `"dGVzdA=="`
 | `string` | <<126, `date`>> | {RFC-3339}[RFC 3339] | `"2019-07-30"`
 | `string` | <<126, `date-time`>> | {RFC-3339}[RFC 3339] |`"2019-07-30T06:43:40.252Z"`
-| `string` | `email` | {RFC-5322}[RFC 5322] | `"example@zalando.de"`
+| `string` | `email` | {RFC-5322}[RFC 5322] | `"example@sailpoint.de"`
 | `string` | `gtin-13` | {GTIN}[GTIN] | `"5710798389878"`
-| `string` | `hostname` | {RFC-1034}[RFC 1034] | `"www.zalando.de"`
+| `string` | `hostname` | {RFC-1034}[RFC 1034] | `"www.sailpoint.de"`
 | `string` | `ipv4` | {RFC-2673}[RFC 2673] | `"104.75.173.179"`
 | `string` | `ipv6` | {RFC-2673}[RFC 2673] | `"2600:1401:2::8a"`
 | `string` | <<170, `iso-3166`>> | {ISO-3166-1-a2}[ISO 3166-1 alpha-2] | `"DE"`
@@ -91,7 +91,7 @@ You *should* use these formats, whenever applicable.
 | `string` | `password` |  | `"secret"`
 | `string` | `regex` | {ECMA-262}[ECMA 262] | `"^[a-z0-9]+$"`
 | `string` | <<126, `time`>> | {RFC-3339}[RFC 3339] | `"06:43:40.252Z"`
-| `string` | `uri` | {RFC-3986}[RFC 3986] | `"https://www.zalando.de/"`
+| `string` | `uri` | {RFC-3986}[RFC 3986] | `"https://www.sailpoint.de/"`
 | `string` | `uri-template` | {RFC-6570}[RFC 6570] | `"/users/\{id\}"`
 | `string` | <<144, `uuid`>> | {RFC-4122}[RFC 4122] | `"e2ab873e-b295-11e9-9c02-..."`
 |=====================================================================
@@ -125,7 +125,7 @@ Use the following standard formats for country, language and currency
 codes:
 
 * Country codes: {ISO-3166-1-a2}[ISO 3166-1-alpha2] two letter country codes
-** Hint: It is "GB", not "UK", even though "UK" has seen some use at Zalando
+** Hint: It is "GB", not "UK", even though "UK" has seen some use at sailpoint
 * Language codes: {ISO-639-1}[ISO 639-1] two letter language codes
 * Language variant tags: {BCP47}[BCP 47] 
 ** It is a compatible extension of {ISO-639-1}[ISO 639-1], providing additional 

@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 2.0.16">
 <meta name="keywords" content="SailPoint, Guidelines, RESTful, API, Events, Schema">
 <meta name="copyright" content="CC-BY-SA 4.0">
-<title>SailPoint RESTful API and Event Guidelines</title>
+<title>SailPoint RESTful API Guidelines</title>
 <style>
 /*! normalize.css v2.1.2 | MIT License | git.io/normalize */
 /* ========================================================================== HTML5 display definitions ========================================================================== */
@@ -1387,14 +1387,14 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_sailpoint_restful_api_and_event_guidelines"><a class="link" href="#_sailpoint_restful_api_and_event_guidelines">SailPoint RESTful API and Event Guidelines</a></h2>
+<h2 id="_sailpoint_restful_api_guidelines"><a class="link" href="#_sailpoint_restful_api_guidelines">SailPoint RESTful API Guidelines</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://github.com/sailpoint-oss/sailpoint-api-guidelines">Github Repository</a></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="assets/api-guild.jpg" alt="API Guild Logo">
+<img src="assets/api-guild.png" alt="API Guild Logo">
 </div>
 </div>
 <div class="paragraph">
@@ -1403,11 +1403,11 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_sailpoint_restful_api_and_event_guidelines">SailPoint RESTful API and Event Guidelines</a></li>
+<li><a href="#_sailpoint_restful_api_guidelines">SailPoint RESTful API Guidelines</a></li>
 <li><a href="#introduction">1. Introduction</a>
 <ul class="sectlevel2">
 <li><a href="#conventions-used-in-these-guidelines">Conventions used in these guidelines</a></li>
-<li><a href="#zalando-specific-information">Zalando specific information</a></li>
+<li><a href="#sailpoint-specific-information">SailPoint specific information</a></li>
 </ul>
 </li>
 <li><a href="#principles">2. Principles</a>
@@ -1602,7 +1602,6 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#appendix-tooling">Appendix B: Tooling</a>
 <ul class="sectlevel2">
 <li><a href="#api-first-integrations">API first integrations</a></li>
-<li><a href="#support-libraries">Support libraries</a></li>
 </ul>
 </li>
 <li><a href="#appendix-best-practices">Appendix C: Best practices</a>
@@ -1680,12 +1679,11 @@ interpreted as described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RFC
 </div>
 </div>
 <div class="sect2">
-<h3 id="zalando-specific-information"><a class="link" href="#zalando-specific-information">Zalando specific information</a></h3>
+<h3 id="sailpoint-specific-information"><a class="link" href="#sailpoint-specific-information">SailPoint specific information</a></h3>
 <div class="paragraph">
 <p>The purpose of our "RESTful API guidelines" is to define standards to
 successfully establish "consistent API look and feel" quality. The
-<a href="https://confluence.zalando.net/display/GUL/API+Guild">API Guild [internal
-link</a>] drafted and owns this document. Teams are responsible to fulfill
+SailPoint API Guild drafted and owns this document. Teams are responsible to fulfill
 these guidelines during API development and are encouraged to contribute
 to guideline evolution via pull requests.</p>
 </div>
@@ -1854,9 +1852,8 @@ developer experience.</p>
 <div class="sect2">
 <h3 id="api-first"><a class="link" href="#api-first">API first</a></h3>
 <div class="paragraph">
-<p>API First is one of our
-<a href="https://github.com/zalando/engineering-principles">engineering
-and architecture principles</a>. In a nutshell API First requires two
+<p>API First is one of our engineering
+and architecture principles. In a nutshell API First requires two
 aspects:</p>
 </div>
 <div class="ulist">
@@ -3313,7 +3310,7 @@ information. More specifically, for JSON payload you should use the standard med
 <code>application/json</code> (or <code>application/problem+json</code> for <a href="#176"><span class="must-keyword"><strong>MUST</strong></span> support problem JSON</a>).</p>
 </div>
 <div class="paragraph">
-<p>You should avoid using custom media types like <code>application/x.zalando.article+json</code>.
+<p>You should avoid using custom media types like <code>application/x.sailpoint.article+json</code>.
 Custom media types beginning with <code>x</code> bring no advantage compared to the
 standard media type for JSON, and make automated processing more difficult.</p>
 </div>
@@ -3419,7 +3416,7 @@ You <strong>should</strong> use these formats, whenever applicable.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc5322">RFC 5322</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"<a href="mailto:example@zalando.de">example@zalando.de</a>"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"<a href="mailto:example@sailpoint.de">example@sailpoint.de</a>"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
@@ -3431,7 +3428,7 @@ You <strong>should</strong> use these formats, whenever applicable.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hostname</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc1034">RFC 1034</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"www.zalando.de"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"www.sailpoint.de"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
@@ -3491,7 +3488,7 @@ You <strong>should</strong> use these formats, whenever applicable.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://www.zalando.de/"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://www.sailpoint.de/"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
@@ -3541,7 +3538,7 @@ codes:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Hint: It is "GB", not "UK", even though "UK" has seen some use at Zalando</p>
+<p>Hint: It is "GB", not "UK", even though "UK" has seen some use at sailpoint</p>
 </li>
 </ul>
 </div>
@@ -3711,7 +3708,7 @@ used in the guideline:</p>
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">SalesOrder</span>:
   <span class="key">properties</span>:
     <span class="key">grand_total</span>:
-      <span class="error">$ref</span>: <span class="error">'https://opensource.zalando.com/restful-api-guidelines/money-1.0.0.yaml#/Money'</span></code></pre>
+      <span class="error">$ref</span>: <span class="error">'https://sailpoint-oss.github.io/sailpoint-api-guidelines/money-1.0.0.yaml#/Money'</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4341,7 +4338,7 @@ request with body payload must be used, and explicitly documented with a hint li
   <span class="key">/products</span>:
     <span class="key">post</span>:
       <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;</span><span class="content">
-        [GET with body payload](https://opensource.zalando.com/restful-api-guidelines/#get-with-body) - no resources created:
+        [GET with body payload](https://sailpoint-oss.github.io/sailpoint-api-guidelines/#get-with-body) - no resources created:
         Returns all products matching the query passed as request input payload.</span></span>
       <span class="key">requestBody</span>:
         <span class="key">required</span>: <span class="string"><span class="content">true</span></span>
@@ -5056,7 +5053,7 @@ response specifications can be combined using the following pattern
     <span class="key">content</span>:
       <span class="key"><span class="delimiter">&quot;</span><span class="content">application/problem+json</span><span class="delimiter">&quot;</span></span>:
         <span class="key">schema</span>:
-          <span class="error">$ref</span>: <span class="error">'https://opensource.zalando.com/restful-api-guidelines/problem-1.0.1.yaml#/Problem'</span></code></pre>
+          <span class="error">$ref</span>: <span class="error">'https://sailpoint-oss.github.io/sailpoint-api-guidelines/problem-1.0.1.yaml#/Problem'</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6241,35 +6238,14 @@ Using a tool mentioned here doesn&#8217;t automatically ensure you follow the gu
 <div class="sect2">
 <h3 id="api-first-integrations"><a class="link" href="#api-first-integrations">API first integrations</a></h3>
 <div class="paragraph">
-<p>The following frameworks were specifically designed to support the API First
+<p>The following software was specifically designed to support the API First
 workflow with OpenAPI YAML files (sorted alphabetically):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong><a href="https://github.com/zalando/connexion">Connexion</a>:</strong>
-OpenAPI First framework for Python on top of Flask</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando-stups/friboo">Friboo</a>:</strong>
-utility library to write microservices in Clojure with support for Swagger and OAuth</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando/api-first-hand">Api-First-Hand</a>:</strong>
-API-First Play Bootstrapping Tool for Swagger/OpenAPI specs</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/swagger-api/swagger-codegen">Swagger Codegen</a>:</strong>
-template-driven engine to generate client code in different languages by
-parsing Swagger Resource Declaration</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando-stups/swagger-codegen-tooling">Swagger Codegen Tooling</a>:</strong>
-plugin for Maven that generates pieces of code from OpenAPI specification</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando/intellij-swagger">Swagger Plugin for IntelliJ IDEA</a>:</strong>
-plugin to help you easily edit Swagger specification files inside IntelliJ IDEA</p>
+<p><strong><a href="https://github.com/sailpoint-oss/api-linter">API Linter</a>:</strong>
+SailPoint&#8217;s API linter using Spectral</p>
 </li>
 </ul>
 </div>
@@ -6277,37 +6253,6 @@ plugin to help you easily edit Swagger specification files inside IntelliJ IDEA<
 <p>The Swagger/OpenAPI homepage lists more
 <a href="http://swagger.io/open-source-integrations/">Community-Driven Language
 Integrations</a>, but most of them do not fit our API First approach.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="support-libraries"><a class="link" href="#support-libraries">Support libraries</a></h3>
-<div class="paragraph">
-<p>These utility libraries support you in implementing various parts of our
-RESTful API guidelines (sorted alphabetically):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong><a href="https://github.com/zalando/problem">Problem</a>:</strong>
-Java library that implements application/problem+json</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando/problem-spring-web">Problems for Spring Web MVC</a>:</strong>
-library for handling Problems in Spring Web MVC</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando/jackson-datatype-money">Jackson Datatype Money</a>:</strong>
-extension module to properly support datatypes of javax.money</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando/tracer">Tracer</a>:</strong>
-call tracing and log correlation in distributed systems</p>
-</li>
-<li>
-<p><strong><a href="https://github.com/zalando/twintip-spring-web">TWINTIP Spring Integration</a>:</strong>
-API discovery endpoint for Spring Web MVC</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -6755,7 +6700,7 @@ not perfectly in sync, the locking could potentially fail</p>
 <h2 id="appendix-changelog"><a class="link" href="#appendix-changelog">Appendix D: Changelog</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This change log only contains major changes made after October 2016.</p>
+<p>This change log only contains major changes made after October 2021.</p>
 </div>
 <div class="paragraph">
 <p>Non-major changes are editorial-only changes or minor changes of existing guidelines, e.g. adding new error code.
@@ -6763,7 +6708,7 @@ Major changes are changes that come with additional obligations, or even change 
 The latter changes are additionally labeled with "Rule Change" here.</p>
 </div>
 <div class="paragraph">
-<p>To see a list of all changes, please have a look at the <a href="https://github.com/zalando/restful-api-guidelines/commits/master">commit list in Github</a>.</p>
+<p>To see a list of all changes, please have a look at the <a href="https://github.com/sailpoint-oss/sailpoint-api-guidelines/commits/main">commit list in Github</a>.</p>
 </div>
 <div class="paragraph">
 <p>(Note that recent changes might be missing, as we update this list only occasionally,
@@ -6771,188 +6716,6 @@ The latter changes are additionally labeled with "Rule Change" here.</p>
 </div>
 <div class="sect2">
 <h3 id="rule-changes"><a class="link" href="#rule-changes">Rule Changes</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p><code>2021-01-19</code>: more details for <a href="#get-with-body"><code>GET with body</code></a> and <a href="#delete-with-body"><code>DELETE with body</code></a> (<a href="#148"><span class="must-keyword"><strong>MUST</strong></span> use HTTP methods correctly</a>).</p>
-</li>
-<li>
-<p><code>2020-09-29</code>: include models for headers to be included by reference in API definitions (<a href="#183">[183]</a>)</p>
-</li>
-<li>
-<p><code>2020-09-08</code>: add exception for legacy host names to <a href="#224">[224]</a></p>
-</li>
-<li>
-<p><code>2020-08-25</code>: change <a href="#240"><span class="must-keyword"><strong>MUST</strong></span> declare enum values using UPPER_SNAKE_CASE string</a> from <span class="must-keyword"><strong>MUST</strong></span> to <span class="should-keyword"><strong>SHOULD</strong></span>, explain exceptions</p>
-</li>
-<li>
-<p><code>2020-08-25</code>: add exception for <code>self</code> to <a href="#143"><span class="must-keyword"><strong>MUST</strong></span> identify resources and sub-resources via path segments</a> and <a href="#134"><span class="must-keyword"><strong>MUST</strong></span> pluralize resource names</a>.</p>
-</li>
-<li>
-<p><code>2020-08-24</code>: change "<span class="must-keyword"><strong>MUST</strong></span> avoid trailing slashes" to <a href="#136"><span class="must-keyword"><strong>MUST</strong></span> use normalized paths without empty path segments and trailing slashes</a>.</p>
-</li>
-<li>
-<p><code>2020-08-20</code>: change <a href="#183">[183]</a> from <span class="must-keyword"><strong>MUST</strong></span> to <span class="should-keyword"><strong>SHOULD</strong></span>, mention gateway-specific headers (which are not part of the public API).</p>
-</li>
-<li>
-<p><code>2020-06-30</code>: add details to <a href="#114">[114]</a></p>
-</li>
-<li>
-<p><code>2020-05-19</code>: new sections about DELETE with query parameters and <a href="#delete-with-body"><code>DELETE with body</code></a> in <a href="#148"><span class="must-keyword"><strong>MUST</strong></span> use HTTP methods correctly</a>.</p>
-</li>
-<li>
-<p><code>2020-02-06</code>: new rule <a href="#241">[241]</a></p>
-</li>
-<li>
-<p><code>2020-02-05</code>: add Sunset header, clarify deprecation producedure (<a href="#185">[185]</a>, <a href="#186">[186]</a>, <a href="#187"><span class="must-keyword"><strong>MUST</strong></span> reflect deprecation in API specifications</a>, <a href="#188"><span class="must-keyword"><strong>MUST</strong></span> monitor usage of deprecated API scheduled for sunset</a>, <a href="#189"><span class="should-keyword"><strong>SHOULD</strong></span> add <code>Deprecation</code> and <code>Sunset</code> header to responses</a>, <a href="#190"><span class="should-keyword"><strong>SHOULD</strong></span> add monitoring for <code>Deprecation</code> and <code>Sunset</code> header</a>, <a href="#191"><span class="must-keyword"><strong>MUST</strong></span> not start using deprecated APIs</a>)</p>
-</li>
-<li>
-<p><code>2020-01-21</code>: new rule <a href="#240"><span class="must-keyword"><strong>MUST</strong></span> declare enum values using UPPER_SNAKE_CASE string</a> (as MUST, changed later to SHOULD)</p>
-</li>
-<li>
-<p><code>2020-01-15</code>: change "Warning" to "Deprecation" header in <a href="#189"><span class="should-keyword"><strong>SHOULD</strong></span> add <code>Deprecation</code> and <code>Sunset</code> header to responses</a>, <a href="#190"><span class="should-keyword"><strong>SHOULD</strong></span> add monitoring for <code>Deprecation</code> and <code>Sunset</code> header</a>.</p>
-</li>
-<li>
-<p><code>2019-10-10</code>: remove never-implemented rule "<span class="must-keyword"><strong>MUST</strong></span> Permissions on events must correspond to API permissions"</p>
-</li>
-<li>
-<p><code>2019-09-10</code>: remove duplicated rule "<span class="may-keyword"><strong>MAY</strong></span> Standards could be used for Language, Country and Currency", upgrade <a href="#170"><span class="must-keyword"><strong>MUST</strong></span> use standards for country, language and currency codes</a> from <span class="may-keyword"><strong>MAY</strong></span> to <span class="should-keyword"><strong>SHOULD</strong></span>.</p>
-</li>
-<li>
-<p><code>2019-08-29</code>: new rule <a href="#239"><span class="must-keyword"><strong>MUST</strong></span> encode embedded binary data in <code>base64url</code></a>, extend <a href="#167"><span class="must-keyword"><strong>MUST</strong></span> use JSON as payload data interchange format</a> pointing to <a href="https://tools.ietf.org/html/rfc7493">RFC-7493</a></p>
-</li>
-<li>
-<p><code>2019-08-29</code>: new rules <a href="#236"><span class="should-keyword"><strong>SHOULD</strong></span> design simple query languages using query parameters</a>, <a href="#237"><span class="must-keyword"><strong>MUST</strong></span> design complex query languages using JSON</a></p>
-</li>
-<li>
-<p><code>2019-07-30</code>: new rule <a href="#238"><span class="must-keyword"><strong>MUST</strong></span> use standardized property formats</a></p>
-</li>
-<li>
-<p><code>2019-07-30</code>: change <a href="#173"><span class="must-keyword"><strong>MUST</strong></span> use the common money object</a> from <span class="should-keyword"><strong>SHOULD</strong></span> to <span class="must-keyword"><strong>MUST</strong></span></p>
-</li>
-<li>
-<p><code>2019-07-30</code>: change "<span class="should-keyword"><strong>SHOULD</strong></span> Null values should have their fields removed to" <a href="#123"><span class="must-keyword"><strong>MUST</strong></span> use same semantics for <code>null</code> and absent properties</a>.</p>
-</li>
-<li>
-<p><code>2019-07-25</code>: new rule <a href="#235">[235]</a>.</p>
-</li>
-<li>
-<p><code>2019-07-18</code>: improved cursor guideline for <a href="#get-with-body"><code>GET with body</code></a>.</p>
-</li>
-<li>
-<p><code>2019-06-25</code>: change <a href="#154"><span class="must-keyword"><strong>MUST</strong></span> define collection format of header and query parameters</a> from <span class="should-keyword"><strong>SHOULD</strong></span> to <span class="must-keyword"><strong>MUST</strong></span>, use OpenAPI 3 syntax</p>
-</li>
-<li>
-<p><code>2019-06-13</code>: remove <code>X-App-Domain</code> from <a href="#183">[183]</a>.</p>
-</li>
-<li>
-<p><code>2019-05-17</code>: add <code>X-Mobile-Advertising-Id</code> to <a href="#183">[183]</a>.</p>
-</li>
-<li>
-<p><code>2019-04-09</code> New rule <a href="#234">[234]</a></p>
-</li>
-<li>
-<p><code>2019-02-19</code>: New rule <a href="#233">[233]</a> extracted + expanded from <a href="#183">[183]</a>.</p>
-</li>
-<li>
-<p><code>2019-01-24:</code> Improve guidance on caching (<a href="#149"><span class="must-keyword"><strong>MUST</strong></span> fulfill common method properties</a>, <a href="#227">[227]</a>).</p>
-</li>
-<li>
-<p><code>2019-01-21:</code> Improve guidance on idempotency, introduce idempotency-key (<a href="#229"><span class="should-keyword"><strong>SHOULD</strong></span> consider to design <code>POST</code> and <code>PATCH</code> idempotent</a>, <a href="#231"><span class="may-keyword"><strong>MAY</strong></span> use secondary key for idempotent <code>POST</code> design</a>).</p>
-</li>
-<li>
-<p><code>2019-01-16</code>: Change <a href="#135"><span class="must-keyword"><strong>MUST</strong></span> not use <code>/api</code> as base path</a> from <span class="may-keyword"><strong>MAY</strong></span> to {SHOULD NOT}</p>
-</li>
-<li>
-<p><code>2018-10-19</code>: Add <code>ordering_key_field</code> to event type definition schema (<a href="#197">[197]</a>, <a href="#203">[203]</a>)</p>
-</li>
-<li>
-<p><code>2018-09-28</code>: New rule <a href="#228"><span class="must-keyword"><strong>MUST</strong></span> use URL-friendly resource identifiers: [a-zA-Z0-9:._\-/]*</a></p>
-</li>
-<li>
-<p><code>2018-09-13</code>: replaced OpenAPI 2.0 syntax with OpenAPI 3.0 in the example snippets</p>
-</li>
-<li>
-<p><code>2018-08-10</code>: New rule <a href="#226"><span class="must-keyword"><strong>MUST</strong></span> document implicit filtering</a></p>
-</li>
-<li>
-<p><code>2018-07-12</code>: Add <code>audience</code> field to event type definition (<a href="#197">[197]</a>)</p>
-</li>
-<li>
-<p><code>2018-06-11:</code> Introduced new naming guidelines for host, permission, and event names.</p>
-</li>
-<li>
-<p><code>2018-01-10:</code> Moved meta information related aspects into new chapter <a href="#meta-information">Meta information</a>.</p>
-</li>
-<li>
-<p><code>2018-01-09:</code> Changed publication requirements for API specifications (<a href="#192"><span class="must-keyword"><strong>MUST</strong></span> publish OpenAPI specification</a>).</p>
-</li>
-<li>
-<p><code>2017-12-07:</code> Added best practices section including discussion about optimistic locking approaches.</p>
-</li>
-<li>
-<p><code>2017-11-28:</code> Changed OAuth flow example from password to client credentials in <a href="#security">Security</a>.</p>
-</li>
-<li>
-<p><code>2017-11-22:</code> Updated description of X-Tenant-ID header field</p>
-</li>
-<li>
-<p><code>2017-08-22:</code> Migration to Asciidoc</p>
-</li>
-<li>
-<p><code>2017-07-20:</code> Be more precise on client vs. server obligations for compatible API extensions.</p>
-</li>
-<li>
-<p><code>2017-06-06:</code> Made money object guideline clearer.</p>
-</li>
-<li>
-<p><code>2017-05-17:</code> Added guideline on query parameter collection format.</p>
-</li>
-<li>
-<p><code>2017-05-10:</code> Added the convention of using RFC2119 to describe guideline levels, and replaced <code>book.could</code> with <code>book.may</code>.</p>
-</li>
-<li>
-<p><code>2017-03-30:</code> Added rule that permissions on resources in events must correspond to permissions on API resources</p>
-</li>
-<li>
-<p><code>2017-03-30:</code> Added rule that APIs should be modelled around business processes</p>
-</li>
-<li>
-<p><code>2017-02-28:</code> Extended information about how to reference sub-resources and the usage of composite identifiers in the <a href="#143"><span class="must-keyword"><strong>MUST</strong></span> identify resources and sub-resources via path segments</a>
-part.</p>
-</li>
-<li>
-<p><code>2017-02-22:</code> Added guidance for conditional requests with If-Match/If-None-Match</p>
-</li>
-<li>
-<p><code>2017-02-02:</code> Added guideline for batch and bulk request</p>
-</li>
-<li>
-<p><code>2017-02-01:</code> <a href="#180"><span class="should-keyword"><strong>SHOULD</strong></span> use <code>Location</code> header instead of <code>Content-Location</code> header</a></p>
-</li>
-<li>
-<p><code>2017-01-18:</code> Removed "Avoid Javascript Keywords" rule</p>
-</li>
-<li>
-<p><code>2017-01-05:</code> Clarification on the usage of the term "REST/RESTful"</p>
-</li>
-<li>
-<p><code>2016-12-07:</code> Introduced "API as a Product" principle</p>
-</li>
-<li>
-<p><code>2016-12-06:</code> New guideline: "Should Only Use UUIDs If Necessary"</p>
-</li>
-<li>
-<p><code>2016-12-04:</code> Changed OAuth flow example from implicit to password in <a href="#security">Security</a>.</p>
-</li>
-<li>
-<p><code>2016-10-13:</code> <a href="#172"><span class="should-keyword"><strong>SHOULD</strong></span> use standard media types</a></p>
-</li>
-<li>
-<p><code>2016-10-10:</code> Introduced the changelog. From now on all rule changes on API guidelines will be recorded here.</p>
-</li>
-</ul>
-</div>
 <!-- Adds rule id as a postfix to all rule titles -->
 <script>
 var ruleIdRegEx = /(\d)+/;
@@ -7034,7 +6797,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-09-14 17:51:45 UTC
+Last updated 2021-09-16 13:40:33 UTC
 </div>
 </div>
 </body>
