@@ -41,11 +41,11 @@ also <<pagination-fields>> for details):
 [source,json]
 ----
 {
-  "self": "http://my-service.zalandoapis.com/resources?cursor=<self-position>",
-  "first": "http://my-service.zalandoapis.com/resources?cursor=<first-position>",
-  "prev": "http://my-service.zalandoapis.com/resources?cursor=<previous-position>",
-  "next": "http://my-service.zalandoapis.com/resources?cursor=<next-position>",
-  "last": "http://my-service.zalandoapis.com/resources?cursor=<last-position>",
+  "self": "https://myorg.api.identitynow.com/v3/resources?cursor=<self-position>",
+  "first": "https://myorg.api.identitynow.com/v3/resources?cursor=<first-position>",
+  "prev": "https://myorg.api.identitynow.com/v3/resources?cursor=<previous-position>",
+  "next": "https://myorg.api.identitynow.com/v3/resources?cursor=<next-position>",
+  "last": "https://myorg.api.identitynow.com/v3/resources?cursor=<last-position>",
   "query": {
     "query-param-<1>": ...,
     "query-param-<n>": ...

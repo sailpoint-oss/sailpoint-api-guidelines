@@ -1,16 +1,13 @@
 [[introduction]]
 = Introduction
 
-Zalando’s software architecture centers around decoupled microservices
+SailPoint's SaaS software architecture centers around microservices
 that provide functionality via RESTful APIs with a JSON payload. Small
-engineering teams own, deploy and operate these microservices in their
-AWS (team) accounts. Our APIs most purely express what our systems do,
+engineering teams own, deploy and operate these microservices. Our APIs most purely express what our systems do,
 and are therefore highly valuable business assets. Designing
 high-quality, long-lasting APIs has become even more critical for us
-since we started developing our new open platform strategy, which
-transforms Zalando from an online shop into an expansive fashion
-platform. Our strategy emphasizes developing lots of public APIs for our
-external business partners to use via third-party applications.
+as we invest more in our SaaS platform and enabling customers and partners to build
+functionalty outside of our UI.
 
 With this in mind, we’ve adopted "API First" as one of our key
 engineering principles. Microservices development begins with API
@@ -27,7 +24,7 @@ ensure that our APIs:
 * follow a consistent RESTful style and syntax
 * are consistent with other teams’ APIs and our global architecture
 
-Ideally, all Zalando APIs will look like the same author created them.
+Ideally, all SailPoint APIs will look like the same author created them.
 
 
 [[conventions-used-in-these-guidelines]]
