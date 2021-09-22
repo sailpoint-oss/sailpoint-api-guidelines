@@ -1623,16 +1623,13 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h2 id="introduction"><a class="link" href="#introduction">1. Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Zalando’s software architecture centers around decoupled microservices
+<p>SailPoint&#8217;s SaaS software architecture centers around microservices
 that provide functionality via RESTful APIs with a JSON payload. Small
-engineering teams own, deploy and operate these microservices in their
-AWS (team) accounts. Our APIs most purely express what our systems do,
+engineering teams own, deploy and operate these microservices. Our APIs most purely express what our systems do,
 and are therefore highly valuable business assets. Designing
 high-quality, long-lasting APIs has become even more critical for us
-since we started developing our new open platform strategy, which
-transforms Zalando from an online shop into an expansive fashion
-platform. Our strategy emphasizes developing lots of public APIs for our
-external business partners to use via third-party applications.</p>
+as we invest more in our SaaS platform and enabling customers and partners to build
+functionalty outside of our UI.</p>
 </div>
 <div class="paragraph">
 <p>With this in mind, we’ve adopted "API First" as one of our key
@@ -1666,7 +1663,7 @@ ensure that our APIs:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Ideally, all Zalando APIs will look like the same author created them.</p>
+<p>Ideally, all SailPoint APIs will look like the same author created them.</p>
 </div>
 <div class="sect2">
 <h3 id="conventions-used-in-these-guidelines"><a class="link" href="#conventions-used-in-these-guidelines">Conventions used in these guidelines</a></h3>
@@ -1796,14 +1793,8 @@ Styles and the Design of Network-Based Software Architectures</a></p>
 <div class="sect2">
 <h3 id="api-as-a-product"><a class="link" href="#api-as-a-product">API as a product</a></h3>
 <div class="paragraph">
-<p>As mentioned above, Zalando is transforming from an online shop into an
-expansive fashion platform comprising a rich set of products following a
-Software as a Platform (SaaP) model for our business partners. As a
-company we want to deliver products to our (internal and external)
-customers which can be consumed like a service.</p>
-</div>
-<div class="paragraph">
-<p>Platform products provide their functionality via (public) APIs; hence,
+<p>At SailPoint, we want to deliver products to our (internal and external)
+customers which can be consumed like a service.  Platform products provide their functionality via (public) APIs; hence,
 the design of our APIs should be based on the API as a Product
 principle:</p>
 </div>
@@ -2867,10 +2858,10 @@ the deprecation info (see hint in <a href="#189"><span class="should-keyword"><s
 <h2 id="json-guidelines"><a class="link" href="#json-guidelines">8. JSON guidelines</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>These guidelines provides recommendations for defining JSON data at Zalando.
+<p>These guidelines provides recommendations for defining JSON data at SailPoint.
 JSON here refers to <a href="https://tools.ietf.org/html/rfc7159">RFC 7159</a> (which updates <a href="https://tools.ietf.org/html/rfc4627">RFC 4627</a>),
 the "application/json" media type and custom JSON media types defined for APIs.
-The guidelines clarifies some specific cases to allow Zalando JSON data to have
+The guidelines clarifies some specific cases to allow SailPoint JSON data to have
 an idiomatic form across teams and services.</p>
 </div>
 <div class="paragraph">
@@ -5565,11 +5556,11 @@ also <a href="#pagination-fields">[pagination-fields]</a> for details):</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json">{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;self-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;first-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">prev</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;previous-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">next</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;next-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">last</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;last-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://myorg.api.identitynow.com/v3/resources?cursor=&lt;self-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://myorg.api.identitynow.com/v3/resources?cursor=&lt;first-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">prev</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://myorg.api.identitynow.com/v3/resources?cursor=&lt;previous-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">next</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://myorg.api.identitynow.com/v3/resources?cursor=&lt;next-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">last</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://myorg.api.identitynow.com/v3/resources?cursor=&lt;last-position&gt;</span><span class="delimiter">&quot;</span></span>,
   <span class="key"><span class="delimiter">&quot;</span><span class="content">query</span><span class="delimiter">&quot;</span></span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">query-param-&lt;1&gt;</span><span class="delimiter">&quot;</span></span>: <span class="error">.</span><span class="error">.</span><span class="error">.</span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">query-param-&lt;n&gt;</span><span class="delimiter">&quot;</span></span>: <span class="error">.</span><span class="error">.</span><span class="error">.</span>
