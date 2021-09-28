@@ -1558,13 +1558,19 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#177"><span class="must-keyword"><strong>MUST</strong></span> not expose stack traces</a></li>
 </ul>
 </li>
-<li><a href="#pagination">15. Pagination</a>
+<li><a href="#performance">15. Performance</a>
+<ul class="sectlevel2">
+<li><a href="#157"><span class="should-keyword"><strong>SHOULD</strong></span> support partial responses via filtering</a></li>
+<li><a href="#158"><span class="should-keyword"><strong>SHOULD</strong></span> allow optional embedding of sub-resources</a></li>
+</ul>
+</li>
+<li><a href="#pagination">16. Pagination</a>
 <ul class="sectlevel2">
 <li><a href="#159"><span class="must-keyword"><strong>MUST</strong></span> support pagination</a></li>
 <li><a href="#161"><span class="may-keyword"><strong>MAY</strong></span> use pagination links where applicable</a></li>
 </ul>
 </li>
-<li><a href="#hypermedia">16. Hypermedia</a>
+<li><a href="#hypermedia">17. Hypermedia</a>
 <ul class="sectlevel2">
 <li><a href="#162"><span class="must-keyword"><strong>MUST</strong></span> use REST maturity level 2</a></li>
 <li><a href="#217"><span class="should-keyword"><strong>SHOULD</strong></span> use full, absolute URI</a></li>
@@ -1572,7 +1578,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#166"><span class="must-keyword"><strong>MUST</strong></span> not use link headers with JSON entities</a></li>
 </ul>
 </li>
-<li><a href="#standard-headers">17. Standard headers</a>
+<li><a href="#standard-headers">18. Standard headers</a>
 <ul class="sectlevel2">
 <li><a href="#133"><span class="may-keyword"><strong>MAY</strong></span> use standardized headers</a></li>
 <li><a href="#132"><span class="should-keyword"><strong>SHOULD</strong></span> use uppercase separate words with hyphens for HTTP headers</a></li>
@@ -1584,7 +1590,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#230"><span class="may-keyword"><strong>MAY</strong></span> consider to support <code>Idempotency-Key</code> header</a></li>
 </ul>
 </li>
-<li><a href="#api-operation">18. API Operation</a>
+<li><a href="#api-operation">19. API Operation</a>
 <ul class="sectlevel2">
 <li><a href="#192"><span class="must-keyword"><strong>MUST</strong></span> publish OpenAPI specification</a></li>
 <li><a href="#193"><span class="must-keyword"><strong>MUST</strong></span> monitor API usage</a></li>
@@ -5504,7 +5510,149 @@ receive and may disclose insights about vulnerabilities to attackers.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pagination"><a class="link" href="#pagination">15. Pagination</a></h2>
+<h2 id="performance"><a class="link" href="#performance">15. Performance</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="157"><a class="link" href="#157"><span class="should-keyword"><strong>SHOULD</strong></span> support partial responses via filtering</a></h3>
+<div class="paragraph">
+<p>Depending on your use case and payload size, you can significantly reduce
+network bandwidth need by supporting filtering of returned entity fields.
+Here, the client can explicitly determine the subset of fields he wants to
+receive via the <a href="#fields"><code>fields</code></a> query parameter. (It is analogue to
+<a href="https://graphql.org/learn/queries/#fields">GraphQL <code>fields</code></a> and simple
+queries, and also applied, for instance, for
+<a href="https://cloud.google.com/storage/docs/json_api/v1/how-tos/performance#partial-response">Google
+Cloud API&#8217;s partial responses</a>.)</p>
+</div>
+<div class="sect3">
+<h4 id="unfiltered"><a class="link" href="#unfiltered">Unfiltered</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="http">GET http://api.example.org/users/123 HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;id&quot;: &quot;cddd5e44-dae0-11e5-8c01-63ed66ab2da5&quot;,
+  &quot;name&quot;: &quot;John Doe&quot;,
+  &quot;address&quot;: &quot;1600 Pennsylvania Avenue Northwest, Washington, DC, United States&quot;,
+  &quot;birthday&quot;: &quot;1984-09-13&quot;,
+  &quot;friends&quot;: [ {
+    &quot;id&quot;: &quot;1fb43648-dae1-11e5-aa01-1fbc3abb1cd0&quot;,
+    &quot;name&quot;: &quot;Jane Doe&quot;,
+    &quot;address&quot;: &quot;1600 Pennsylvania Avenue Northwest, Washington, DC, United States&quot;,
+    &quot;birthday&quot;: &quot;1988-04-07&quot;
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="filtered"><a class="link" href="#filtered">Filtered</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="http">GET http://api.example.org/users/123?fields=(name,friends(name)) HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  &quot;name&quot;: &quot;John Doe&quot;,
+  &quot;friends&quot;: [ {
+    &quot;name&quot;: &quot;Jane Doe&quot;
+  } ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="#fields"><code>fields</code></a> query parameter determines the fields returned with the response
+payload object. For instance, <code>(name)</code> returns <code>users</code> root object with only
+the <code>name</code> field, and <code>(name,friends(name))</code> returns the <code>name</code> and the nested
+<code>friends</code> object with only its <code>name</code> field.</p>
+</div>
+<div class="paragraph">
+<p>OpenAPI doesn&#8217;t support you in formally specifying different return object
+schemes depending on a parameter. When you define the field parameter, we
+recommend to provide the following description: <code>Endpoint supports filtering
+of return object fields as described in
+[Rule #157](<a href="https://opensource.zalando.com/restful-api-guidelines/#157" class="bare">https://opensource.zalando.com/restful-api-guidelines/#157</a>)</code></p>
+</div>
+<div class="paragraph">
+<p>The syntax of the query <a href="#fields"><code>fields</code></a> value is defined by the following
+<a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form">BNF</a> grammar.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bnf">&lt;fields&gt;            ::= [ &lt;negation&gt; ] &lt;fields_struct&gt;
+&lt;fields_struct&gt;     ::= &quot;(&quot; &lt;field_items&gt; &quot;)&quot;
+&lt;field_items&gt;       ::= &lt;field&gt; [ &quot;,&quot; &lt;field_items&gt; ]
+&lt;field&gt;             ::= &lt;field_name&gt; | &lt;fields_substruct&gt;
+&lt;fields_substruct&gt;  ::= &lt;field_name&gt; &lt;fields_struct&gt;
+&lt;field_name&gt;        ::= &lt;dash_letter_digit&gt; [ &lt;field_name&gt; ]
+&lt;dash_letter_digit&gt; ::= &lt;dash&gt; | &lt;letter&gt; | &lt;digit&gt;
+&lt;dash&gt;              ::= &quot;-&quot; | &quot;_&quot;
+&lt;letter&gt;            ::= &quot;A&quot; | ... | &quot;Z&quot; | &quot;a&quot; | ... | &quot;z&quot;
+&lt;digit&gt;             ::= &quot;0&quot; | ... | &quot;9&quot;
+&lt;negation&gt;          ::= &quot;!&quot;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> Following the
+<a href="https://en.wikipedia.org/wiki/Principle_of_least_astonishment">principle of
+least astonishment</a>, you should not define the <a href="#fields"><code>fields</code></a> query parameter using
+a default value, as the result is counter-intuitive and very likely not
+anticipated by the consumer.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="158"><a class="link" href="#158"><span class="should-keyword"><strong>SHOULD</strong></span> allow optional embedding of sub-resources</a></h3>
+<div class="paragraph">
+<p>Embedding related resources (also know as <em>Resource expansion</em>) is a
+great way to reduce the number of requests. In cases where clients know
+upfront that they need some related resources they can instruct the
+server to prefetch that data eagerly. Whether this is optimized on the
+server, e.g. a database join, or done in a generic way, e.g. an HTTP
+proxy that transparently embeds resources, is up to the implementation.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#137"><span class="must-keyword"><strong>MUST</strong></span> stick to conventional query parameters</a> for naming, e.g. "embed" for steering of embedded
+resource expansion. Please use the
+<a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form">BNF</a> grammar, as
+already defined above for filtering, when it comes to an embedding query
+syntax.</p>
+</div>
+<div class="paragraph">
+<p>Embedding a sub-resource can possibly look like this where an order
+resource has its order items as sub-resource (/order/{orderId}/items):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="http">GET /order/123?embed=(items) HTTP/1.1
+
+{
+  &quot;id&quot;: &quot;123&quot;,
+  &quot;_embedded&quot;: {
+    &quot;items&quot;: [
+      {
+        &quot;position&quot;: 1,
+        &quot;sku&quot;: &quot;1234-ABCD-7890&quot;,
+        &quot;price&quot;: {
+          &quot;amount&quot;: 71.99,
+          &quot;currency&quot;: &quot;EUR&quot;
+        }
+      }
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="pagination"><a class="link" href="#pagination">16. Pagination</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="159"><a class="link" href="#159"><span class="must-keyword"><strong>MUST</strong></span> support pagination</a></h3>
@@ -5581,7 +5729,7 @@ the ability to support serving counts over the life of a service.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="hypermedia"><a class="link" href="#hypermedia">16. Hypermedia</a></h2>
+<h2 id="hypermedia"><a class="link" href="#hypermedia">17. Hypermedia</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="162"><a class="link" href="#162"><span class="must-keyword"><strong>MUST</strong></span> use REST maturity level 2</a></h3>
@@ -5719,7 +5867,7 @@ As a result, the use of the <a href="https://tools.ietf.org/html/rfc8288#section
 </div>
 </div>
 <div class="sect1">
-<h2 id="standard-headers"><a class="link" href="#standard-headers">17. Standard headers</a></h2>
+<h2 id="standard-headers"><a class="link" href="#standard-headers">18. Standard headers</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes a handful of standard headers, which we found raising the most
@@ -6061,7 +6209,7 @@ common header.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="api-operation"><a class="link" href="#api-operation">18. API Operation</a></h2>
+<h2 id="api-operation"><a class="link" href="#api-operation">19. API Operation</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="192"><a class="link" href="#192"><span class="must-keyword"><strong>MUST</strong></span> publish OpenAPI specification</a></h3>
@@ -6788,7 +6936,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-09-16 13:40:33 UTC
+Last updated 2021-09-28 15:09:17 UTC
 </div>
 </div>
 </body>
