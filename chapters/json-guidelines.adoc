@@ -248,7 +248,7 @@ know what value will be used should they ignore a property.
 
 All request/response schemas MUST define the “required” attribute for each property and parameter per the OpenAPI specification.
 
-For request/response objects, see https://swagger.io/docs/specification/data-models/data-types/#required. If all properties are optional, do not specify the required keyword.
+For request/response objects, see https://swagger.io/docs/specification/data-models/data-types/#required. If all properties within an object are optional, then the "required" attribute may be omitted.
 
 For path and query parameters, see https://swagger.io/docs/specification/describing-parameters/
 
