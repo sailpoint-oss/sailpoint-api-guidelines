@@ -13,10 +13,22 @@ The following code snippet shows how to define the authorization scheme using a 
 ----
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    oauth2:
+      type: oauth2
+      description: |
+        OAuth2 Bearer token (JWT).
+      flows:
+        clientCredentials:
+          tokenUrl: https://tenant.api.identitynow.com/oauth/token
+          scopes:
+            "sp:scopes:default": "default scope"
+            "sp:scopes:all": "access to all scopes"
+        authorizationCode:
+          authorizationUrl: https://tenant.identitynow.com/oauth/authorize
+          tokenUrl: https://tenant.api.identitynow.com/oauth/token
+          scopes:
+            "sp:scopes:default": "default scope"
+            "sp:scopes:all": "access to all scopes"
 ----
 
 The next code snippet applies this security scheme to all API endpoints. The bearer token of the client must have additionally the scopes scope_1 and scope_2.
@@ -24,7 +36,7 @@ The next code snippet applies this security scheme to all API endpoints. The bea
 [source,yaml]
 ----
 security:
-  - bearerAuth: [ scope_1, scope_2 ]
+    - oauth2: [ scope_1, scope_2 ]
 ----
 
 
@@ -38,7 +50,7 @@ To appropriately document AMS rights on an endpoint, use the following OpenAPI p
 [source,yaml]
 ----
 security:
-  - bearerAuth:
+  - oauth2:
      - 'idn:task-definition:read'
      - 'idn:task-definition:write'
 ----
@@ -60,8 +72,8 @@ get:
           schema:
             $ref: '../schemas/Tenant.yaml'
   security:
-    - bearerAuth:
-        - 'cam:general:read'
+    - oauth2:
+        - 'idn:accounts:read'
 ----
 
 

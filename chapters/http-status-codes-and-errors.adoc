@@ -19,8 +19,7 @@ well as exceptional situations.
 especially if they are not under control of the service provider. Thus unless
 a response code conveys application-specific functional semantics or is used
 in a none standard way that requires additional explanation, multiple error
-response specifications can be combined using the following pattern
-(see also <<#234>>):
+response specifications can be combined using the following pattern:
 
 [source,yaml]
 ----
@@ -106,7 +105,7 @@ OK - this is the standard success response
 |[[status-code-201]]{201}|
 Created - Returned on successful entity creation. You are
 free to return either an empty response or the created resource in conjunction
-with the Location header. (More details found in the <<common-headers>>.)
+with the Location header.
 _Always_ set the Location header.
 |{POST}, {PUT}
 

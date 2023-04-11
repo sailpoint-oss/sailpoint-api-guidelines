@@ -109,7 +109,7 @@ also `/partners/{partnerId}/addresses`, `/partners/{partnerId}` and
 ----
 
 **Note:** resource identifiers may be build of multiple other resource
-identifiers (see <<241>>).
+identifiers.
 
 **Exception:** In some situations the resource identifier is not passed as a
 path segment but  via the authorization information, e.g. an authorization
