@@ -7,6 +7,8 @@
 
 Every public API endpoint must be secured using OAuth 2.0.
 
+For information on adding new oauth2 scopes visit https://sailpoint.atlassian.net/wiki/spaces/PLAT/pages/1713963123/Defining+Scopes+for+API+Authorization[Defining Scopes for API Authorization, role=external, window=_blank].
+
 The following code snippet shows how to define the authorization scheme using a bearer token (e.g. JWT token).
 
 [source,yaml]
