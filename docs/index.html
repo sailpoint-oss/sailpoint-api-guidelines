@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.18">
 <meta name="keywords" content="SailPoint, Guidelines, RESTful, API, Events, Schema">
 <meta name="copyright" content="CC-BY-SA 4.0">
 <title>SailPoint RESTful API Guidelines</title>
@@ -1293,18 +1293,18 @@ a > code { background-color: #f0f0f0; padding: .1em .4em .1em .4em !important; f
 
 </style>
 <style>
-/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
+/*! Stylesheet for CodeRay to loosely match GitHub themes | MIT License */
 pre.CodeRay{background:#f7f7f8}
-.CodeRay .line-numbers{border-right:1px solid currentColor;opacity:.35;padding:0 .5em 0 0}
+.CodeRay .line-numbers{border-right:1px solid;opacity:.35;padding:0 .5em 0 0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 .CodeRay span.line-numbers{display:inline-block;margin-right:.75em}
 .CodeRay .line-numbers strong{color:#000}
 table.CodeRay{border-collapse:separate;border:0;margin-bottom:0;background:none}
 table.CodeRay td{vertical-align:top;line-height:inherit}
 table.CodeRay td.line-numbers{text-align:right}
 table.CodeRay td.code{padding:0 0 0 .75em}
-.CodeRay .debug{color:#fff !important;background:#000080 !important}
+.CodeRay .debug{color:#fff!important;background:navy!important}
 .CodeRay .annotation{color:#007}
-.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-name{color:navy}
 .CodeRay .attribute-value{color:#700}
 .CodeRay .binary{color:#509}
 .CodeRay .comment{color:#998;font-style:italic}
@@ -1313,7 +1313,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 .CodeRay .char .delimiter{color:#039}
 .CodeRay .class{color:#458;font-weight:bold}
 .CodeRay .complex{color:#a08}
-.CodeRay .constant,.CodeRay .predefined-constant{color:#008080}
+.CodeRay .constant,.CodeRay .predefined-constant{color:teal}
 .CodeRay .color{color:#099}
 .CodeRay .class-variable{color:#369}
 .CodeRay .decorator{color:#b0b}
@@ -1328,7 +1328,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 .CodeRay .exception{color:inherit}
 .CodeRay .filename{color:#099}
 .CodeRay .function{color:#900;font-weight:bold}
-.CodeRay .global-variable{color:#008080}
+.CodeRay .global-variable{color:teal}
 .CodeRay .hex{color:#058}
 .CodeRay .integer,.CodeRay .float{color:#099}
 .CodeRay .include{color:#555}
@@ -1339,7 +1339,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 .CodeRay .inline-delimiter{color:#d14}
 .CodeRay .important{color:#555;font-weight:bold}
 .CodeRay .interpreted{color:#b2b}
-.CodeRay .instance-variable{color:#008080}
+.CodeRay .instance-variable{color:teal}
 .CodeRay .label{color:#970}
 .CodeRay .local-variable{color:#963}
 .CodeRay .octal{color:#40e}
@@ -1349,7 +1349,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 .CodeRay .directive{font-weight:bold}
 .CodeRay .type{font-weight:bold}
 .CodeRay .predefined-type{color:inherit}
-.CodeRay .reserved,.CodeRay .keyword {color:#000;font-weight:bold}
+.CodeRay .reserved,.CodeRay .keyword{color:#000;font-weight:bold}
 .CodeRay .key{color:#808}
 .CodeRay .key .delimiter{color:#606}
 .CodeRay .key .char{color:#80f}
@@ -1369,7 +1369,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 .CodeRay .symbol{color:#990073}
 .CodeRay .symbol .content{color:#a60}
 .CodeRay .symbol .delimiter{color:#630}
-.CodeRay .tag{color:#008080}
+.CodeRay .tag{color:teal}
 .CodeRay .tag-special{color:#d70}
 .CodeRay .variable{color:#036}
 .CodeRay .insert{background:#afa}
@@ -2273,16 +2273,31 @@ along the target audience — even if this creates redundancies (rationale (inte
 <p>Every public API endpoint must be secured using OAuth 2.0.</p>
 </div>
 <div class="paragraph">
+<p>For information on adding new oauth2 scopes visit <a href="https://sailpoint.atlassian.net/wiki/spaces/PLAT/pages/1713963123/Defining+Scopes+for+API+Authorization" class="external" target="_blank" rel="noopener">Defining Scopes for API Authorization</a>.</p>
+</div>
+<div class="paragraph">
 <p>The following code snippet shows how to define the authorization scheme using a bearer token (e.g. JWT token).</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">components</span>:
   <span class="key">securitySchemes</span>:
-    <span class="key">bearerAuth</span>:
-      <span class="key">type</span>: <span class="string"><span class="content">http</span></span>
-      <span class="key">scheme</span>: <span class="string"><span class="content">bearer</span></span>
-      <span class="key">bearerFormat</span>: <span class="string"><span class="content">JWT</span></span></code></pre>
+    <span class="key">oauth2</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">oauth2</span></span>
+      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
+        OAuth2 Bearer token (JWT).</span></span>
+      <span class="key">flows</span>:
+        <span class="key">clientCredentials</span>:
+          <span class="key">tokenUrl</span>: <span class="string"><span class="content">https://tenant.api.identitynow.com/oauth/token</span></span>
+          <span class="key">scopes</span>:
+            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:default</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">default scope</span><span class="delimiter">&quot;</span></span>
+            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:all</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">access to all scopes</span><span class="delimiter">&quot;</span></span>
+        <span class="key">authorizationCode</span>:
+          <span class="key">authorizationUrl</span>: <span class="string"><span class="content">https://tenant.identitynow.com/oauth/authorize</span></span>
+          <span class="key">tokenUrl</span>: <span class="string"><span class="content">https://tenant.api.identitynow.com/oauth/token</span></span>
+          <span class="key">scopes</span>:
+            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:default</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">default scope</span><span class="delimiter">&quot;</span></span>
+            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:all</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">access to all scopes</span><span class="delimiter">&quot;</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2291,7 +2306,7 @@ along the target audience — even if this creates redundancies (rationale (inte
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">security</span>:
-  - <span class="string"><span class="content">bearerAuth: [ scope_1, scope_2 ]</span></span></code></pre>
+    - <span class="string"><span class="content">oauth2: [ scope_1, scope_2 ]</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -2307,7 +2322,7 @@ needed to access the endpoint.  If creating a new AMS right that doesn’t exist
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">security</span>:
-  - <span class="string"><span class="content">bearerAuth:</span><span class="content">
+  - <span class="string"><span class="content">oauth2:</span><span class="content">
      - 'idn:task-definition:read'
      - 'idn:task-definition:write'</span></span></code></pre>
 </div>
@@ -2331,8 +2346,8 @@ needed to access the endpoint.  If creating a new AMS right that doesn’t exist
           <span class="key">schema</span>:
             <span class="error">$ref</span>: <span class="error">'../schemas/Tenant.yaml'</span>
   <span class="key">security</span>:
-    - <span class="string"><span class="content">bearerAuth:</span><span class="content">
-        - 'cam:general:read'</span></span></code></pre>
+    - <span class="string"><span class="content">oauth2:</span><span class="content">
+        - 'idn:accounts:read'</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -3161,9 +3176,13 @@ know what value will be used should they ignore a property.</p>
 <div class="sect2">
 <h3 id="317"><a class="link" href="#317"><span class="must-keyword"><strong>MUST</strong></span> define the “required” attribute for request/response objects and parameters</a></h3>
 <div class="paragraph">
-<p>All request/response schemas MUST define the “required” attribute for each property and parameter per the OpenAPI specification.
-For request/response objects, see <a href="https://swagger.io/docs/specification/data-models/data-types/#required" class="bare">https://swagger.io/docs/specification/data-models/data-types/#required</a>.  For path and query parameters, see
-<a href="https://swagger.io/docs/specification/describing-parameters/" class="bare">https://swagger.io/docs/specification/describing-parameters/</a></p>
+<p>All request/response schemas MUST define the “required” attribute for each property and parameter per the OpenAPI specification.</p>
+</div>
+<div class="paragraph">
+<p>For request/response objects, see <a href="https://swagger.io/docs/specification/data-models/data-types/#required" class="bare">https://swagger.io/docs/specification/data-models/data-types/#required</a>. If all properties within an object are optional, then the "required" attribute may be omitted.</p>
+</div>
+<div class="paragraph">
+<p>For path and query parameters, see <a href="https://swagger.io/docs/specification/describing-parameters/" class="bare">https://swagger.io/docs/specification/describing-parameters/</a></p>
 </div>
 <div class="paragraph">
 <p>Generally, query parameters should be optional, but there are cases where a query parameter is required.  In these cases,
@@ -3495,7 +3514,7 @@ You <strong>should</strong> use these formats, whenever applicable.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#144"><code>uuid</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uuid</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"e2ab873e-b295-11e9-9c02-&#8230;&#8203;"</code></p></td>
 </tr>
@@ -3662,9 +3681,6 @@ used in the guideline:</p>
 </li>
 <li>
 <p><a href="#176">Problem object</a></p>
-</li>
-<li>
-<p><a href="#address-fields">Address object</a></p>
 </li>
 </ul>
 </div>
@@ -4096,7 +4112,7 @@ also <code>/partners/{partnerId}/addresses</code>, <code>/partners/{partnerId}</
 </div>
 <div class="paragraph">
 <p><strong>Note:</strong> resource identifiers may be build of multiple other resource
-identifiers (see <a href="#241">[241]</a>).</p>
+identifiers.</p>
 </div>
 <div class="paragraph">
 <p><strong>Exception:</strong> In some situations the resource identifier is not passed as a
@@ -4658,9 +4674,6 @@ to <a href="https://tools.ietf.org/html/rfc7231">RFC 7231</a>:</p>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>Note:</strong> <a href="#227">[227]</a>.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="229"><a class="link" href="#229"><span class="should-keyword"><strong>SHOULD</strong></span> consider to design <code>POST</code> and <code>PATCH</code> idempotent</a></h3>
@@ -4899,7 +4912,7 @@ provides the following benefits:</p>
 </div>
 <div class="paragraph">
 <p><a href="#json-guidelines">JSON-specific rules</a> and most certainly needs to make use
-of the <a href="#get-with-body"><code>GET</code>-with-body</a> pattern.</p>
+of the <a href="#get-with-body-payload"><code>GET</code>-with-body</a> pattern.</p>
 </div>
 <div class="sect3">
 <h4 id="_example"><a class="link" href="#_example">Example</a></h4>
@@ -4964,8 +4977,7 @@ is authorized to access.</p>
 </div>
 <div class="paragraph">
 <p>In such cases, the fact that implicit filtering is applied must be documented
-in the API specification&#8217;s endpoint description. Consider <a href="#227">caching aspects</a>
-when implicit filtering is provided. Example:</p>
+in the API specification&#8217;s endpoint description. Example:</p>
 </div>
 <div class="paragraph">
 <p>If an employee of the company <em>Foo</em> accesses one of our business-to-business
@@ -5038,8 +5050,7 @@ well as exceptional situations.</p>
 especially if they are not under control of the service provider. Thus unless
 a response code conveys application-specific functional semantics or is used
 in a none standard way that requires additional explanation, multiple error
-response specifications can be combined using the following pattern
-(see also <a href="#234">[234]</a>):</p>
+response specifications can be combined using the following pattern:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5140,7 +5151,7 @@ a clear description of the HTTP status code in the response.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="status-code-201"></a><a href="#status-code-201" class="status-code">201</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Created - Returned on successful entity creation. You are
 free to return either an empty response or the created resource in conjunction
-with the Location header. (More details found in the <a href="#common-headers">[common-headers]</a>.)
+with the Location header.
 <em>Always</em> set the Location header.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#post"><code>POST</code></a>, <a href="#put"><code>PUT</code></a></p></td>
 </tr>
@@ -5697,9 +5708,8 @@ you must stick to the common query parameter names defined in <a href="#137"><sp
 <div class="sect2">
 <h3 id="161"><a class="link" href="#161"><span class="may-keyword"><strong>MAY</strong></span> use pagination links where applicable</a></h3>
 <div class="paragraph">
-<p>To simplify client design, APIs should support <a href="#165">simplified hypertext
-controls</a> for paginating over collections whenever applicable as follows (see
-also <a href="#pagination-fields">[pagination-fields]</a> for details):</p>
+<p>To simplify client design, APIs should support simplified hypertext
+controls for paginating over collections whenever applicable as follows</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5772,7 +5782,7 @@ URI uses an absolute or relative path) introduces avoidable client side
 complexity. It also requires clarity on the base URI, which might not be given
 when using features like embedding subresources. The primary advantage of
 non-absolute URI is reduction of the payload size, which is better achievable
-by following the recommendation to use <a href="#156">gzip compression</a></p>
+by following the recommendation to use gzip compression.</p>
 </div>
 </div>
 <div class="sect2">
@@ -6201,7 +6211,7 @@ size.</p>
 <p><strong>Note:</strong> The <a href="#230"><code>Idempotency-Key</code></a> header unlike other headers in this section
 is not standardized in an RFC. Our only reference are the usage in the
 <a href="https://stripe.com/docs/api/idempotent_requests">Stripe API</a>. However, as it
-fit not into our section about <a href="#proprietary-headers">[proprietary-headers]</a>, and we did not want
+fit not into our section about proprietary-headers, and we did not want
 to change the header name and semantic, we decided to treat it as any other
 common header.</p>
 </div>
@@ -6407,8 +6417,8 @@ implementing RESTful APIs.</p>
 <div class="sect2">
 <h3 id="cursor-based-pagination"><a class="link" href="#cursor-based-pagination">Cursor-based pagination in RESTful APIs</a></h3>
 <div class="paragraph">
-<p>Cursor-based pagination is a very powerful and valuable technique (see also
-<a href="#160">[160]</a>, that allows to efficiently provide a stable view on changing data.
+<p>Cursor-based pagination is a very powerful and valuable technique,
+that allows to efficiently provide a stable view on changing data.
 This is obtained by using an anchor element that allows to retrieve all page
 elements directly via an ordering combined-index, usually based on <code>created_at</code>
 or <code>modified_at</code>. Simple said, the cursor is the information set needed to
@@ -6531,7 +6541,7 @@ entity first and specifically update this one. If another version has been
 created in the meantime, the update should fail. In order to make this work,
 the client has to provide some kind of version reference, which is checked by
 the service, before the update is executed. Please read the more detailed
-description on how to update resources via <a href="#put"><code>PUT</code></a> in the <a href="#put">HTTP Requests
+description on how to update resources via <a href="#put"><code>PUT</code></a> in the <a href="#updating-an-object-by-full-replacement">HTTP Requests
 Section</a>.</p>
 </div>
 <div class="paragraph">
@@ -6936,7 +6946,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-09-28 15:09:17 UTC
+Last updated 2021-12-06 20:51:31 UTC
 </div>
 </div>
 </body>

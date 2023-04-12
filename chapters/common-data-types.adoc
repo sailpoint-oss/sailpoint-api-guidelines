@@ -6,8 +6,6 @@ used in the guideline:
 
 * <<173, Money object>>
 * <<176, Problem object>>
-* <<address-fields, Address object>>
-
 
 [#173]
 == {MUST} use the common money object

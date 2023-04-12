@@ -292,9 +292,6 @@ to {RFC-7231}[RFC 7231]:
 | {TRACE}   | {YES} | {YES}      | {NO}
 |====================================================
 
-*Note:* <<227>>.
-
-
 [#229]
 == {SHOULD} consider to design `POST` and `PATCH` idempotent
 
@@ -418,7 +415,7 @@ provides the following benefits:
 ** Existing means are familiar to everyone
 
 <<json-guidelines, JSON-specific rules>> and most certainly needs to make use
-of the <<get-with-body, `GET`-with-body>> pattern.
+of the <<get-with-body-payload, `GET`-with-body>> pattern.
 
 
 === Example
@@ -465,8 +462,7 @@ Implicit filtering could be done on:
 * the fields returned for the detail information of the resource
 
 In such cases, the fact that implicit filtering is applied must be documented 
-in the API specification's endpoint description. Consider <<227,caching aspects>> 
-when implicit filtering is provided. Example:
+in the API specification's endpoint description. Example:
 
 If an employee of the company _Foo_ accesses one of our business-to-business
 service and performs a `{GET} /business-partners`, it must, for legal reasons,

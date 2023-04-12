@@ -93,7 +93,7 @@ You *should* use these formats, whenever applicable.
 | `string` | <<126, `time`>> | {RFC-3339}[RFC 3339] | `"06:43:40.252Z"`
 | `string` | `uri` | {RFC-3986}[RFC 3986] | `"https://www.sailpoint.de/"`
 | `string` | `uri-template` | {RFC-6570}[RFC 6570] | `"/users/\{id\}"`
-| `string` | <<144, `uuid`>> | {RFC-4122}[RFC 4122] | `"e2ab873e-b295-11e9-9c02-..."`
+| `string` | `uuid` | {RFC-4122}[RFC 4122] | `"e2ab873e-b295-11e9-9c02-..."`
 |=====================================================================
 
 *Remark:* Please note that this list of standard data formats is not exhaustive 

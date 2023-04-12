@@ -34,9 +34,8 @@ you must stick to the common query parameter names defined in <<137>>.
 [#161]
 == {MAY} use pagination links where applicable
 
-To simplify client design, APIs should support <<165, simplified hypertext
-controls>> for paginating over collections whenever applicable as follows (see
-also <<pagination-fields>> for details):
+To simplify client design, APIs should support simplified hypertext
+controls for paginating over collections whenever applicable as follows
 
 [source,json]
 ----

@@ -30,7 +30,7 @@ URI uses an absolute or relative path) introduces avoidable client side
 complexity. It also requires clarity on the base URI, which might not be given
 when using features like embedding subresources. The primary advantage of
 non-absolute URI is reduction of the payload size, which is better achievable
-by following the recommendation to use <<156,gzip compression>>
+by following the recommendation to use gzip compression.
 
 
 [#164]
