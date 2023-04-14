@@ -108,7 +108,8 @@ unknown.
 [#310]
 == {MUST} define a default value for boolean properties
 
-All boolean properties must have a default value defined
+All optional boolean properties must have a default value defined. If the property 
+is required, it is not required to have a default value.
 
 
 [#311]
