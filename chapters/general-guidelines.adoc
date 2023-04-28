@@ -108,48 +108,60 @@ get:
 Use this guide when creating your operationIds. Your operationId must start with one of the approved values for each method.
 
 *GET* methods that return an array
-[format=csv]
-|===
-`compare`,`export`,`get`
-`list`,`search`,
-|===
+
+* compare
+* export
+* get
+* list
+* search
 
 *GET* methods that return a single result
-[format=csv]
-|===
-`get`,`search`,`test`
-|===
+
+* get
+* search
+* test
 
 *POST* methods
-[format=csv]
-|===
-`approve`,`cancel`,`complete`
-`create`,`delete`,`disable`
-`enable`,  `export`,`hide`
-`import`,  `move`,  `ping`
-`reject`,  `reset`, `search`
-`send`,    `set`,    `show`
-`start`,   `submit`,`sync`
-`unlock`,  `unregister`, `update`
-|===
+
+* approve
+* cancel
+* complete
+* create
+* delete
+* disable
+* enable
+* export
+* hide
+* import
+* move
+* ping
+* reject
+* reset
+* search
+* send
+* set
+* show
+* start
+* submit
+* sync
+* unlock
+* unregister
+* update
 
 *PUT* methods
-[format=csv]
-|===
-`put`,`set`,
-|===
+
+* put
+* set
 
 *PATCH* methods
-[format=csv]
-|===
-`patch`,`update`,
-|===
+
+* patch
+* update
 
 *DELETE* methods
-[format=csv]
-|===
-`delete`,`remove`,
-|===
+
+* delete
+* remove
 
 
 [#103]
