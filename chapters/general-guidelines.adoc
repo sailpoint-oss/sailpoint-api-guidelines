@@ -85,5 +85,72 @@ Every operation (POST, PUT, PATCH, etc) may define one or more operation level e
 Certain tools, like Postman, have a limit on how many words can be displayed within the operation summary.  
 It is helpful for consumers to have short summaries that describe the operation at its most basic level to improve readability for consumers.
 
+[#400]
+== {MUST} provide a valid operationId in camelCase for each operation
+
+`operationId` is a unique string used to identify an operation. These IDs must be unique among all operations described in your API.
+
+Certain tools, like the OpenAPI Generator use this value to name the corresponding methods in code.
+
+The following `listAccessProfiles` is an example of an operationId.
+
+[source,yaml]
+----
+get:
+  operationId: listAccessProfiles
+  tags:
+    - Access Profiles
+  summary: List Access Profiles
+  description: >-
+    This API returns a list of Access Profiles.
+----
+
+Use this guide when creating your operationIds. Your operationId must start with one of the approved values for each method.
+
+*GET* methods that return an array
+[format=csv]
+|===
+`compare`,`export`,`get`
+`list`,`search`,
+|===
+
+*GET* methods that return a single result
+[format=csv]
+|===
+`get`,`search`,`test`
+|===
+
+*POST* methods
+[format=csv]
+|===
+`approve`,`cancel`,`complete`
+`create`,`delete`,`disable`
+`enable`,  `export`,`hide`
+`import`,  `move`,  `ping`
+`reject`,  `reset`, `search`
+`send`,    `set`,    `show`
+`start`,   `submit`,`sync`
+`unlock`,  `unregister`, `update`
+|===
+
+*PUT* methods
+[format=csv]
+|===
+`put`,`set`,
+|===
+
+*PATCH* methods
+[format=csv]
+|===
+`patch`,`update`,
+|===
+
+*DELETE* methods
+[format=csv]
+|===
+`delete`,`remove`,
+|===
+
+
 [#103]
 == {MUST} write APIs using U.S. English
