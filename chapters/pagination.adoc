@@ -12,7 +12,7 @@ just a few hundred entries.
 
 There are two well known page iteration techniques:
 
-* https://developer.infoconnect.com/paging-results[Offset/Limit-based
+* https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-results[Offset/Limit-based
   pagination]: numeric offset identifies the first page entry
 * https://dev.twitter.com/overview/api/cursoring[Cursor/Limit-based] — aka
   key-based — pagination: a unique key element identifies the first page entry
@@ -25,7 +25,7 @@ https://www.smashingmagazine.com/2016/03/pagination-infinite-scrolling-load-more
 jumping to a specific page is far less used than navigation via {next}/{prev}
 page links.
 
-We currently prefer to use https://developer.infoconnect.com/paging-results[Offset/Limit-based pagination].
+We currently prefer to use https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-results[Offset/Limit-based pagination].
 
 **Note:** To provide a consistent look and feel of pagination patterns,
 you must stick to the common query parameter names defined in <<137>>.
