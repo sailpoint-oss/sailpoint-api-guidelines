@@ -135,7 +135,7 @@ codes:
 
 
 [#171]
-== {MUST} define format for number and integer types
+== {MUST} define format for number and integer types icon:check-square[text="Test" role="lime"]
 
 Whenever an API defines a property of type `number` or `integer`, the
 precision must be defined by the format as follows to prevent clients

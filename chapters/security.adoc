@@ -3,7 +3,7 @@
 
 
 [#104]
-== {MUST} secure endpoints with OAuth 2.0
+== {MUST} secure endpoints with OAuth 2.0 icon:check-square[text="Test" role="lime"]
 
 Every public API endpoint must be secured using OAuth 2.0.
 
@@ -43,7 +43,7 @@ security:
 
 
 [#105]
-== {MUST} define and assign permissions (scopes)
+== {MUST} define and assign permissions (scopes) icon:check-square[text="Test" role="lime"]
 
 Each endpoint must document every https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/beta/securitySchemes/OAuth2.yaml[AMS right, role=external, window=_blank] 
 needed to access the endpoint.  If creating a new AMS right that doesn’t exist in the list, then it must be added to the list first.
