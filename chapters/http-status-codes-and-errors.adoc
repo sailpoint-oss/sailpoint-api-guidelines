@@ -3,7 +3,7 @@
 
 
 [#151]
-== {MUST} specify success and error responses
+== {MUST} specify success and error responses icon:check-square[text="Test" role="lime"]
 
 APIs should define the functional, business view and abstract from
 implementation aspects. Success and error responses are a vital part to

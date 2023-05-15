@@ -44,7 +44,7 @@ Must notify customers using deprecated APIs on a timely basis to help them move 
 
 
 [#189]
-== {SHOULD} add `Deprecation` and `Sunset` header to responses
+== {SHOULD} add `Deprecation` and `Sunset` header to responses icon:check-square[text="Test" role="lime"]
 
 During the deprecation phase, the producer should add a `Deprecation: <date-time>`
 (see https://tools.ietf.org/html/draft-ietf-httpapi-deprecation-header[draft: RFC

@@ -1,9 +1,8 @@
 [[pagination]]
 = Pagination
 
-
 [#159]
-== {MUST} support pagination
+== {MUST} support pagination 
 
 Access to lists of data items must support pagination to protect the service
 against overload as well as for best client side iteration and batch processing

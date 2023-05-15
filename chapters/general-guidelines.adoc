@@ -66,12 +66,12 @@ It is important to provide extra documentation for our developers to reduce the 
 ====
 
 [#303]
-== {MUST} describe every parameter and property
+== {MUST} describe every parameter and property icon:check-square[text="Test" role="lime"]
 
 Every query/path parameter and request/response property in the API specification must have a description
 
 [#304]
-== {MUST} provide an example for every parameter and property
+== {MUST} provide an example for every parameter and property icon:check-square[text="Test" role="lime"]
 
 Every query/path parameter and request/response property in the API specification must have an accurate example.  
 An accurate example will show the API consumer what an input/output value will realistically look like, and could even be used in a real request/response.
@@ -80,13 +80,13 @@ However, take care to not use personally identifiable information or secrets in 
 Every operation (POST, PUT, PATCH, etc) may define one or more operation level examples.
 
 [#305]
-== {SHOULD} keep operation summaries at five or less words
+== {SHOULD} keep operation summaries at five or less words icon:check-square[text="Test" role="lime"]
 
 Certain tools, like Postman, have a limit on how many words can be displayed within the operation summary.  
 It is helpful for consumers to have short summaries that describe the operation at its most basic level to improve readability for consumers.
 
 [#400]
-== {MUST} provide a valid operationId in camelCase for each operation
+== {MUST} provide a valid operationId in camelCase for each operation icon:check-square[text="Test" role="lime"]
 
 `operationId` is a unique string used to identify an operation. These IDs must be unique among all operations described in your API.
 

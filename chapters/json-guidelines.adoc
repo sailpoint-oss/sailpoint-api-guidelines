@@ -106,7 +106,7 @@ unknown.
 
 
 [#310]
-== {MUST} define a default value for boolean properties
+== {MUST} define a default value for boolean properties icon:check-square[text="Test" role="lime"]
 
 All optional boolean properties must have a default value defined. If the property 
 is required, it is not required to have a default value.
@@ -245,7 +245,7 @@ know what value will be used should they ignore a property.
 
 
 [#317]
-== {MUST} define the “required” attribute for request/response objects and parameters
+== {MUST} define the “required” attribute for request/response objects and parameters icon:check-square[text="Test" role="lime"]
 
 All request/response schemas MUST define the “required” attribute for each property and parameter per the OpenAPI specification.
 

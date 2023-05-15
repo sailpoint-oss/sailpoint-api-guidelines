@@ -18,11 +18,11 @@
     },
     {
       "id": "#104",
-      "title": "MUST secure endpoints with OAuth 2.0"
+      "title": "MUST secure endpoints with OAuth 2.0 icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#105",
-      "title": "MUST define and assign permissions (scopes)"
+      "title": "MUST define and assign permissions (scopes) icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#106",
@@ -174,7 +174,7 @@
     },
     {
       "id": "#151",
-      "title": "MUST specify success and error responses"
+      "title": "MUST specify success and error responses icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#152",
@@ -198,7 +198,7 @@
     },
     {
       "id": "#159",
-      "title": "MUST support pagination"
+      "title": "MUST support pagination "
     },
     {
       "id": "#161",
@@ -234,7 +234,7 @@
     },
     {
       "id": "#171",
-      "title": "MUST define format for number and integer types"
+      "title": "MUST define format for number and integer types icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#172",
@@ -286,7 +286,7 @@
     },
     {
       "id": "#189",
-      "title": "SHOULD add `Deprecation` and `Sunset` header to responses"
+      "title": "SHOULD add `Deprecation` and `Sunset` header to responses icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#190",
@@ -382,15 +382,15 @@
     },
     {
       "id": "#303",
-      "title": "MUST describe every parameter and property"
+      "title": "MUST describe every parameter and property icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#304",
-      "title": "MUST provide an example for every parameter and property"
+      "title": "MUST provide an example for every parameter and property icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#305",
-      "title": "SHOULD keep operation summaries at five or less words"
+      "title": "SHOULD keep operation summaries at five or less words icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#306",
@@ -410,7 +410,7 @@
     },
     {
       "id": "#310",
-      "title": "MUST define a default value for boolean properties"
+      "title": "MUST define a default value for boolean properties icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#311",
@@ -438,7 +438,7 @@
     },
     {
       "id": "#317",
-      "title": "MUST define the “required” attribute for request/response objects and parameters"
+      "title": "MUST define the “required” attribute for request/response objects and parameters icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#318",
@@ -466,7 +466,7 @@
     },
     {
       "id": "#400",
-      "title": "MUST provide a valid operationId in camelCase for each operation"
+      "title": "MUST provide a valid operationId in camelCase for each operation icon:check-square[text=\"Test\" role=\"lime\"]"
     }
   ]
 }
