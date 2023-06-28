@@ -52,7 +52,18 @@ prevent this.
 === Reading a List of Objects
 
 * Modeled as `GET /.../plural-noun`.
-* On success, returns a 200 with a JSON array of objects enveloped inside an object.  By returning 
+* For *API version 3*, on success, returns a 200 with an array of objects.
+[source,json]
+----
+[
+  {
+    "id": "123",
+    "name": "John"
+  },
+  ...
+]
+----
+* *Proposed for API version 4*, on success, returns a 200 with a JSON array of objects enveloped inside an object.  By returning 
 an object as the top level for all responses, we allow our APIs to extend without breaking backwards 
 compatibility.  If there was ever a need to add an additional field to a response that returns an 
 array (ex. pagination links in the body), then we would need to break the API by wrapping it in an 
