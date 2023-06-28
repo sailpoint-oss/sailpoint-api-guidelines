@@ -68,9 +68,6 @@ an object as the top level for all responses, we allow our APIs to extend withou
 compatibility.  If there was ever a need to add an additional field to a response that returns an 
 array (ex. pagination links in the body), then we would need to break the API by wrapping it in an 
 object.  By requiring objects at the top level from the start, we avoid this in the future.
-* A response object for a list of results must contain an array of `results`.  Other properties are
-optional.
-
 [source,json]
 ----
 {
