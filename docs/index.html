@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <meta name="keywords" content="SailPoint, Guidelines, RESTful, API, Events, Schema">
 <meta name="copyright" content="CC-BY-SA 4.0">
 <title>SailPoint RESTful API Guidelines</title>
@@ -4449,24 +4449,38 @@ prevent this.</p>
 <p>Modeled as <code>GET /&#8230;&#8203;/plural-noun</code>.</p>
 </li>
 <li>
-<p>On success, returns a 200 with a JSON array of objects enveloped inside an object.  By returning
-an object as the top level for all responses, we allow our APIs to extend without breaking backwards
-compatibility.  If there was ever a need to add an additional field to a response that returns an
-array (ex. pagination links in the body), then we would need to break the API by wrapping it in an
-object.  By requiring objects at the top level from the start, we avoid this in the future.</p>
-</li>
-<li>
-<p>A response object for a list of results must contain an array of <code>results</code>.  Other properties are
-optional.</p>
+<p>For <strong>API version 3</strong>, on success, returns a 200 with an array of objects.</p>
 </li>
 </ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="json">{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">results</span><span class="delimiter">&quot;</span></span>: [<span class="error">.</span><span class="error">.</span><span class="error">.</span>],
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">count</span><span class="delimiter">&quot;</span></span>: <span class="error">.</span><span class="error">.</span><span class="error">.</span>
-}</code></pre>
+<pre>[
+  {
+    "id": "123",
+    "name": "John"
+  },
+  ...
+]</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Proposed for API version 4</strong>, on success, returns a 200 with a JSON array of objects enveloped inside an object.  By returning
+an object as the top level for all responses, we allow our APIs to extend without breaking backwards
+compatibility.  If there was ever a need to add an additional field to a response that returns an
+array (ex. pagination links in the body), then we would need to break the API by wrapping it in an
+object.  By requiring objects at the top level from the start, we avoid this in the future.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>{
+  "results": [...],
+  "count": ...
+}</pre>
 </div>
 </div>
 <div class="ulist">
@@ -7131,7 +7145,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-05-15 18:51:11 UTC
+Last updated 2023-06-28 16:34:35 UTC
 </div>
 </div>
 </body>
