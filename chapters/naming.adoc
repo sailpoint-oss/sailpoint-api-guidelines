@@ -123,3 +123,22 @@ Note:  Additional query parameters are allowed, but effort should be made to fit
 
 The customer organization is provided in the session context that is generated on the back end, and therefore does not need to be in the URL.
 
+[#504]
+== {MUST} Reserved keywords must not be used in properties
+
+There are reserved keywords for Open API specifications. The properties you use to describe your API response must not include any of the following keywords.
+
+* type 
+* format 
+* description 
+* items 
+* properties 
+* additionalProperties 
+* default 
+* allOf 
+* oneOf 
+* anyOf 
+* not 
+
+
+https://swagger.io/docs/specification/data-models/keywords/
