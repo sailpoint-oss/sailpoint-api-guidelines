@@ -231,7 +231,7 @@ snippet is an example of how to properly format the description for `filters`.
 - Always bold the property name using two asterisks before and after the name.
 - Only document one property per line.
 - Always italicize the operators by using a single asterisk before an after the list of operators.
-- Only use the operators [listed here](https://developer.sailpoint.com/idn/api/standard-collection-parameters#filter-syntax). If you are introducing a new operator not in the list, please contact the Developer Relations team to update the list.
+- Only use the operators https://developer.sailpoint.com/idn/api/standard-collection-parameters#filter-syntax[listed here]. If you are introducing a new operator not in the list, please contact the Developer Relations team to update the list.
 - Always use a comma and a space to separate operators.
 - Do not add any additional text in the description, such as examples, clarifications, etc.
 
