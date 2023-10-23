@@ -1,11 +1,13 @@
 [[common-data-types]]
 = Common data types
 
+
 Definitions of data objects that are good candidates for wider usage. Below you can find a list of common data types
 used in the guideline:
 
 * <<173, Money object>>
 * <<176, Problem object>>
+
 
 [#173]
 == {MUST} use the common money object
@@ -97,4 +99,3 @@ numbers as float / doubles.
 == {MUST} use common field names and semantics
 
 TBD
-

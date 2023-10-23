@@ -1502,6 +1502,8 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#169"><span class="must-keyword"><strong>MUST</strong></span> use standard date and time formats</a></li>
 <li><a href="#170"><span class="must-keyword"><strong>MUST</strong></span> use standards for country, language and currency codes</a></li>
 <li><a href="#171"><span class="must-keyword"><strong>MUST</strong></span> define format for number and integer types <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
+<li><a href="#324"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>filters</code> query param</a></li>
+<li><a href="#325"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>sorters</code> query param</a></li>
 </ul>
 </li>
 <li><a href="#common-data-types">10. Common data types</a>
@@ -3849,6 +3851,126 @@ specific language types in Java will translate to <code>BigDecimal</code> for
           <span class="key">format</span>: <span class="string"><span class="content">int32</span></span>
           <span class="key">example</span>: <span class="string"><span class="content">42</span></span></code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="324"><a class="link" href="#324"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>filters</code> query param</a></h3>
+<div class="paragraph">
+<p>The OpenAPI specification does not provide dedicated properties for defining filters,
+so filters must be defined in the description of the <code>filters</code> query param.  Our users
+and our tooling rely on filter descriptions following a strict format.  The following
+snippet is an example of how to properly format the description for <code>filters</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">in</span>: <span class="string"><span class="content">query</span></span>
+<span class="key">name</span>: <span class="string"><span class="content">filters</span></span>
+<span class="key">schema</span>:
+  <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+<span class="key">description</span>: <span class="string"><span class="delimiter">&gt;-</span><span class="content">
+  Filter results using the standard syntax described in [V3 API Standard Collection Parameters](https://developer.sailpoint.com/idn/api/standard-collection-parameters#filtering-results)
+
+
+  Filtering is supported for the following fields and operators:
+
+
+  **id**: *eq, in*
+
+
+  **name**: *eq, sw*
+
+
+  **created**: *gt, lt, ge, le*
+
+
+  **modified**: *gt, lt, ge, le*
+
+
+  **owner.id**: *eq, in*
+
+
+  **requestable**: *eq*
+
+
+  **source.id**: *eq, in*</span></span>
+<span class="key">example</span>: <span class="string"><span class="content">name eq &quot;SailPoint Support&quot;</span></span>
+<span class="key">required</span>: <span class="string"><span class="content">false</span></span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Always include the first two lines in your description to point users towards the extended documenation.</p>
+</li>
+<li>
+<p>Always use two new lines between lines. The use of one new line will result in the text not displaying on separate lines in the API documentaiton.</p>
+</li>
+<li>
+<p>Always bold the property name using two asterisks before and after the name.</p>
+</li>
+<li>
+<p>Only document one property per line.</p>
+</li>
+<li>
+<p>Always italicize the operators by using a single asterisk before an after the list of operators.</p>
+</li>
+<li>
+<p>Only use the operators <a href="https://developer.sailpoint.com/idn/api/standard-collection-parameters#filter-syntax">listed here</a>. If you are introducing a new operator not in the list, please contact the Developer Relations team to update the list.</p>
+</li>
+<li>
+<p>Always use a comma and a space to separate operators.</p>
+</li>
+<li>
+<p>Do not add any additional text in the description, such as examples, clarifications, etc.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="325"><a class="link" href="#325"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>sorters</code> query param</a></h3>
+<div class="paragraph">
+<p>The OpenAPI specification does not provide dedicated properties for defining sorter,
+so sorters must be defined in the description of the <code>sorters</code> query param.  Our users
+and our tooling rely on filter descriptions following a strict format.  The following
+snippet is an example of how to properly format the description for <code>sorters</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">in</span>: <span class="string"><span class="content">query</span></span>
+<span class="key">name</span>: <span class="string"><span class="content">sorters</span></span>
+<span class="key">schema</span>:
+  <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+  <span class="key">format</span>: <span class="string"><span class="content">comma-separated</span></span>
+<span class="key">description</span>: <span class="string"><span class="delimiter">&gt;-</span><span class="content">
+  Sort results using the standard syntax described in [V3 API Standard Collection Parameters](https://developer.sailpoint.com/idn/api/standard-collection-parameters#sorting-results)
+
+
+  Sorting is supported for the following fields: **name, created, modified**</span></span>
+<span class="key">example</span>: <span class="string"><span class="content">name,-modified</span></span>
+<span class="key">required</span>: <span class="string"><span class="content">false</span></span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Always include the first line in your description to point users towards the extended documenation.</p>
+</li>
+<li>
+<p>Always use two new lines between lines. The use of one new line will result in the text not displaying on separate lines in the API documentaiton.</p>
+</li>
+<li>
+<p>The second line must start with "Sorting is supported for the following fields:"</p>
+</li>
+<li>
+<p>Wrap all supported properties in double asterisks to make them bold.</p>
+</li>
+<li>
+<p>Use a comma and a space to separate supported properties.</p>
+</li>
+<li>
+<p>Do not add any additional lines or text in the description. There should only be two lines: the extended documentation and the list of supporter properties.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -7192,7 +7314,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-28 16:34:35 UTC
+Last updated 2023-10-23 14:09:12 UTC
 </div>
 </div>
 </body>
