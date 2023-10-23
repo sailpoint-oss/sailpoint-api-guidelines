@@ -1502,15 +1502,13 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#169"><span class="must-keyword"><strong>MUST</strong></span> use standard date and time formats</a></li>
 <li><a href="#170"><span class="must-keyword"><strong>MUST</strong></span> use standards for country, language and currency codes</a></li>
 <li><a href="#171"><span class="must-keyword"><strong>MUST</strong></span> define format for number and integer types <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
-</ul>
-</li>
-<li><a href="#common-data-types">10. Common data types</a>
-<ul class="sectlevel2">
+<li><a href="#324"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>filters</code> query param</a></li>
+<li><a href="#325"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>sorters</code> query param</a></li>
 <li><a href="#173"><span class="must-keyword"><strong>MUST</strong></span> use the common money object</a></li>
 <li><a href="#174"><span class="must-keyword"><strong>MUST</strong></span> use common field names and semantics</a></li>
 </ul>
 </li>
-<li><a href="#api-naming">11. API naming</a>
+<li><a href="#api-naming">10. API naming</a>
 <ul class="sectlevel2">
 <li><a href="#223"><span class="must-keyword"><strong>MUST</strong></span>/<span class="should-keyword"><strong>SHOULD</strong></span> use functional naming schema</a></li>
 <li><a href="#129"><span class="must-keyword"><strong>MUST</strong></span> use lowercase separate words with hyphens for path segments</a></li>
@@ -1523,7 +1521,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#504"><span class="must-keyword"><strong>MUST</strong></span> Reserved keywords must not be used in properties</a></li>
 </ul>
 </li>
-<li><a href="#resources">12. Resources</a>
+<li><a href="#resources">11. Resources</a>
 <ul class="sectlevel2">
 <li><a href="#138"><span class="should-keyword"><strong>SHOULD</strong></span> avoid actions — think about resources</a></li>
 <li><a href="#139"><span class="should-keyword"><strong>SHOULD</strong></span> model complete business processes</a></li>
@@ -1538,7 +1536,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#147"><span class="should-keyword"><strong>SHOULD</strong></span> limit number of sub-resource levels</a></li>
 </ul>
 </li>
-<li><a href="#http-requests">13. HTTP requests and responses</a>
+<li><a href="#http-requests">12. HTTP requests and responses</a>
 <ul class="sectlevel2">
 <li><a href="#148"><span class="must-keyword"><strong>MUST</strong></span> use HTTP methods correctly</a></li>
 <li><a href="#149"><span class="must-keyword"><strong>MUST</strong></span> fulfill common method properties</a></li>
@@ -1550,7 +1548,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#226"><span class="must-keyword"><strong>MUST</strong></span> document implicit filtering</a></li>
 </ul>
 </li>
-<li><a href="#http-status-codes-and-errors">14. HTTP status codes and errors</a>
+<li><a href="#http-status-codes-and-errors">13. HTTP status codes and errors</a>
 <ul class="sectlevel2">
 <li><a href="#151"><span class="must-keyword"><strong>MUST</strong></span> specify success and error responses <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#150"><span class="must-keyword"><strong>MUST</strong></span> use standard HTTP status codes</a></li>
@@ -1561,19 +1559,19 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#177"><span class="must-keyword"><strong>MUST</strong></span> not expose stack traces</a></li>
 </ul>
 </li>
-<li><a href="#performance">15. Performance</a>
+<li><a href="#performance">14. Performance</a>
 <ul class="sectlevel2">
 <li><a href="#157"><span class="should-keyword"><strong>SHOULD</strong></span> support partial responses via filtering</a></li>
 <li><a href="#158"><span class="should-keyword"><strong>SHOULD</strong></span> allow optional embedding of sub-resources</a></li>
 </ul>
 </li>
-<li><a href="#pagination">16. Pagination</a>
+<li><a href="#pagination">15. Pagination</a>
 <ul class="sectlevel2">
 <li><a href="#159"><span class="must-keyword"><strong>MUST</strong></span> support pagination</a></li>
 <li><a href="#161"><span class="may-keyword"><strong>MAY</strong></span> use pagination links where applicable</a></li>
 </ul>
 </li>
-<li><a href="#hypermedia">17. Hypermedia</a>
+<li><a href="#hypermedia">16. Hypermedia</a>
 <ul class="sectlevel2">
 <li><a href="#162"><span class="must-keyword"><strong>MUST</strong></span> use REST maturity level 2</a></li>
 <li><a href="#217"><span class="should-keyword"><strong>SHOULD</strong></span> use full, absolute URI</a></li>
@@ -1581,7 +1579,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#166"><span class="must-keyword"><strong>MUST</strong></span> not use link headers with JSON entities</a></li>
 </ul>
 </li>
-<li><a href="#standard-headers">18. Standard headers</a>
+<li><a href="#standard-headers">17. Standard headers</a>
 <ul class="sectlevel2">
 <li><a href="#133"><span class="may-keyword"><strong>MAY</strong></span> use standardized headers</a></li>
 <li><a href="#132"><span class="should-keyword"><strong>SHOULD</strong></span> use uppercase separate words with hyphens for HTTP headers</a></li>
@@ -1593,7 +1591,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#230"><span class="may-keyword"><strong>MAY</strong></span> consider to support <code>Idempotency-Key</code> header</a></li>
 </ul>
 </li>
-<li><a href="#api-operation">19. API Operation</a>
+<li><a href="#api-operation">18. API Operation</a>
 <ul class="sectlevel2">
 <li><a href="#192"><span class="must-keyword"><strong>MUST</strong></span> publish OpenAPI specification</a></li>
 <li><a href="#193"><span class="must-keyword"><strong>MUST</strong></span> monitor API usage</a></li>
@@ -3851,11 +3849,126 @@ specific language types in Java will translate to <code>BigDecimal</code> for
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="324"><a class="link" href="#324"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>filters</code> query param</a></h3>
+<div class="paragraph">
+<p>The OpenAPI specification does not provide dedicated properties for defining filters,
+so filters must be defined in the description of the <code>filters</code> query param.  Our users
+and our tooling rely on filter descriptions following a strict format.  The following
+snippet is an example of how to properly format the description for <code>filters</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">- <span class="string"><span class="content">in: query</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">filters</span></span>
+  <span class="key">schema</span>:
+    <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+  <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;-</span><span class="content">
+    Filter results using the standard syntax described in [V3 API Standard Collection Parameters](https://developer.sailpoint.com/idn/api/standard-collection-parameters#filtering-results)
+
+
+    Filtering is supported for the following fields and operators:
+
+
+    **id**: *eq, in*
+
+
+    **name**: *eq, sw*
+
+
+    **created**: *gt, lt, ge, le*
+
+
+    **modified**: *gt, lt, ge, le*
+
+
+    **owner.id**: *eq, in*
+
+
+    **requestable**: *eq*
+
+
+    **source.id**: *eq, in*</span></span>
+  <span class="key">example</span>: <span class="string"><span class="content">name eq &quot;SailPoint Support&quot;</span></span>
+  <span class="key">required</span>: <span class="string"><span class="content">false</span></span></code></pre>
 </div>
 </div>
-<div class="sect1">
-<h2 id="common-data-types"><a class="link" href="#common-data-types">10. Common data types</a></h2>
-<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Always include the first two lines in your description to point users towards the extended documenation.</p>
+</li>
+<li>
+<p>Always use two new lines between lines. The use of one new line will result in the text not displaying on separate lines in the API documentaiton.</p>
+</li>
+<li>
+<p>Always bold the property name using two asterisks before and after the name.</p>
+</li>
+<li>
+<p>Only document one property per line.</p>
+</li>
+<li>
+<p>Always italicize the operators by using a single asterisk before an after the list of operators.</p>
+</li>
+<li>
+<p>Only use the operators [listed here](<a href="https://developer.sailpoint.com/idn/api/standard-collection-parameters#filter-syntax" class="bare">https://developer.sailpoint.com/idn/api/standard-collection-parameters#filter-syntax</a>). If you are introducing a new operator not in the list, please contact the Developer Relations team to update the list.</p>
+</li>
+<li>
+<p>Always use a comma and a space to separate operators.</p>
+</li>
+<li>
+<p>Do not add any additional text in the description, such as examples, clarifications, etc.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="325"><a class="link" href="#325"><span class="must-keyword"><strong>MUST</strong></span> use proper description format for the <code>sorters</code> query param</a></h3>
+<div class="paragraph">
+<p>The OpenAPI specification does not provide dedicated properties for defining sorter,
+so sorters must be defined in the description of the <code>sorters</code> query param.  Our users
+and our tooling rely on filter descriptions following a strict format.  The following
+snippet is an example of how to properly format the description for <code>sorters</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">- <span class="string"><span class="content">in: query</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">sorters</span></span>
+  <span class="key">schema</span>:
+    <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+    <span class="key">format</span>: <span class="string"><span class="content">comma-separated</span></span>
+  <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;-</span><span class="content">
+    Sort results using the standard syntax described in [V3 API Standard Collection Parameters](https://developer.sailpoint.com/idn/api/standard-collection-parameters#sorting-results)
+
+
+    Sorting is supported for the following fields: **name, created, modified**</span></span>
+  <span class="key">example</span>: <span class="string"><span class="content">name,-modified</span></span>
+  <span class="key">required</span>: <span class="string"><span class="content">false</span></span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Always include the first line in your description to point users towards the extended documenation.</p>
+</li>
+<li>
+<p>Always use two new lines between lines. The use of one new line will result in the text not displaying on separate lines in the API documentaiton.</p>
+</li>
+<li>
+<p>The second line must start with "Sorting is supported for the following fields:"</p>
+</li>
+<li>
+<p>Wrap all supported properties in double asterisks to make them bold.</p>
+</li>
+<li>
+<p>Use a comma and a space to separate supported properties.</p>
+</li>
+<li>
+<p>Do not add any additional lines or text in the description. There should only be two lines: the extended documentation and the list of supporter properties.
+= Common data types</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>Definitions of data objects that are good candidates for wider usage. Below you can find a list of common data types
 used in the guideline:</p>
@@ -3869,6 +3982,7 @@ used in the guideline:</p>
 <p><a href="#176">Problem object</a></p>
 </li>
 </ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="173"><a class="link" href="#173"><span class="must-keyword"><strong>MUST</strong></span> use the common money object</a></h3>
@@ -4027,7 +4141,7 @@ numbers as float / doubles.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="api-naming"><a class="link" href="#api-naming">11. API naming</a></h2>
+<h2 id="api-naming"><a class="link" href="#api-naming">10. API naming</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="223"><a class="link" href="#223"><span class="must-keyword"><strong>MUST</strong></span>/<span class="should-keyword"><strong>SHOULD</strong></span> use functional naming schema</a></h3>
@@ -4229,7 +4343,7 @@ for implementation details for each of the above parameters.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="resources"><a class="link" href="#resources">12. Resources</a></h2>
+<h2 id="resources"><a class="link" href="#resources">11. Resources</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="138"><a class="link" href="#138"><span class="should-keyword"><strong>SHOULD</strong></span> avoid actions — think about resources</a></h3>
@@ -4409,7 +4523,7 @@ than 2000 characters.)</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="http-requests"><a class="link" href="#http-requests">13. HTTP requests and responses</a></h2>
+<h2 id="http-requests"><a class="link" href="#http-requests">12. HTTP requests and responses</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="148"><a class="link" href="#148"><span class="must-keyword"><strong>MUST</strong></span> use HTTP methods correctly</a></h3>
@@ -5276,7 +5390,7 @@ also with company <em>Bar</em>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="http-status-codes-and-errors"><a class="link" href="#http-status-codes-and-errors">14. HTTP status codes and errors</a></h2>
+<h2 id="http-status-codes-and-errors"><a class="link" href="#http-status-codes-and-errors">13. HTTP status codes and errors</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="151"><a class="link" href="#151"><span class="must-keyword"><strong>MUST</strong></span> specify success and error responses <span class="icon lime"><i class="fa fa-check-square"></i></span></a></h3>
@@ -5767,7 +5881,7 @@ receive and may disclose insights about vulnerabilities to attackers.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="performance"><a class="link" href="#performance">15. Performance</a></h2>
+<h2 id="performance"><a class="link" href="#performance">14. Performance</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="157"><a class="link" href="#157"><span class="should-keyword"><strong>SHOULD</strong></span> support partial responses via filtering</a></h3>
@@ -5909,7 +6023,7 @@ resource has its order items as sub-resource (/order/{orderId}/items):</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pagination"><a class="link" href="#pagination">16. Pagination</a></h2>
+<h2 id="pagination"><a class="link" href="#pagination">15. Pagination</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="159"><a class="link" href="#159"><span class="must-keyword"><strong>MUST</strong></span> support pagination</a></h3>
@@ -5985,7 +6099,7 @@ the ability to support serving counts over the life of a service.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="hypermedia"><a class="link" href="#hypermedia">17. Hypermedia</a></h2>
+<h2 id="hypermedia"><a class="link" href="#hypermedia">16. Hypermedia</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="162"><a class="link" href="#162"><span class="must-keyword"><strong>MUST</strong></span> use REST maturity level 2</a></h3>
@@ -6123,7 +6237,7 @@ As a result, the use of the <a href="https://tools.ietf.org/html/rfc8288#section
 </div>
 </div>
 <div class="sect1">
-<h2 id="standard-headers"><a class="link" href="#standard-headers">18. Standard headers</a></h2>
+<h2 id="standard-headers"><a class="link" href="#standard-headers">17. Standard headers</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes a handful of standard headers, which we found raising the most
@@ -6465,7 +6579,7 @@ common header.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="api-operation"><a class="link" href="#api-operation">19. API Operation</a></h2>
+<h2 id="api-operation"><a class="link" href="#api-operation">18. API Operation</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="192"><a class="link" href="#192"><span class="must-keyword"><strong>MUST</strong></span> publish OpenAPI specification</a></h3>
@@ -7192,7 +7306,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-28 16:34:35 UTC
+Last updated 2023-06-28 16:30:12 UTC
 </div>
 </div>
 </body>
