@@ -38,7 +38,7 @@ The next code snippet applies this security scheme to all API endpoints. The bea
 [source,yaml]
 ----
 security:
-    - oauth2: [ scope_1, scope_2 ]
+    - UserContextAuth: [ scope_1, scope_2 ]
 ----
 
 
@@ -52,7 +52,7 @@ To appropriately document AMS rights on an endpoint, use the following OpenAPI p
 [source,yaml]
 ----
 security:
-  - oauth2:
+  - UserContextAuth:
      - 'idn:task-definition:read'
      - 'idn:task-definition:write'
 ----
@@ -74,7 +74,7 @@ get:
           schema:
             $ref: '../schemas/Tenant.yaml'
   security:
-    - oauth2:
+    - UserContextAuth:
         - 'idn:accounts:read'
 ----
 
