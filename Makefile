@@ -1,4 +1,4 @@
-DOCKER := asciidoctor/docker-asciidoctor:latest
+DOCKER := asciidoctor/docker-asciidoctor:1.60.0
 DIRMOUNTS := /documents
 DIRCONTENTS := chapters
 DIRSCRIPTS := scripts
