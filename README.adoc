@@ -24,7 +24,27 @@ to challenge their APIs. As such, you should consider this to be a
 living, evolving document. We will revise and update based on our
 learnings and experiences.
 
-See link:BUILD.adoc[BUILD documentation] for technical details.
+== Build
+
+=== Build HTML site, PDF and EPUB3 locally
+
+You must have Docker installed and running before executing the below command.
+
+[source,bash]
+----
+make all
+----
+
+=== Generate Custom CSS
+
+In order to generate custom CSS we have to use http://asciidoctor.org/docs/user-manual/#stylesheet-factory[`stylesheet-factory`]
+
+This script clones the factory repository, installs the dependencies and generates CSS based in the `zalando.scss`
+
+[source,bash]
+----
+.scripts/build-css.sh
+----
 
 == License
 
