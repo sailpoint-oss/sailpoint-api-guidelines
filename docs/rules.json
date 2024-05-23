@@ -475,10 +475,6 @@
     {
       "id": "#400",
       "title": "MUST provide a valid operationId in camelCase for each operation icon:check-square[text=\"Test\" role=\"lime\"]"
-    },
-    {
-      "id": "#504",
-      "title": "MUST Reserved keywords must not be used in properties"
     }
   ]
 }
