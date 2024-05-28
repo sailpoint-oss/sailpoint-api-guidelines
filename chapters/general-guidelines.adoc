@@ -163,6 +163,21 @@ Use this guide when creating your operationIds. Your operationId must start with
 * delete
 * remove
 
+[#402]
+== {MUST} provide a valid tag for each operation icon:check-square[text="Test" role="lime"]
+
+Each operation must be assigned exactly one tag that categorizes it. No operation should have more than one tag.
+
+This tag must also exist in the root specification.
+
+[source,yaml]
+----
+get:
+  operationId: listAccessProfiles
+  tags:
+    - Access Profiles
+----
+
 
 [#103]
 == {MUST} write APIs using U.S. English

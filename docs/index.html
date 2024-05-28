@@ -1429,6 +1429,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#304"><span class="must-keyword"><strong>MUST</strong></span> provide an example for every parameter and property <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#305"><span class="should-keyword"><strong>SHOULD</strong></span> keep operation summaries at five or less words <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#400"><span class="must-keyword"><strong>MUST</strong></span> provide a valid operationId in camelCase for each operation <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
+<li><a href="#402"><span class="must-keyword"><strong>MUST</strong></span> provide a valid tag for each operation <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#103"><span class="must-keyword"><strong>MUST</strong></span> write APIs using U.S. English</a></li>
 </ul>
 </li>
@@ -2251,6 +2252,23 @@ It is helpful for consumers to have short summaries that describe the operation 
 <p>remove</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="402"><a class="link" href="#402"><span class="must-keyword"><strong>MUST</strong></span> provide a valid tag for each operation <span class="icon lime"><i class="fa fa-check-square"></i></span></a></h3>
+<div class="paragraph">
+<p>Each operation must be assigned exactly one tag that categorizes it. No operation should have more than one tag.</p>
+</div>
+<div class="paragraph">
+<p>This tag must also exist in the root specification.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">get</span>:
+  <span class="key">operationId</span>: <span class="string"><span class="content">listAccessProfiles</span></span>
+  <span class="key">tags</span>:
+    - <span class="string"><span class="content">Access Profiles</span></span></code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
