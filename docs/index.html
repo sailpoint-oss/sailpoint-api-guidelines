@@ -1523,7 +1523,6 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#136"><span class="must-keyword"><strong>MUST</strong></span> use normalized paths without empty path segments and trailing slashes</a></li>
 <li><a href="#137"><span class="must-keyword"><strong>MUST</strong></span> stick to conventional query parameters</a></li>
 <li><a href="#319"><span class="must-keyword"><strong>MUST</strong></span> Customer org name must never appear in the path of public APIs</a></li>
-<li><a href="#504"><span class="must-keyword"><strong>MUST</strong></span> Reserved keywords must not be used in properties</a></li>
 </ul>
 </li>
 <li><a href="#resources">12. Resources</a>
@@ -4318,52 +4317,6 @@ for implementation details for each of the above parameters.</p>
 <h3 id="319"><a class="link" href="#319"><span class="must-keyword"><strong>MUST</strong></span> Customer org name must never appear in the path of public APIs</a></h3>
 <div class="paragraph">
 <p>The customer organization is provided in the session context that is generated on the back end, and therefore does not need to be in the URL.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="504"><a class="link" href="#504"><span class="must-keyword"><strong>MUST</strong></span> Reserved keywords must not be used in properties</a></h3>
-<div class="paragraph">
-<p>There are reserved keywords for Open API specifications. The properties you use to describe your API response must not include any of the following keywords.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>type</p>
-</li>
-<li>
-<p>format</p>
-</li>
-<li>
-<p>description</p>
-</li>
-<li>
-<p>items</p>
-</li>
-<li>
-<p>properties</p>
-</li>
-<li>
-<p>additionalProperties</p>
-</li>
-<li>
-<p>default</p>
-</li>
-<li>
-<p>allOf</p>
-</li>
-<li>
-<p>oneOf</p>
-</li>
-<li>
-<p>anyOf</p>
-</li>
-<li>
-<p>not</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><a href="https://swagger.io/docs/specification/data-models/keywords/" class="bare">https://swagger.io/docs/specification/data-models/keywords/</a></p>
 </div>
 </div>
 </div>
