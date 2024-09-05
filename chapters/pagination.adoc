@@ -52,9 +52,8 @@ controls for paginating over collections whenever applicable as follows
 }
 ----
 
-*Remark:* You should avoid providing a total count unless there is a clear
-need to do so. Very often, there are significant system and performance
-implications when supporting full counts. Especially, if the data set grows
-and requests become complex queries and filters drive full scans. While this
-is an implementation detail relative to the API, it is important to consider
-the ability to support serving counts over the life of a service.
+*Remarks:*
+1. It is essential to include the query parameters from the original requests in the hypertext controls provided for pagination. These parameters can either be encoded within the cursor or provided separately.
+2. You should avoid providing a total count unless there is a clear need to do so. Very often, there are significant system and performance implications when supporting full counts. Especially, if the data set grows and requests become complex queries and filters drive full scans. While this is an implementation detail relative to the API, it is important to consider the ability to support serving counts over the life of a service.
+3. The hypertext controls such as self, first, prev, next and last are all optional. You should include the relevant controls based on the specific requirements.
+
