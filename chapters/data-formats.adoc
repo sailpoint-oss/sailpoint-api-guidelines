@@ -241,7 +241,7 @@ required: false
 
 The OpenAPI specification does not provide dedicated properties for defining sorter,
 so sorters must be defined in the description of the `sorters` query param.  Our users 
-and our tooling rely on filter descriptions following a strict format.  The following
+and our tooling rely on sorter descriptions following a strict format.  The following
 snippet is an example of how to properly format the description for `sorters`.
 
 ```yaml

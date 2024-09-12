@@ -252,7 +252,7 @@ You must use the most specific HTTP status code when returning information about
 processing status or error situations.  See the below table for examples of when to use the generic 
 400 vs a more specific 4xx
 
-See https://github.com/sailpoint/cloud-api-client-common/blob/master/design-docs/v3/definition.md#response-codes-and-headers
+See https://sailpoint-oss.github.io/sailpoint-api-guidelines/#client-side-error-codes
 for a list of response codes that SailPoint prefers to use. 
 
 If you encounter a scenario where two or more response codes are appropriate, prefer to use the response code that preserves the security of the system and does not hand out too much information to unauthorized users.
