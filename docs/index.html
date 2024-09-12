@@ -1773,7 +1773,7 @@ Robustness Principle</a> (see also <a href="https://tools.ietf.org/html/rfc1122"
 <ul>
 <li>
 <p>Article:
-<a href="https://www.thoughtworks.com/de/insights/blog/rest-api-design-resource-modeling">REST API Design - Resource Modeling</a></p>
+<a href="https://www.thoughtworks.com/insights/blog/rest-api-design-resource-modeling">REST API Design - Resource Modeling</a></p>
 </li>
 <li>
 <p>Article:
@@ -3948,7 +3948,7 @@ snippet is an example of how to properly format the description for <code>filter
 <div class="paragraph">
 <p>The OpenAPI specification does not provide dedicated properties for defining sorter,
 so sorters must be defined in the description of the <code>sorters</code> query param.  Our users
-and our tooling rely on filter descriptions following a strict format.  The following
+and our tooling rely on sorter descriptions following a strict format.  The following
 snippet is an example of how to properly format the description for <code>sorters</code>.</p>
 </div>
 <div class="listingblock">
@@ -4288,7 +4288,7 @@ paginating, you must stick to the following naming conventions:</p>
 <p><code>limit</code>: Integer that specifies the maximum number of results to return. If not specified a default limit will be used.</p>
 </li>
 <li>
-<p><code>offest</code>: Integer that specifies the offset of the first result from the beginning of the collection</p>
+<p><code>offset</code>: Integer that specifies the offset of the first result from the beginning of the collection</p>
 </li>
 <li>
 <p><code>count</code>: Boolean that indicates whether a total count will be returned, factoring in any filter parameters, in the X-Total-Count response header.</p>
@@ -4306,7 +4306,7 @@ character, which indicates the sort is descending based on the value of that fie
 is ascending.  Each endpoint that implements sorters must clearly define which fields are supported.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="https://developer.sailpoint.com/docs/standard_collection_parameters.html#standard-collection-parameters" class="bare">https://developer.sailpoint.com/docs/standard_collection_parameters.html#standard-collection-parameters</a>
+<p>See <a href="https://developer.sailpoint.com/docs/api/standard-collection-parameters/#paginating-results" class="bare">https://developer.sailpoint.com/docs/api/standard-collection-parameters/#paginating-results</a>
 for implementation details for each of the above parameters.</p>
 </div>
 <div class="paragraph">
@@ -5696,7 +5696,7 @@ processing status or error situations.  See the below table for examples of when
 400 vs a more specific 4xx</p>
 </div>
 <div class="paragraph">
-<p>See <a href="https://github.com/sailpoint/cloud-api-client-common/blob/master/design-docs/v3/definition.md#response-codes-and-headers" class="bare">https://github.com/sailpoint/cloud-api-client-common/blob/master/design-docs/v3/definition.md#response-codes-and-headers</a>
+<p>See <a href="https://sailpoint-oss.github.io/sailpoint-api-guidelines/#client-side-error-codes" class="bare">https://sailpoint-oss.github.io/sailpoint-api-guidelines/#client-side-error-codes</a>
 for a list of response codes that SailPoint prefers to use.</p>
 </div>
 <div class="paragraph">
@@ -6022,10 +6022,9 @@ just a few hundred entries.</p>
 pagination</a>: numeric offset identifies the first page entry</p>
 </li>
 <li>
-<p><a href="https://dev.twitter.com/overview/api/cursoring">Cursor/Limit-based</a> — aka
+<p><a href="https://developer.x.com/en/docs/x-api/pagination">Cursor/Limit-based</a> — aka
 key-based — pagination: a unique key element identifies the first page entry
-(see also <a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging">Facebook’s
-guide</a>)</p>
+(see also <a href="https://developers.facebook.com/docs/graph-api/results">Facebook’s guide</a>)</p>
 </li>
 </ul>
 </div>
@@ -6760,7 +6759,7 @@ implementing RESTful APIs.</p>
 that allows to efficiently provide a stable view on changing data.
 This is obtained by using an anchor element that allows to retrieve all page
 elements directly via an ordering combined-index, usually based on <code>created_at</code>
-or <code>modified_at</code>. Simple said, the cursor is the information set needed to
+or <code>modified_at</code>. Simply said, the cursor is the information set needed to
 reconstruct the database query to retrieves the minimal page information from
 the data storage.</p>
 </div>
@@ -7285,7 +7284,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-28 16:34:35 UTC
+Last updated 2024-09-12 17:00:33 UTC
 </div>
 </div>
 </body>

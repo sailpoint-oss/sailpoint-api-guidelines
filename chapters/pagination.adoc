@@ -13,10 +13,9 @@ There are two well known page iteration techniques:
 
 * https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-results[Offset/Limit-based
   pagination]: numeric offset identifies the first page entry
-* https://dev.twitter.com/overview/api/cursoring[Cursor/Limit-based] — aka
+* https://developer.x.com/en/docs/x-api/pagination[Cursor/Limit-based] — aka
   key-based — pagination: a unique key element identifies the first page entry
-  (see also https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging[Facebook’s
-  guide])
+  (see also https://developers.facebook.com/docs/graph-api/results[Facebook’s guide])
 
 The technical conception of pagination should also consider user experience
 related issues. As mentioned in this
