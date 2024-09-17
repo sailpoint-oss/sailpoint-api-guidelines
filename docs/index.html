@@ -6067,12 +6067,20 @@ controls for paginating over collections whenever applicable as follows</p>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Remark:</strong> You should avoid providing a total count unless there is a clear
-need to do so. Very often, there are significant system and performance
-implications when supporting full counts. Especially, if the data set grows
-and requests become complex queries and filters drive full scans. While this
-is an implementation detail relative to the API, it is important to consider
-the ability to support serving counts over the life of a service.</p>
+<p><strong>Remarks:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is essential to include the query parameters from the original requests in the hypertext controls provided for pagination. These parameters can either be encoded within the cursor or provided separately.</p>
+</li>
+<li>
+<p>You should avoid providing a total count unless there is a clear need to do so. Very often, there are significant system and performance implications when supporting full counts. Especially, if the data set grows and requests become complex queries and filters drive full scans. While this is an implementation detail relative to the API, it is important to consider the ability to support serving counts over the life of a service.</p>
+</li>
+<li>
+<p>The hypertext controls such as self, first, prev, next and last are all optional. You should include the relevant controls based on the specific requirements.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -7285,7 +7293,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-28 16:34:35 UTC
+Last updated 2024-09-05 10:01:44 UTC
 </div>
 </div>
 </body>
