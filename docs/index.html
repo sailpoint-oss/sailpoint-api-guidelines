@@ -1444,6 +1444,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <ul class="sectlevel2">
 <li><a href="#104"><span class="must-keyword"><strong>MUST</strong></span> secure endpoints with OAuth 2.0 <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#105"><span class="must-keyword"><strong>MUST</strong></span> define and assign permissions (scopes) <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
+<li><a href="#321"><span class="must-keyword"><strong>MUST</strong></span> define user levels (capabilities) needed by an endpoint</a></li>
 <li><a href="#306"><span class="must-keyword"><strong>MUST</strong></span> Document necessary license add-on to use an API collection</a></li>
 <li><a href="#225"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for permissions (scopes)</a></li>
 </ul>
@@ -2474,61 +2475,62 @@ along the target audience — even if this creates redundancies (rationale (inte
 <div class="sect2">
 <h3 id="104"><a class="link" href="#104"><span class="must-keyword"><strong>MUST</strong></span> secure endpoints with OAuth 2.0 <span class="icon lime"><i class="fa fa-check-square"></i></span></a></h3>
 <div class="paragraph">
-<p>Every public API endpoint must be secured using OAuth 2.0.</p>
+<p>Every public API endpoint must be secured using OAuth 2.0. We have defined two security schemas, <strong>userAuth</strong> and <strong>applicationAuth</strong>.</p>
 </div>
 <div class="paragraph">
-<p>For information on adding new oauth2 scopes visit <a href="https://sailpoint.atlassian.net/wiki/spaces/PLAT/pages/1713963123/Defining+Scopes+for+API+Authorization" class="external" target="_blank" rel="noopener">Defining Scopes for API Authorization</a>.</p>
+<p><strong>userAuth</strong> is the authentication mechanism that assigns a user context to a token, such as a Personal Access Token or OAuth token granted via authorization code.</p>
 </div>
 <div class="paragraph">
-<p>The following code snippet shows how to define the authorization scheme using a bearer token (e.g. JWT token).</p>
+<p><strong>applicationAuth</strong> is the authentication mechanism provides a token that does not have a user context. This is a result of the OAuth client credentials grant flow.</p>
+</div>
+<div class="paragraph">
+<p>Each endpoint must select one or both of the security schemes depending on which one(s) it supports. For example, if an endpoint supports only <strong>userAuth</strong>, then the path would be defined as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">components</span>:
-  <span class="key">securitySchemes</span>:
-    <span class="key">oauth2</span>:
-      <span class="key">type</span>: <span class="string"><span class="content">oauth2</span></span>
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        OAuth2 Bearer token (JWT).</span></span>
-      <span class="key">flows</span>:
-        <span class="key">clientCredentials</span>:
-          <span class="key">tokenUrl</span>: <span class="string"><span class="content">https://tenant.api.identitynow.com/oauth/token</span></span>
-          <span class="key">scopes</span>:
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:default</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">default scope</span><span class="delimiter">&quot;</span></span>
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:all</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">access to all scopes</span><span class="delimiter">&quot;</span></span>
-        <span class="key">authorizationCode</span>:
-          <span class="key">authorizationUrl</span>: <span class="string"><span class="content">https://tenant.identitynow.com/oauth/authorize</span></span>
-          <span class="key">tokenUrl</span>: <span class="string"><span class="content">https://tenant.api.identitynow.com/oauth/token</span></span>
-          <span class="key">scopes</span>:
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:default</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">default scope</span><span class="delimiter">&quot;</span></span>
-            <span class="key"><span class="delimiter">&quot;</span><span class="content">sp:scopes:all</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">access to all scopes</span><span class="delimiter">&quot;</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">get</span>:
+  <span class="key">operationId</span>: <span class="string"><span class="content">getAccessProfile</span></span>
+  <span class="key">tags</span>:
+    - <span class="string"><span class="content">Access Profiles</span></span>
+  <span class="key">summary</span>: <span class="string"><span class="content">Get an Access Profile</span></span>
+  <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;-</span><span class="content">
+    This API returns an Access Profile by its ID.</span></span>
+  <span class="key">security</span>:
+    - <span class="string"><span class="content">userAuth: [idn:access-profile:read]</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The next code snippet applies this security scheme to all API endpoints. The bearer token of the client must have additionally the scopes scope_1 and scope_2.</p>
+<p>If the endpoint supports both security schemes, then it would be defined as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">security</span>:
-    - <span class="string"><span class="content">UserContextAuth: [ scope_1, scope_2 ]</span></span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">get</span>:
+  <span class="key">operationId</span>: <span class="string"><span class="content">getAccessProfile</span></span>
+  <span class="key">tags</span>:
+    - <span class="string"><span class="content">Access Profiles</span></span>
+  <span class="key">summary</span>: <span class="string"><span class="content">Get an Access Profile</span></span>
+  <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;-</span><span class="content">
+    This API returns an Access Profile by its ID.</span></span>
+  <span class="key">security</span>:
+    - <span class="string"><span class="content">userAuth: [idn:access-profile:read]</span></span>
+    - <span class="string"><span class="content">applicationAuth: [idn:access-profile:read]</span></span></code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="105"><a class="link" href="#105"><span class="must-keyword"><strong>MUST</strong></span> define and assign permissions (scopes) <span class="icon lime"><i class="fa fa-check-square"></i></span></a></h3>
 <div class="paragraph">
-<p>Each endpoint must document every <a href="https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/beta/securitySchemes/OAuth2.yaml" class="external" target="_blank" rel="noopener">AMS right</a>
-needed to access the endpoint.  If creating a new AMS right that doesn’t exist in the list, then it must be added to the list first.</p>
+<p>Each endpoint must document every scope needed to access the endpoint.  See <a href="https://sailpoint.atlassian.net/wiki/spaces/PLAT/pages/1713963123/Defining+Scopes+for+API+Authorization" class="external" target="_blank" rel="noopener">Defining Scopes for API Authorization</a> for more information on adding new scopes.</p>
 </div>
 <div class="paragraph">
-<p>To appropriately document AMS rights on an endpoint, use the following OpenAPI properties:</p>
+<p>To appropriately document a scope on an endpoint, use the following OpenAPI properties:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">security</span>:
-  - <span class="string"><span class="content">UserContextAuth:</span><span class="content">
+  - <span class="string"><span class="content">userAuth:</span><span class="content">
      - 'idn:task-definition:read'
-     - 'idn:task-definition:write'</span></span></code></pre>
+     - 'idn:task-definition:manage'</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2550,8 +2552,50 @@ needed to access the endpoint.  If creating a new AMS right that doesn’t exist
           <span class="key">schema</span>:
             <span class="error">$ref</span>: <span class="error">'../schemas/Tenant.yaml'</span>
   <span class="key">security</span>:
-    - <span class="string"><span class="content">UserContextAuth:</span><span class="content">
+    - <span class="string"><span class="content">userAuth:</span><span class="content">
         - 'idn:accounts:read'</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="321"><a class="link" href="#321"><span class="must-keyword"><strong>MUST</strong></span> define user levels (capabilities) needed by an endpoint</a></h3>
+<div class="paragraph">
+<p>Each endpoint that specifies <strong>userAuth</strong> as one of the allowed security types must also document the user levels required to access the endpoint. See the <a href="https://documentation.sailpoint.com/saas/help/common/users/user_level_matrix.html" class="external" target="_blank" rel="noopener">user level matrix</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>To appropriately document user level(s) on an endpoint, use the <strong>x-sailpoint-userLevels</strong> attribute in the path definition. The <strong>technical name</strong> must be used as seen in the user level matrix (ex. ORG_ADMIN instead of Admin).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">x-sailpoint-userLevels</span>:
+  - <span class="string"><span class="content">ORG_ADMIN</span></span>
+  - <span class="string"><span class="content">SOURCE_ADMIN</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A full example on an endpoint might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">get</span>:
+  <span class="key">tags</span>:
+    - <span class="string"><span class="content">tenants</span></span>
+  <span class="key">summary</span>: <span class="string"><span class="content">Get Tenant</span></span>
+  <span class="key">description</span>: <span class="string"><span class="content">Get tenant object based on current auth token</span></span>
+  <span class="key">operationId</span>: <span class="string"><span class="content">getTenant</span></span>
+  <span class="key">responses</span>:
+    <span class="key"><span class="delimiter">'</span><span class="content">200</span><span class="delimiter">'</span></span>:
+      <span class="key">description</span>: <span class="string"><span class="content">successful operation</span></span>
+      <span class="key">content</span>:
+        <span class="key">application/json</span>:
+          <span class="key">schema</span>:
+            <span class="error">$ref</span>: <span class="error">'../schemas/Tenant.yaml'</span>
+  <span class="key">security</span>:
+    - <span class="string"><span class="content">userAuth:</span><span class="content">
+        - 'idn:accounts:read'</span></span>
+  <span class="key">x-sailpoint-userLevels</span>:
+    - <span class="string"><span class="content">ORG_ADMIN</span></span>
+    - <span class="string"><span class="content">SOURCE_ADMIN</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -7293,7 +7337,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-05 10:01:44 UTC
+Last updated 2023-10-23 14:09:12 UTC
 </div>
 </div>
 </body>

@@ -454,6 +454,10 @@
     },
     {
       "id": "#321",
+      "title": "MUST define user levels (capabilities) needed by an endpoint"
+    },
+    {
+      "id": "#321",
       "title": "MUST use a standard error response object"
     },
     {
