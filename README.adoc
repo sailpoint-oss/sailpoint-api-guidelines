@@ -48,9 +48,9 @@ This script clones the factory repository, installs the dependencies and generat
 
 == License
 
-Credit goes to the Zolando Team for these guidelines. https://github.com/zalando/restful-api-guidelines[Zalando]
+Credit goes to the Zalando Team for these guidelines. https://github.com/zalando/restful-api-guidelines[Zalando]
 
-We have made slight modifications to the Zolando guidelines to fit our companies needs.
+We have made slight modifications to the Zalando guidelines to fit our company's needs.
 
 We have published these guidelines under the CC-BY (Creative commons
 Attribution 4.0) license. Please see link:LICENSE[LICENSE file].
