@@ -5,11 +5,13 @@
 [#104]
 == {MUST} secure endpoints with OAuth 2.0 icon:check-square[text="Test" role="lime"]
 
-Every public API endpoint must be secured using OAuth 2.0. We have defined two security schemas, *userAuth* and *applicationAuth*.
+Every public API endpoint must be secured using OAuth 2.0. We have defined two security schemas, *userAuth* and *applicationAuth*. In the rare case that an endpoint does not require authentication, and is completely open to the public, then an empty object can be used instead.
 
-*userAuth* is the authentication mechanism that assigns a user context to a token, such as a Personal Access Token or OAuth token granted via authorization code.
+* *userAuth* is the authentication mechanism that assigns a user context to a token, such as a Personal Access Token or OAuth token granted via authorization code.
 
-*applicationAuth* is the authentication mechanism provides a token that does not have a user context. This is a result of the OAuth client credentials grant flow.
+* *applicationAuth* is the authentication mechanism that provides a token that does not have a user context. This is a result of the OAuth client credentials grant flow.
+
+* *{}* is how we indicate that an endpoint does not require authentication to access.
 
 Each endpoint must select one or both of the security schemes depending on which one(s) it supports. For example, if an endpoint supports only *userAuth*, then the path would be defined as follows:
 
@@ -40,6 +42,21 @@ get:
   security:
     - userAuth: [idn:access-profile:read]
     - applicationAuth: [idn:access-profile:read]
+----
+
+If the endpoint does not require authentication, then it would be defined as follows:
+
+[source,yaml]
+----
+get:
+  operationId: getAccessProfile
+  tags:
+    - Access Profiles
+  summary: Get an Access Profile
+  description: >-
+    This API returns an Access Profile by its ID.
+  security:
+    - {}
 ----
 
 
@@ -78,7 +95,7 @@ get:
         - 'idn:accounts:read'
 ----
 
-[#321]
+[#326]
 == {MUST} define user levels (capabilities) needed by an endpoint
 
 Each endpoint that specifies *userAuth* as one of the allowed security types must also document the user levels required to access the endpoint. See the https://documentation.sailpoint.com/saas/help/common/users/user_level_matrix.html[user level matrix, role=external, window=_blank] for more information.
