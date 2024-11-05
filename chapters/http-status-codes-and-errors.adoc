@@ -40,8 +40,8 @@ API specification. This can reduce service support tasks and contribute to
 service client and provider performance.
 
 
-[#321]
-=== {MUST} use a standard error response object
+[#326]
+== {MUST} use a standard error response object
 
 All error responses must use the standard error response DTO object defined at 
 https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/v3/schemas/ErrorResponseDto.yaml.  
@@ -49,14 +49,14 @@ This provides a consistent error response structure that can be easily consumed 
 
 
 [#322]
-=== {MAY} define application specific codes for the standard error response object
+== {MAY} define application specific codes for the standard error response object
 
 If using the `detailCode` within the https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/v3/schemas/ErrorResponseDto.yaml, 
 then the service owner is free to create their own logic for detail codes that will aid them in debugging issues with the service.
 
 
 [#323]
-=== {MUST} use the most accurate response example for each endpoint
+== {MUST} use the most accurate response example for each endpoint
 
 Each endpoint must define a response example for every success and error response that can be returned.  
 These examples must accurately reflect what can be returned by the endpoint.  Default examples shared across 
