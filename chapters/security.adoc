@@ -95,7 +95,7 @@ get:
         - 'idn:accounts:read'
 ----
 
-[#326]
+[#321]
 == {MUST} define user levels (capabilities) needed by an endpoint
 
 Each endpoint that specifies *userAuth* as one of the allowed security types must also document the user levels required to access the endpoint. See the https://documentation.sailpoint.com/saas/help/common/users/user_level_matrix.html[user level matrix, role=external, window=_blank] for more information.

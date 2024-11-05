@@ -40,7 +40,7 @@ API specification. This can reduce service support tasks and contribute to
 service client and provider performance.
 
 
-[#321]
+[#326]
 == {MUST} use a standard error response object
 
 All error responses must use the standard error response DTO object defined at 
