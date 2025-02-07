@@ -178,6 +178,71 @@ get:
     - Access Profiles
 ----
 
+[#404]
+== {MUST} provide a valid operationId in camelCase under the key `x-sailpoint-resource-operation-id` for each path parameter icon:check-square[text="Test" role="lime"]
+
+Certain tools, such as the API Schema Validator and developer.sailpoint.com, rely on `x-sailpoint-resource-operation-id` to accurately locate and reference the required values for path parameters.
+
+## API Schema Validator
+
+When validating API responses, the tool needs to make requests to an endpoint that requires a path parameter (such as a resource `id`). Without a valid `operationId`, there is no way to programmatically determine how to retrieve a valid identifier from the system. By defining `x-sailpoint-resource-operation-id`, the validator can look up the appropriate operation to call, fetch a valid resource identifier, and then use it to execute the request for validation. This ensures that response validation is performed on actual data from the system rather than using placeholder or manually provided values.
+
+[source, yaml]
+----
+parameters:
+  - in: path
+    name: id
+    schema:
+      type: string
+    required: true
+    description: Account ID.
+    example: ef38f94347e94562b5bb8424a56397d8
+    x-sailpoint-resource-operation-id: listAccounts
+----
+
+### How the API Schema Validator Resolves Resource Identifiers
+
+When performing a lookup, the validator follows a structured process to extract the required path parameter from the response of the specified operationId. For example, if an API path requires `/accounts/{accountId}`, the corresponding `x-sailpoint-resource-operation-id: listAccounts` is necessary. The validator will attempt to resolve the `accountId` by checking the response in the following order:
+
+1. *Exact Key Match* – It first looks for a key in the response that matches the path parameter exactly `accountId`.
+2. *Fallback to Standard Identifier* `id` – If no exact match is found, it attempts to retrieve a field named id, assuming that it represents a unique identifier for the resource.
+3. *Final Attempt with* `name` – If neither accountId nor id exists, it tries to use name as a last resort.
+4. *Validation Failure* – If none of these keys are present in the response, the validator will error out, as it cannot resolve a valid identifier for the path parameter.
+
+This resolution process ensures flexibility while maintaining consistency in how identifiers are determined across different API responses.
+
+## developer.sailpoint.com
+
+Uses the `x-sailpoint-resource-operation-id` value to improve API discoverability and documentation by linking path parameters to their respective operations. When an API requires a path parameter, such as a unique resource identifier (id), this key helps determine how the value can be retrieved. If an operation exists to list or search for the resource, its operationId can be referenced, allowing developers to programmatically obtain the required identifier before making a request to an endpoint that depends on it.
+
+## Exceptions to this rule
+
+This rule does not apply in the following cases:
+
+*Enums in Path Parameters* – If the path parameter is an enum, the set of possible values is predefined and does not require lookup from an external resource. Tools can iterate through the available values without needing an associated operationId. The API Schema Validator and other tools can directly use the enum values to construct valid API requests, eliminating the need for additional lookups.
+
+[source, yaml]
+----
+parameters:
+  - in: path
+    name: type
+    schema:
+      type: string
+      enum:
+        - ACCESS_PROFILE
+        - APPLICATION
+        - CAMPAIGN
+        - ENTITLEMENT
+        - IDENTITY
+        - ROLE
+        - SOD_POLICY
+        - SOURCE
+    required: true
+    example: ACCESS_PROFILE
+----
+
+*User-Defined Path Parameters* – If the path parameter represents a value entirely determined by the user (e.g., specifying a filename when downloading or saving a file), there is no need to retrieve a resource identifier from the system. Since these values are not tied to any existing API resource, defining `x-sailpoint-resource-operation-id` would not be meaningful or applicable.
+
 
 [#103]
 == {MUST} write APIs using U.S. English

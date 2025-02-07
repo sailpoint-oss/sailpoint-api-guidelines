@@ -483,6 +483,10 @@
     {
       "id": "#402",
       "title": "MUST provide a valid tag for each operation icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
+      "id": "#404",
+      "title": "MUST provide a valid operationId in camelCase under the key `x-sailpoint-resource-operation-id` for each path parameter icon:check-square[text=\"Test\" role=\"lime\"]"
     }
   ]
 }

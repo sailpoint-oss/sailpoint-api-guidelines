@@ -1430,6 +1430,10 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#305"><span class="should-keyword"><strong>SHOULD</strong></span> keep operation summaries at five or less words <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#400"><span class="must-keyword"><strong>MUST</strong></span> provide a valid operationId in camelCase for each operation <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
 <li><a href="#402"><span class="must-keyword"><strong>MUST</strong></span> provide a valid tag for each operation <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
+<li><a href="#404"><span class="must-keyword"><strong>MUST</strong></span> provide a valid operationId in camelCase under the key <code>x-sailpoint-resource-operation-id</code> for each path parameter <span class="icon lime"><i class="fa fa-check-square"></i></span></a></li>
+<li><a href="#_api_schema_validator">API Schema Validator</a></li>
+<li><a href="#_developer_sailpoint_com">developer.sailpoint.com</a></li>
+<li><a href="#_exceptions_to_this_rule">Exceptions to this rule</a></li>
 <li><a href="#103"><span class="must-keyword"><strong>MUST</strong></span> write APIs using U.S. English</a></li>
 </ul>
 </li>
@@ -2272,6 +2276,94 @@ It is helpful for consumers to have short summaries that describe the operation 
   <span class="key">tags</span>:
     - <span class="string"><span class="content">Access Profiles</span></span></code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="404"><a class="link" href="#404"><span class="must-keyword"><strong>MUST</strong></span> provide a valid operationId in camelCase under the key <code>x-sailpoint-resource-operation-id</code> for each path parameter <span class="icon lime"><i class="fa fa-check-square"></i></span></a></h3>
+<div class="paragraph">
+<p>Certain tools, such as the API Schema Validator and developer.sailpoint.com, rely on <code>x-sailpoint-resource-operation-id</code> to accurately locate and reference the required values for path parameters.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_schema_validator"><a class="link" href="#_api_schema_validator">API Schema Validator</a></h3>
+<div class="paragraph">
+<p>When validating API responses, the tool needs to make requests to an endpoint that requires a path parameter (such as a resource <code>id</code>). Without a valid <code>operationId</code>, there is no way to programmatically determine how to retrieve a valid identifier from the system. By defining <code>x-sailpoint-resource-operation-id</code>, the validator can look up the appropriate operation to call, fetch a valid resource identifier, and then use it to execute the request for validation. This ensures that response validation is performed on actual data from the system rather than using placeholder or manually provided values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">parameters</span>:
+  - <span class="string"><span class="content">in: path</span></span>
+    <span class="key">name</span>: <span class="string"><span class="content">id</span></span>
+    <span class="key">schema</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+    <span class="key">required</span>: <span class="string"><span class="content">true</span></span>
+    <span class="key">description</span>: <span class="string"><span class="content">Account ID.</span></span>
+    <span class="key">example</span>: <span class="string"><span class="content">ef38f94347e94562b5bb8424a56397d8</span></span>
+    <span class="key">x-sailpoint-resource-operation-id</span>: <span class="string"><span class="content">listAccounts</span></span></code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_how_the_api_schema_validator_resolves_resource_identifiers"><a class="link" href="#_how_the_api_schema_validator_resolves_resource_identifiers">How the API Schema Validator Resolves Resource Identifiers</a></h4>
+<div class="paragraph">
+<p>When performing a lookup, the validator follows a structured process to extract the required path parameter from the response of the specified operationId. For example, if an API path requires <code>/accounts/{accountId}</code>, the corresponding <code>x-sailpoint-resource-operation-id: listAccounts</code> is necessary. The validator will attempt to resolve the <code>accountId</code> by checking the response in the following order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Exact Key Match</strong> – It first looks for a key in the response that matches the path parameter exactly <code>accountId</code>.</p>
+</li>
+<li>
+<p><strong>Fallback to Standard Identifier</strong> <code>id</code> – If no exact match is found, it attempts to retrieve a field named id, assuming that it represents a unique identifier for the resource.</p>
+</li>
+<li>
+<p><strong>Final Attempt with</strong> <code>name</code> – If neither accountId nor id exists, it tries to use name as a last resort.</p>
+</li>
+<li>
+<p><strong>Validation Failure</strong> – If none of these keys are present in the response, the validator will error out, as it cannot resolve a valid identifier for the path parameter.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This resolution process ensures flexibility while maintaining consistency in how identifiers are determined across different API responses.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_developer_sailpoint_com"><a class="link" href="#_developer_sailpoint_com">developer.sailpoint.com</a></h3>
+<div class="paragraph">
+<p>Uses the <code>x-sailpoint-resource-operation-id</code> value to improve API discoverability and documentation by linking path parameters to their respective operations. When an API requires a path parameter, such as a unique resource identifier (id), this key helps determine how the value can be retrieved. If an operation exists to list or search for the resource, its operationId can be referenced, allowing developers to programmatically obtain the required identifier before making a request to an endpoint that depends on it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exceptions_to_this_rule"><a class="link" href="#_exceptions_to_this_rule">Exceptions to this rule</a></h3>
+<div class="paragraph">
+<p>This rule does not apply in the following cases:</p>
+</div>
+<div class="paragraph">
+<p><strong>Enums in Path Parameters</strong> – If the path parameter is an enum, the set of possible values is predefined and does not require lookup from an external resource. Tools can iterate through the available values without needing an associated operationId. The API Schema Validator and other tools can directly use the enum values to construct valid API requests, eliminating the need for additional lookups.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">parameters</span>:
+  - <span class="string"><span class="content">in: path</span></span>
+    <span class="key">name</span>: <span class="string"><span class="content">type</span></span>
+    <span class="key">schema</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+      <span class="key">enum</span>:
+        - <span class="string"><span class="content">ACCESS_PROFILE</span></span>
+        - <span class="string"><span class="content">APPLICATION</span></span>
+        - <span class="string"><span class="content">CAMPAIGN</span></span>
+        - <span class="string"><span class="content">ENTITLEMENT</span></span>
+        - <span class="string"><span class="content">IDENTITY</span></span>
+        - <span class="string"><span class="content">ROLE</span></span>
+        - <span class="string"><span class="content">SOD_POLICY</span></span>
+        - <span class="string"><span class="content">SOURCE</span></span>
+    <span class="key">required</span>: <span class="string"><span class="content">true</span></span>
+    <span class="key">example</span>: <span class="string"><span class="content">ACCESS_PROFILE</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>User-Defined Path Parameters</strong> – If the path parameter represents a value entirely determined by the user (e.g., specifying a filename when downloading or saving a file), there is no need to retrieve a resource identifier from the system. Since these values are not tied to any existing API resource, defining <code>x-sailpoint-resource-operation-id</code> would not be meaningful or applicable.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7363,7 +7455,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-23 14:09:12 UTC
+Last updated 2023-06-28 16:34:35 UTC
 </div>
 </div>
 </body>
