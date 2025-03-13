@@ -100,7 +100,7 @@ get:
 
 Each endpoint that specifies *userAuth* as one of the allowed security types must also document the user levels required to access the endpoint. See the https://documentation.sailpoint.com/saas/help/common/users/user_level_matrix.html[user level matrix, role=external, window=_blank] for more information.
 
-To appropriately document user level(s) on an endpoint, use the *x-sailpoint-userLevels* attribute in the path definition. The *technical name* must be used as seen in the user level matrix (ex. ORG_ADMIN instead of Admin).
+To appropriately document user level(s) on an endpoint, use the *x-sailpoint-userLevels* attribute in the path definition. The *technical name* must be used as seen in the user level matrix (ex. ORG_ADMIN instead of Admin). If an endpoint can be called by a user with no elevated user levels, use the value "Any" instead of listing all user levels.
 
 [source,yaml]
 ----

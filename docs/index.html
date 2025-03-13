@@ -2681,7 +2681,7 @@ along the target audience — even if this creates redundancies (rationale (inte
 <p>Each endpoint that specifies <strong>userAuth</strong> as one of the allowed security types must also document the user levels required to access the endpoint. See the <a href="https://documentation.sailpoint.com/saas/help/common/users/user_level_matrix.html" class="external" target="_blank" rel="noopener">user level matrix</a> for more information.</p>
 </div>
 <div class="paragraph">
-<p>To appropriately document user level(s) on an endpoint, use the <strong>x-sailpoint-userLevels</strong> attribute in the path definition. The <strong>technical name</strong> must be used as seen in the user level matrix (ex. ORG_ADMIN instead of Admin).</p>
+<p>To appropriately document user level(s) on an endpoint, use the <strong>x-sailpoint-userLevels</strong> attribute in the path definition. The <strong>technical name</strong> must be used as seen in the user level matrix (ex. ORG_ADMIN instead of Admin). If an endpoint can be called by a user with no elevated user levels, use the value "Any" instead of listing all user levels.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7455,7 +7455,7 @@ header.prepend(nav);
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-28 16:34:35 UTC
+Last updated 2023-10-23 14:09:12 UTC
 </div>
 </div>
 </body>
