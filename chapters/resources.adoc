@@ -21,10 +21,18 @@ Body
 
 [source,json]
 ----
-{
-    “completed”: true
-}
+[
+    {
+        "op": "replace",
+        "path": "/completed",
+        "value": true
+    }
+]
 ----
+
+This example uses JSON Patch, where each operation specifies an `op` (operation type such as 
+"replace", "add", "remove"), a `path` (JSON Pointer to the target field), and a `value` (the new value 
+to apply). This format provides a standardized way to express partial updates to resources.
 
 Sometimes, standard HTTP methods aren’t specific enough to indicate the action you wish to perform on a 
 resource, or there is complex business logic on the back end that can’t be satisfied by PATCHing a single 
