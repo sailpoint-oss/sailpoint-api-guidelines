@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "113",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#113",
+    "url": "/docs/rules/api-contract-and-documentation#113"
+  },
+  "currentTitle": "MUST follow SailPoint API Guidelines",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST follow SailPoint API Guidelines",
+    "proposedText": "**Intent**: enforce a consistent API experience across products and teams.\n\nAPIs MUST follow these guidelines.\n\n**How this is enforced**:\n\n- Treat the OpenAPI spec as the contract and review guideline compliance as part of API review.\n- Use automated checks where possible (linting, OpenAPI validation, compatibility checks, contract tests).\n\n**Exceptions**:\n\n- Any deliberate exception MUST be documented with rationale (and a remediation plan where applicable) using the review ledger.\n\n**Testability**:\n\n- CI validates the OpenAPI spec and blocks invalid specs.\n- Guideline exceptions (if any) are recorded with rationale.\n",
+    "rationale": "Consistency across APIs reduces consumer friction, enables shared SDK/tooling, and makes quality enforceable via automation.",
+    "compatNotes": "Non-breaking documentation/process requirement."
+  },
+  "reviewNotes": []
+}

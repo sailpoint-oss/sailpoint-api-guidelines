@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "709",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#709",
+    "url": "/docs/rules/payload-conventions#709"
+  },
+  "currentTitle": "MUST define defaults for optional properties",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: remove ambiguity when clients omit optional fields.\n\nOptional properties MUST have documented default behavior when omitted.\n\n**Rules**:\n\n- If a default is truly stable, declare it in OpenAPI using `default`.\n- If a default is contextual (depends on tenant config, caller, feature flags), document that explicitly in prose (do not pretend it is constant).\n- Avoid “magic defaults” that vary unpredictably across environments.\n\n**Testability**:\n\n- Reviewers can determine what happens when an optional field is omitted.\n",
+    "rationale": "Undocumented defaults cause client/server mismatches and subtle production bugs.",
+    "compatNotes": "Documentation clarification; servers may need to align behavior with documented defaults over time."
+  },
+  "reviewNotes": []
+}

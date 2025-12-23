@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "708",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#708",
+    "url": "/docs/rules/payload-conventions#708"
+  },
+  "currentTitle": "SHOULD avoid nested objects",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: reduce payload complexity and improve evolvability.\n\nAPIs SHOULD minimize deeply nested object structures.\n\n**Preferred patterns**:\n\n- Use references to separate resources (IDs or links) instead of embedding full graphs.\n- If you embed related data, embed only a small, stable summary (e.g., `{id, name}`), not the full related object.\n\n**When nesting is acceptable**:\n\n- Small, intrinsic value objects that are not meaningful as standalone resources (e.g., `address`, `coordinates`).\n- Stable summary/reference shapes.\n\n**Anti-patterns**:\n\n- Deeply nested graphs where changes to one domain object ripple into many responses.\n- Embedding large sub-objects that make pagination/filtering/patching difficult.\n",
+    "rationale": "Deep nesting makes responses brittle and hard to evolve, and it increases payload size and coupling across services.",
+    "compatNotes": "Guidance. Avoid refactors that rename fields without a compatibility plan."
+  },
+  "reviewNotes": []
+}

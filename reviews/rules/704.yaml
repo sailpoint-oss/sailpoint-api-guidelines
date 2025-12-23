@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "704",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#704",
+    "url": "/docs/rules/payload-conventions#704"
+  },
+  "currentTitle": "MAY pass non-JSON media types via standard formats",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MAY pass non-JSON media types via standard HTTP formats",
+    "proposedText": "**Intent**: support downloads/uploads/exports without abusing JSON or base64-in-JSON.\n\nWhen non-JSON content types are needed (e.g., PDF, CSV, images), APIs MAY use standard content negotiation and HTTP conventions.\n\n**Download pattern**:\n\n```http\nGET /reports/123/content\nAccept: application/pdf\n```\n\n```http\nHTTP/1.1 200 OK\nContent-Type: application/pdf\nContent-Disposition: attachment; filename=\"report-123.pdf\"\n```\n\n**Upload pattern**:\n\n```http\nPUT /avatars/123\nContent-Type: image/png\n```\n\n**Large exports** (recommended):\n\n- Prefer an async job resource:\n  - `POST /exports` → `202 Accepted` + status URL\n  - `GET /exports/{id}` → status + link to download\n\n**Rules**:\n\n- Always set the correct `Content-Type`.\n- Use `Content-Disposition` for downloads when appropriate.\n- Keep JSON for error responses even when the success body is non-JSON (see [#404]).\n\n**Testability**:\n\n- OpenAPI documents the non-JSON response content types under `responses.content`.\n- Example requests/responses include `Accept` and correct `Content-Type`.\n",
+    "rationale": "Many real APIs need file transfer or binary content. Using standard HTTP patterns keeps interoperability high and avoids inventing bespoke JSON wrappers.",
+    "compatNotes": "Additive capability. Be explicit about content negotiation and error behavior."
+  },
+  "reviewNotes": []
+}

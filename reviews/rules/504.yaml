@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "504",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#504",
+    "url": "/docs/rules/resource-modeling-and-urls#504"
+  },
+  "currentTitle": "SHOULD define useful resources",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD define useful resources (optimize for common workflows)",
+    "proposedText": "**Intent**: keep APIs practical and efficient for the most common use cases.\n\nResources SHOULD be designed around the common workflows and support efficient retrieval without excessive round trips.\n\n**Checklist**:\n\n- Resource boundaries reflect domain concepts (see [#506]).\n- Primary workflows are supported end-to-end (see [#503]).\n- Collections support pagination (see [#602]) and conventional query params (see [#600]).\n- Filtering/sorting are available where lists would otherwise be unusable.\n- Responses are lean by default, with optional field selection/embedding when needed (see [#900], [#901]).\n\n**Examples**:\n\n- ✅ `GET /accounts?filters=status eq \"ACTIVE\"&sorters=name:asc&limit=50&offset=0`\n- ✅ `GET /accounts/{id}?fields=(id,name,status)`\n\n**Anti-patterns**:\n\n- ❌ Exposing dozens of near-duplicate resources that only exist to support a single UI view.\n- ❌ Requiring clients to fetch N related resources with N additional calls for the common case.\n\n**Testability**:\n\n- A consumer can accomplish the top workflows with a small number of calls and predictable patterns.\n",
+    "rationale": "APIs that are ‘technically REST’ but not optimized for real workflows force clients into brittle orchestration and create performance problems.",
+    "compatNotes": "Primarily design guidance."
+  },
+  "reviewNotes": []
+}

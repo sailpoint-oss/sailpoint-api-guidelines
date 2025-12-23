@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "705",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#705",
+    "url": "/docs/rules/payload-conventions#705"
+  },
+  "currentTitle": "SHOULD use standard media types",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: maximize interoperability across clients, proxies, and tooling.\n\nAPIs SHOULD use standard IANA-registered media types.\n\n**Defaults**:\n\n- Success JSON: `application/json`\n- Error responses: `application/problem+json` (see [#404])\n\n**Common non-JSON cases**:\n\n- File download: `application/pdf`, `text/csv`, `application/zip`, etc.\n- Binary upload/download: `application/octet-stream`\n- Multipart upload: `multipart/form-data`\n\n**Rules**:\n\n- Always set the correct `Content-Type` for responses.\n- Require clients to send the correct `Content-Type` for requests with bodies.\n- Avoid custom/vendor media types unless you have a strong compatibility reason.\n\n**Testability**:\n\n- OpenAPI declares correct content types for request/response bodies.\n",
+    "rationale": "Standard media types avoid bespoke negotiation logic and improve compatibility with generic tooling and SDK generation.",
+    "compatNotes": "Documentation clarification."
+  },
+  "reviewNotes": []
+}

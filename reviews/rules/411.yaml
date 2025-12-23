@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "411",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#411",
+    "url": "/docs/rules/http-semantics#411"
+  },
+  "currentTitle": "MAY use secondary key for idempotent POST",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MAY use secondary key for idempotent POST (externalId / alternate key)",
+    "proposedText": "**Intent**: make create operations idempotent without relying on temporary idempotency-key storage.\n\nWhen creating resources with `POST /collection`, APIs MAY accept a client-provided **secondary key** (also called `externalId`, `alternateId`, or `clientToken`) that is unique within the relevant scope.\n\n**Requirements if used**:\n\n- Document the field name, scope, and uniqueness constraints.\n- Enforce uniqueness server-side.\n- Define replay behavior:\n  - If the same secondary key is sent again with the same effective payload, return the existing resource (commonly `200 OK` or `201 Created` with the same `Location`).\n  - If the same secondary key is sent with a conflicting payload, return `409 Conflict` with details.\n\n**Example**:\n\n```http\nPOST /accounts\nContent-Type: application/json\n\n{ \"externalId\": \"crm:account:12345\", \"name\": \"Example\" }\n```\n\n**Notes**:\n\n- Secondary keys are best for resources that naturally have a stable external identifier (imports, integrations, id mappings).\n- Prefer opaque server IDs as the primary identifier in URLs; secondary keys are for idempotency and lookup.\n",
+    "rationale": "Secondary keys are durable and avoid the operational burden of storing idempotency keys, while still preventing duplicate creates on retries.",
+    "compatNotes": "Additive. Ensure uniqueness constraints are well-defined and do not create a new attack surface (validate and normalize keys)."
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,39 @@
+---
+title: Authentication, authorization, & scopes
+description: OAuth patterns, scope design, and how to document auth requirements in OpenAPI.
+---
+
+# Authentication, authorization, & scopes
+
+Security needs to be consistent and clearly documented: clients should know what credentials are
+required, what scopes are needed, and what failures look like.
+
+## When to use this guide
+
+- You’re adding OAuth requirements to an API.
+- You’re defining scopes and want consistent naming and documentation.
+
+## Recommendations
+
+- Authenticate and authorize **before** doing expensive work.
+- Document security requirements per operation in OpenAPI.
+- Make authorization failures predictable (status code + error contract).
+
+## Scope design (practical guidance)
+
+- Prefer scopes that match **capabilities** (read/write/admin) for a resource domain.
+- Avoid overly granular scopes that explode in number unless there is a clear governance need.
+- Document what each scope grants and any important constraints.
+
+## OpenAPI documentation tips
+
+- Define `securitySchemes` once and reuse.
+- Add operation-level `security` requirements.
+- Provide error examples for auth failures.
+
+## Related reading
+
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+- [Error model & Problem Details](/docs/guides/error-model-and-problem-details)
+
+

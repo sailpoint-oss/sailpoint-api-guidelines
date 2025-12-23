@@ -1,0 +1,13 @@
+{
+  "title": "Appendices",
+  "description": "Patterns, recipes, and supporting reference material",
+  "pages": [
+    "index",
+    "glossary",
+    "review-checklist",
+    "compatibility-checklist",
+    "openapi-snippet-library",
+    "optimistic-locking",
+    "pagination-recipes"
+  ]
+}

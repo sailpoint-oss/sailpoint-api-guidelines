@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "102",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#102",
+    "url": "/docs/rules/api-contract-and-documentation#102"
+  },
+  "currentTitle": "SHOULD provide an API user manual",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make APIs usable without tribal knowledge by documenting real workflows, edge cases, and operational expectations.\n\nProvide an API user manual that complements OpenAPI.\n\n**What to include**:\n\n- **Getting started**: authentication approach, base URLs/environments, common headers.\n- **Core workflows**: step-by-step guides per API slice / use case (create, update, search, pagination).\n- **Edge cases**: validation rules, idempotency expectations, conflict handling, eventual consistency.\n- **Error handling**: common errors and recommended client behavior (retry vs no-retry).\n- **Performance**: pagination guidance, filtering/sorting limitations, rate limits if applicable.\n\n**OpenAPI linkage (recommended)**:\n\n- Link the manual using OpenAPI `externalDocs` (root-level and/or per-tag / per-operation where appropriate).\n\n**Testability**:\n\n- Documentation exists and is reachable from the published OpenAPI (via `externalDocs`).\n- At least one end-to-end example per primary workflow is present and matches schemas.\n",
+    "rationale": "OpenAPI describes the surface area, but a user manual teaches successful usage patterns and reduces integration mistakes.",
+    "compatNotes": "Doc-only change; clarifies expected content and strengthens guidance to link docs via `externalDocs`."
+  },
+  "reviewNotes": [
+    "Expand guidance: require workflow-oriented docs and recommend OpenAPI `externalDocs` linkage.",
+    "Accepted for Phase A implementation."
+  ]
+}

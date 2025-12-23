@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "409",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#409",
+    "url": "/docs/rules/http-semantics#409"
+  },
+  "currentTitle": "SHOULD consider idempotent POST/PATCH",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD consider idempotent POST/PATCH (safe retries)",
+    "proposedText": "**Intent**: make client retries safe and reduce duplicate side effects.\n\nFor operations that clients are likely to retry (network timeouts, 5xx, gateway errors), APIs SHOULD provide an idempotency mechanism for POST/PATCH where practical.\n\n**Recommended mechanisms**:\n\n- **Optimistic locking** for updates: `ETag` + `If-Match` (preferred for PATCH/PUT).\n- **Idempotency-Key** header for side-effecting requests (see [#410]).\n- **Secondary/external keys** for create operations (see [#411]).\n\n**When to prioritize idempotency**:\n\n- Create endpoints (`POST /resources`) where duplicates are harmful.\n- “Command” endpoints that trigger work (e.g., `POST /imports`, `POST /exports`).\n- PATCH endpoints used by UIs that may retry on transient failures.\n\n**Expected behavior** (at a high level):\n\n- If the same request is replayed within the idempotency window, return the **same outcome** (same created resource, same response body/status) rather than performing the action twice.\n- If the key is reused with a different payload, return a deterministic error (commonly `409 Conflict`) and explain it.\n\n**Notes**:\n\n- Idempotency is not required for every endpoint, but the API MUST document retry safety semantics either way.\n",
+    "rationale": "Retries are inevitable; without idempotency, clients create duplicate resources and trigger duplicate side effects, causing data integrity issues and support load.",
+    "compatNotes": "Doc guidance. Introducing idempotency is additive; ensure the chosen mechanism is documented and consistent."
+  },
+  "reviewNotes": []
+}

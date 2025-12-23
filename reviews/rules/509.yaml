@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "509",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#509",
+    "url": "/docs/rules/resource-modeling-and-urls#509"
+  },
+  "currentTitle": "SHOULD limit number of resource types",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD limit the number of resource types",
+    "proposedText": "**Intent**: keep APIs learnable and prevent uncontrolled surface area growth.\n\nKeep the number of distinct resource types manageable to reduce cognitive load for API consumers.\n\n**Warning signs**:\n\n- Many resources differ only by a small flag or view.\n- You have multiple resources that represent the same domain concept (synonyms).\n- Clients routinely need to call many endpoints to do one workflow.\n\n**Refinement guidance**:\n\n- Consolidate near-duplicate resources by using query parameters, field filtering (`fields`), or embedding (`embed`) where appropriate.\n- Prefer a small set of well-designed core resources supporting filters/sorters over many narrow endpoints.\n\n**Testability**:\n\n- New resource introductions include rationale and alternatives considered (extend existing vs add new).\n",
+    "rationale": "API sprawl makes integration harder and increases maintenance costs. Thoughtful consolidation improves usability and consistency.",
+    "compatNotes": "Consolidation should be done via additive evolution + deprecation; avoid removing widely used resources without a migration plan."
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "402",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#402",
+    "url": "/docs/rules/http-semantics#402"
+  },
+  "currentTitle": "MUST fulfill method properties",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST fulfill HTTP method properties (safe/idempotent/cacheable)",
+    "proposedText": "**Intent**: enable safe retries, correct caching, and predictable client behavior.\n\nHTTP methods MUST follow their defined properties:\n\n- **Safe**: repeated calls do not cause state changes (GET/HEAD/OPTIONS).\n- **Idempotent**: repeating the call has the same effect as a single call (GET/HEAD/PUT/PATCH (often), DELETE).\n- **Cacheable**: responses can be cached when appropriate (GET/HEAD).\n\n**Examples**:\n\n- Safe:\n  - ✅ `GET /accounts/{id}` returning current state\n  - ❌ `GET /accounts/{id}` that updates `lastViewedAt`\n\n- Idempotent:\n  - ✅ `DELETE /accounts/{id}` deleting (repeat returns 404/410 or 204; effect is “deleted”)\n  - ✅ `PUT /accounts/{id}` full replacement\n  - ❌ `POST /accounts/{id}/disable` (repeat creates multiple side effects) unless explicitly made idempotent\n\n- Cacheable:\n  - ✅ `GET /accounts/{id}` can be cache-validated via `ETag`/`If-None-Match` (see [#182])\n\n**Guidance**:\n\n- If clients might retry, design operations to be idempotent where feasible (see [#409], [#410]).\n- If an operation is not idempotent, document retry behavior and recommended client handling.\n\n**Testability**:\n\n- GET/HEAD endpoints do not perform persistent writes.\n- DELETE/PUT/PATCH semantics match documentation and do not produce unexpected side effects.\n",
+    "rationale": "Safe/idempotent semantics are assumed by HTTP clients, gateways, and retry middleware. Violations cause duplicate work, data corruption, and caching bugs.",
+    "compatNotes": "If existing endpoints violate these properties, fix via new endpoints/operations and deprecate old behavior to avoid surprising clients."
+  },
+  "reviewNotes": []
+}

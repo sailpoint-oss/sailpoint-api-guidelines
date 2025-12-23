@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "601",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#601",
+    "url": "/docs/rules/requests-and-querying#601"
+  },
+  "currentTitle": "MUST define collection format of header/query parameters",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST define collection format of header/query parameters",
+    "proposedText": "**Intent**: ensure clients can reliably generate requests and servers can parse them.\n\nWhen a parameter can accept multiple values (arrays), you MUST define and document its encoding format.\n\n**Recommendation (preferred)**:\n\n- Repeated parameters:\n  - `?status=ACTIVE&status=DISABLED`\n\n**Alternative**:\n\n- Comma-separated values:\n  - `?status=ACTIVE,DISABLED`\n\n**Rules**:\n\n- Choose one canonical encoding per parameter.\n- Do not accept multiple encodings unless you explicitly document which encodings are supported and which one is canonical.\n\n**OpenAPI guidance**:\n\n- Use `style: form` and `explode: true` (repeated) or `explode: false` (comma-separated) for query arrays.\n\n**Testability**:\n\n- OpenAPI parameter definitions include `style`/`explode` and example requests match the encoding.\n",
+    "rationale": "Array encoding is a common source of interoperability bugs between SDKs and servers. Explicit OpenAPI encoding keeps clients consistent.",
+    "compatNotes": "Changing encoding rules is breaking; document early and keep stable."
+  },
+  "reviewNotes": []
+}

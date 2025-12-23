@@ -1,0 +1,15 @@
+{
+  "title": "Guides",
+  "description": "Rationale, patterns, and practical guidance",
+  "icon": "BookText",
+  "root": false,
+  "pages": [
+    "index",
+    "design-and-review-workflow",
+    "openapi-authoring",
+    "error-model-and-problem-details",
+    "pagination-and-filtering",
+    "idempotency-and-retries",
+    "authn-authz-and-scopes"
+  ]
+}

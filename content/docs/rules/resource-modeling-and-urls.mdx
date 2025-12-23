@@ -1,0 +1,371 @@
+---
+title: "Resource Modeling & URLs"
+description: Rules for resource naming, URL structure, identifiers, and modeling API concepts cleanly.
+---
+
+These rules cover how to model domain concepts as resources and expose them via stable, consistent
+URLs.
+
+**Related guides**:
+- [Design & review workflow](/docs/guides/design-and-review-workflow)
+
+**Related reference**:
+- [Glossary](/docs/appendices/glossary)
+- [Review checklist](/docs/appendices/review-checklist)
+
+## Resource & URL Design
+<RuleHeader id="500" level="MUST" title="Avoid /api base path" />
+### #500 - Avoid /api Base Path
+
+**Intent**: keep public URLs clean and avoid redundant, implementation-driven path segments.
+
+Avoid redundant base path segments like `/api` in public-facing URL paths.
+
+- Prefer configuring environment-specific base URLs via OpenAPI `servers`.
+- Prefer meaningful, domain-driven resource paths (see [#506]).
+
+**Examples**:
+
+- ✅ `https://example.sailpoint.com/v2026/accounts`
+- ❌ `https://example.sailpoint.com/api/v2026/accounts`
+
+**Note**:
+
+- This guidance is part of overall URL hygiene; see [#501] for normalization and canonical path rules.
+
+<RuleHeader id="501" level="MUST" title="Define canonical URL forms" />
+### #501 - Define Canonical URL Forms
+
+**Intent**: avoid routing ambiguity, caching surprises, and inconsistent client behavior.
+
+APIs MUST define and enforce a canonical URL form.
+
+**Rules**:
+
+- No duplicate slashes (`//`).
+- No empty path segments.
+- Define a trailing-slash policy and apply it consistently (either always without trailing slash, or always with; prefer without).
+- Use lowercase hyphenated path segments (see [#114]).
+- Avoid redundant base path segments like `/api` in public URLs (see [#500]).
+
+**Examples**:
+
+- **Good**:
+  - ✅ `/accounts/123`
+  - ✅ `/accounts/123/entitlements`
+  - ✅ `/identity-profiles/{identityProfileId}`
+- **Bad**:
+  - ❌ `//accounts//123//`
+  - ❌ `/accounts/123/` (if trailing slashes are not canonical)
+  - ❌ `/accounts//123`
+  - ❌ `/Accounts/123` (wrong casing)
+
+**Server behavior**:
+
+- If a non-canonical form is received, either:
+  - normalize internally and treat as equivalent, or
+  - redirect to the canonical form (careful with auth/caching), or
+  - reject with a clear `400` (rare; usually normalization is friendlier)
+
+<RuleHeader id="502" level="SHOULD" title="Model resources (avoid action endpoints)" />
+### #502 - Model Resources (Avoid Action Endpoints)
+
+**Intent**: keep APIs consistent, predictable, and aligned with HTTP semantics.
+
+Prefer resource-oriented endpoints over RPC/action-style endpoints. Model operations as HTTP verbs applied to resources.
+
+**Examples**:
+
+- ✅ `POST /accounts` (create an account)
+- ✅ `PATCH /accounts/{accountId}` (update an account)
+- ❌ `POST /accounts/{accountId}/update`
+- ❌ `GET /accounts/{accountId}/disable`
+
+**When you really need an action**:
+
+Prefer creating a noun-like **command/request resource** rather than embedding a verb:
+
+- ✅ `POST /accounts/{accountId}/disable-requests`
+- ✅ `POST /access-requests` (request resource)
+- ❌ `POST /accounts/{accountId}/disable`
+
+<RuleHeader id="503" level="SHOULD" title="Model business processes" />
+### #503 - Model Business Processes
+
+**Intent**: enable real customer workflows without forcing clients to stitch together fragile sequences.
+
+APIs SHOULD model complete business processes and workflows—not just database tables.
+
+**What this means**:
+
+- Identify the primary workflows for an API slice and ensure the API supports them end-to-end.
+- Prefer stable workflow resources that can be created/queried/audited over ad-hoc “doThing” endpoints.
+- Document the workflow in a step-by-step guide (see [#102]).
+
+**Examples**:
+
+- Access request workflow:
+  - ✅ `POST /access-requests` (create request)
+  - ✅ `GET /access-requests/{id}` (check status)
+  - ✅ `GET /access-requests?filters=...` (list)
+
+- Long-running workflow:
+  - ✅ `POST /imports` (create import job)
+  - ✅ `GET /imports/{id}` (status/results)
+
+**Anti-patterns**:
+
+- ❌ Exposing only low-level CRUD and requiring clients to reverse-engineer process state machines.
+- ❌ Modeling workflows only as RPC verbs (e.g., `/startImport`, `/completeImport`) without durable resources.
+
+<RuleHeader id="504" level="SHOULD" title="Define useful resources" />
+### #504 - Define Useful Resources
+
+**Intent**: keep APIs practical and efficient for the most common use cases.
+
+Resources SHOULD be designed around the common workflows and support efficient retrieval without excessive round trips.
+
+**Checklist**:
+
+- Resource boundaries reflect domain concepts (see [#506]).
+- Primary workflows are supported end-to-end (see [#503]).
+- Collections support pagination (see [#602]) and conventional query params (see [#600]).
+- Filtering/sorting are available where lists would otherwise be unusable.
+- Responses are lean by default, with optional field selection/embedding when needed (see [#900], [#901]).
+
+**Examples**:
+
+- ✅ `GET /accounts?filters=status eq "ACTIVE"&sorters=name:asc&limit=50&offset=0`
+- ✅ `GET /accounts/{id}?fields=(id,name,status)`
+
+**Anti-patterns**:
+
+- ❌ Exposing dozens of near-duplicate resources that only exist to support a single UI view.
+- ❌ Requiring clients to fetch N related resources with N additional calls for the common case.
+
+<RuleHeader id="505" level="SHOULD" title="Keep URLs verb-free" />
+### #505 - Keep URLs Verb-free
+
+**Intent**: keep the URL space stable and expressive via HTTP methods.
+
+Prefer noun-based URL paths. Avoid verbs in paths; use HTTP methods to express the action.
+
+**When you really need an action**:
+
+- Prefer a noun-like sub-resource representing the request, e.g. `POST /accounts/{id}/disable-requests`.
+- Avoid RPC-style verbs like `POST /accounts/{id}/disable`.
+
+**Examples**:
+
+- ✅ `DELETE /accounts/{accountId}`
+- ❌ `GET /accounts/{accountId}/delete`
+
+<RuleHeader id="506" level="MUST" title="Use domain-specific resource names" />
+### #506 - Use Domain-specific Resource Names
+
+**Intent**: make the API intuitive for customers/partners and stable across internal refactors.
+
+Resource names should reflect domain concepts and business terminology rather than technical implementation details.
+
+**Examples**:
+
+- ✅ `/accounts`, `/entitlements`, `/identity-profiles`
+- ❌ `/dbUsers`, `/tblEntitlements`, `/internalAccounts`
+
+<RuleHeader id="507" level="MUST" title="Nest sub-resources only when tightly coupled" />
+### #507 - Nest Sub-resources Only When Tightly Coupled
+
+**Intent**: express ownership/scoping clearly and prevent ambiguous identifiers.
+
+Use nested URL paths for sub-resources that are **tightly coupled** to a parent and cannot exist independently.
+
+**A sub-resource is \"tightly coupled\" when**:
+
+- It has no meaning without the parent (lifecycle is owned by parent).
+- Authorization is scoped to the parent.
+- The sub-resource identity is only unique within the parent.
+
+**Examples (nested is correct)**:
+
+- ✅ `/users/{userId}/preferences`
+- ✅ `/accounts/{accountId}/entitlements` (if entitlements are scoped to the account context)
+- ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`
+
+**Anti-examples (nested is misleading)**:
+
+- ❌ `/accounts/{accountId}/access-requests/{accessRequestId}` if access requests have a global ID and independent lifecycle (prefer `/access-requests/{accessRequestId}` with filters)
+
+<RuleHeader id="508" level="SHOULD" title="Prefer non-nested URLs for independent resources" />
+### #508 - Prefer Non-nested URLs for Independent Resources
+
+**Intent**: keep URLs stable, shallow, and reusable when resources have independent identity/lifecycle.
+
+Prefer flat (non-nested) URLs when a resource is independently addressable.
+
+**A resource is independently addressable when**:
+
+- It has a globally unique ID.
+- It can exist without a single parent.
+- It has its own lifecycle and can be linked/referenced from multiple parents.
+
+**Examples (prefer flat)**:
+
+- ✅ `/access-requests/{accessRequestId}` (global workflow resource)
+- ✅ `/entitlements/{entitlementId}` (if entitlements exist globally)
+- ✅ `/accounts?identityId=...` (filter instead of nesting)
+
+**Acceptable alternatives to deep nesting**:
+
+- Filtering on parent ID: `GET /entitlements?accountId={accountId}`
+- Relationship resources: `GET /account-entitlements?accountId=...`
+- Links in payloads: `{ "links": { "entitlements": "/entitlements?accountId=..." } }`
+
+<RuleHeader id="509" level="SHOULD" title="Limit resource types" />
+### #509 - Limit Resource Types
+
+**Intent**: keep APIs learnable and prevent uncontrolled surface area growth.
+
+Keep the number of distinct resource types manageable to reduce cognitive load for API consumers.
+
+**Warning signs**:
+
+- Many resources differ only by a small flag or view.
+- You have multiple resources that represent the same domain concept (synonyms).
+- Clients routinely need to call many endpoints to do one workflow.
+
+**Refinement guidance**:
+
+- Consolidate near-duplicate resources by using query parameters, field filtering (`fields`), or embedding (`embed`) where appropriate.
+- Prefer a small set of well-designed core resources supporting filters/sorters over many narrow endpoints.
+
+<RuleHeader id="510" level="SHOULD" title="Limit nesting depth" />
+### #510 - Limit Nesting Depth
+
+**Intent**: keep URLs readable and avoid deeply-coupled endpoint hierarchies.
+
+Limit URL path nesting depth to **3 levels or fewer**.
+
+**Rule of thumb**:
+
+- If you need more than 3 levels, consider flattening and using filtering instead.
+
+**Examples**:
+
+- ✅ `/accounts/{accountId}/entitlements`
+- ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`
+- ❌ `/orgs/{orgId}/identities/{identityId}/accounts/{accountId}/entitlements`
+
+<RuleHeader id="512" level="MUST" title="Use URL-friendly IDs" />
+### #512 - Use URL-friendly IDs
+
+**Intent**: avoid encoding ambiguity and ensure IDs work across tooling, proxies, and clients.
+
+Resource identifiers used in URL path segments MUST be URL-friendly.
+
+**Requirements**:
+
+- Prefer opaque string IDs such as UUIDs (see [#804]) or base64url-encoded identifiers.
+- IDs MUST NOT contain spaces or characters that require frequent percent-encoding in normal usage.
+- IDs MUST NOT contain unescaped unicode.
+- IDs MUST NOT contain `/` unless your routing explicitly supports it (rare; avoid by default).
+
+**Allowed character guidance** (recommended safe set for path segments):
+
+- `[A-Za-z0-9._:-]` (and optionally `~`)
+
+**Examples**:
+
+- ✅ `2c9180837c0a1234017c0a9999990000`
+- ✅ `3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b` (UUID)
+- ✅ `SGVsbG9fV29ybGQtMTIz` (base64url)
+- ❌ `john doe` (space)
+- ❌ `部门-1` (unicode)
+- ❌ `a/b` (slashes; breaks routing)
+
+**Notes**:
+
+- If an ID can include unsafe characters (legacy/natural keys), it MUST be carried as a query parameter or body field instead of a path segment.
+
+<RuleHeader id="513" level="MUST" title="Never include customer org names in paths" />
+### #513 - Never Include Customer Org Names in Paths
+
+**Intent**: prevent tenant leakage and keep URLs stable across customer renames.
+
+Public APIs MUST NOT embed customer org names or tenant identifiers in URL path structures.
+
+**Why**:
+
+- Org names can change and are not stable identifiers.
+- Embedding tenant identifiers increases data leakage risk and complicates caches/logs.
+
+**Preferred approach**:
+
+- Determine tenant/org scope from authentication context (token claims) and/or standard headers.
+
+**Examples**:
+
+- ✅ `GET /accounts` (scope inferred from auth context)
+- ❌ `GET /customers/acme-corp/accounts`
+- ❌ `GET /orgs/{orgName}/accounts`
+
+**Notes**:
+
+- Internal-only administrative APIs may have different constraints; this rule applies to public, customer-facing APIs.
+
+**Related rules**: [#300], [#206]
+
+---
+
+<RuleHeader id="514" level="MUST" title="Avoid sequential numeric IDs" />
+### #514 - Avoid Sequential Numeric IDs
+
+**Intent**: reduce enumeration risk and avoid leaking internal scale/ordering.
+
+APIs MUST NOT expose sequential numeric identifiers as public resource IDs.
+
+**Why**:
+
+- Sequential IDs are easy to enumerate/scrape.
+- They leak business scale and internal ordering.
+
+**Preferred alternatives**:
+
+- UUID/ULID/GUID (opaque string IDs).
+- Non-sequential natural keys only when they are truly stable and non-sensitive.
+
+**Notes**:
+
+- This rule is about *public identifiers*. Internal database surrogate keys may be sequential; do not expose them directly.
+
+**Testability**:
+
+- Resource IDs shown in URLs and payloads are non-sequential and not trivially enumerable.
+
+---
+
+## Hypermedia & Links
+<RuleHeader id="511" level="MUST" title="Target REST maturity level 2" />
+### #511 - Target REST Maturity Level 2
+
+**Intent**: make APIs predictable by using HTTP as designed.
+
+APIs MUST target at least REST Maturity Model (RMM) **Level 2**: resource-oriented URLs + correct HTTP methods + correct status codes.
+
+**What this means in practice**:
+
+- Use resource URLs (nouns), not action/RPC endpoints.
+- Use HTTP methods correctly (see [#401]) and respect method properties (see [#402]).
+- Use standard, semantically correct status codes (see [#403]).
+- Use standard content negotiation and media types (see [#705]).
+- Use a standardized error contract (Problem Details) (see [#404]).
+
+**Not required**:
+
+- Hypermedia controls (RMM Level 3) are not required; do not mandate HAL/JSON:API link schemas.
+
+**Testability**:
+
+- Reviewers can verify endpoints are noun-based and use correct HTTP methods/status codes.
+- OpenAPI documents success + error responses and media types per operation.
+
+---

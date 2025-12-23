@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "604",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#604",
+    "url": "/docs/rules/requests-and-querying#604"
+  },
+  "currentTitle": "SHOULD design simple query languages with query params",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST align on a single query format across the API (filters/sorters; GET + POST search)",
+    "proposedText": "**Intent**: make querying consistent so documentation, parsing, and shared client/server logic can be reused.\n\nAPIs MUST align on a single, consistent query format across endpoints so all query experiences share the same documentation patterns and parsing logic.\n\n**Baseline conventions**:\n\n- Use the same parameter names and shapes across APIs:\n  - `filters` for filter expressions\n  - `sorters` for ordering\n  - `limit`/`offset` for pagination (see [Pagination](/docs/rules/pagination))\n- The **grammar** for `filters` and `sorters` MUST be consistent across endpoints.\n- Endpoints MUST document the **allowed field list** for filtering and sorting.\n\n## 1) Simple queries via query parameters (GET)\n\nUse query params for simple filters and ordering.\n\n**Example**:\n\n```http\nGET /accounts?filters=status eq \"ACTIVE\"&sorters=createdAt:desc&limit=50&offset=0\n```\n\n## 2) Complex queries via a single standard search endpoint pattern (POST)\n\nWhen queries exceed practical URL length/complexity, use a dedicated POST search endpoint with **GET-like semantics** (no resource creation):\n\n- `POST /{resource}/search`\n\n**Requirements**:\n\n- Clearly document “search semantics; no creation”.\n- Safe to retry when combined with idempotency guidance (see [#409], [#410]).\n- Use a single standard request body shape across APIs (same field names, same operator set).\n\n**Example**:\n\n```http\nPOST /accounts/search\nContent-Type: application/json\n\n{\n  \"filters\": [\n    { \"field\": \"status\", \"op\": \"eq\", \"value\": \"ACTIVE\" },\n    { \"field\": \"createdAt\", \"op\": \"gte\", \"value\": \"2025-01-01T00:00:00Z\" }\n  ],\n  \"sorters\": [{ \"field\": \"createdAt\", \"direction\": \"desc\" }],\n  \"limit\": 50,\n  \"offset\": 0\n}\n```\n\n**Notes**:\n\n- Do not invent bespoke query syntaxes per endpoint.\n- Keep the documentation for the shared query grammar in one place and link to it from endpoints.\n\n**Related rules**: [#600], [#601], [#603]\n",
+    "rationale": "A single query format reduces fragmentation, makes SDKs reusable, and prevents every team from inventing their own filter/sort DSL and documentation.",
+    "compatNotes": "Docs/pattern change. Existing APIs can migrate over time; new APIs should adopt the shared query format immediately."
+  },
+  "reviewNotes": []
+}

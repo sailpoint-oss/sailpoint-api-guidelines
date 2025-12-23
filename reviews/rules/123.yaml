@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "123",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#123",
+    "url": "/docs/rules/api-contract-and-documentation#123"
+  },
+  "currentTitle": "MUST use same semantics for null vs. absent properties",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use the same semantics for null vs. absent properties",
+    "proposedText": "**Intent**: avoid subtle client/server mismatches and reduce ambiguity.\n\nFor optional properties, `null` and “absent” MUST have the **same semantics** unless the API explicitly defines a different meaning.\n\n**Default policy**:\n\n- Prefer omitting optional properties over sending `null`.\n- If an optional property is omitted in a response, clients should treat it as “not provided / not applicable,” not as a third state.\n\n**Boolean-specific guidance**:\n\n- If a boolean is not applicable, omit it rather than returning `null` (see [#122]).\n\n**If you need \"clear\" semantics**:\n\n- Do not overload `null` vs absent informally.\n- Prefer explicit PATCH semantics (e.g., JSON Patch) or a documented request contract that clearly defines how values are cleared.\n\n**Examples**:\n\n- ✅ `{}` and `{ \"field\": null }` mean the same thing (if `field` is optional and nullable)\n- ✅ For optional booleans: `{}` instead of `{ \"enabled\": null }`\n\n**Testability**:\n\n- OpenAPI marks `nullable: true` only when `null` is actually allowed.\n- Docs explicitly define any cases where `null` carries special meaning.\n",
+    "rationale": "Many languages and SDKs treat missing vs null differently; unless you define the difference carefully, you create bugs and incompatible client behavior.",
+    "compatNotes": "Changing null/absent semantics is breaking. Choose a policy early and keep it consistent."
+  },
+  "reviewNotes": [
+    "Clarify default policy (omit over null), and explicitly answer the boolean case: omit it if not applicable."
+  ]
+}

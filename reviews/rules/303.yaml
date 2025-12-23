@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "303",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#303",
+    "url": "/docs/rules/security-and-authorization#303"
+  },
+  "currentTitle": "MUST define user levels (capabilities) for endpoints using userAuth",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make authorization requirements explicit beyond OAuth scopes.\n\nFor endpoints that use `userAuth`, APIs MUST document the required user capability levels/roles in addition to OAuth scopes.\n\n**Requirements**:\n\n- State the required user level/role(s) for the operation.\n- If authorization differs by operation mode (read vs write), document the differences.\n- If the requirement is conditional (feature flags, tenant config), document the condition.\n\n**Where to document**:\n\n- In the OpenAPI operation description.\n- Prefer a consistent vendor extension if tooling consumes it (if available in your platform).\n\n**Testability**:\n\n- A reviewer can answer: “Which scopes are required?” and “Which user roles/capabilities are required?” from the OpenAPI + docs.\n",
+    "rationale": "Scopes alone rarely express the full authorization model for end-user actions. Explicit capability/role requirements prevent surprises and support tickets.",
+    "compatNotes": "Documentation-only; does not change runtime auth behavior."
+  },
+  "reviewNotes": []
+}

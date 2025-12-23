@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "512",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#512",
+    "url": "/docs/rules/resource-modeling-and-urls#512"
+  },
+  "currentTitle": "MUST use URL-friendly IDs",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use URL-friendly IDs",
+    "proposedText": "**Intent**: avoid encoding ambiguity and ensure IDs work across tooling, proxies, and clients.\n\nResource identifiers used in URL path segments MUST be URL-friendly.\n\n**Requirements**:\n\n- Prefer opaque string IDs such as UUIDs (see [#804]) or base64url-encoded identifiers.\n- IDs MUST NOT contain spaces or characters that require frequent percent-encoding in normal usage.\n- IDs MUST NOT contain unescaped unicode.\n- IDs MUST NOT contain `/` unless your routing explicitly supports it (rare; avoid by default).\n\n**Allowed character guidance** (recommended safe set for path segments):\n\n- `[A-Za-z0-9._:-]` (and optionally `~`)\n\n**Examples**:\n\n- ✅ `2c9180837c0a1234017c0a9999990000`\n- ✅ `3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b` (UUID)\n- ✅ `SGVsbG9fV29ybGQtMTIz` (base64url)\n- ❌ `john doe` (space)\n- ❌ `部门-1` (unicode)\n- ❌ `a/b` (slashes; breaks routing)\n\n**Notes**:\n\n- If an ID can include unsafe characters (legacy/natural keys), it MUST be carried as a query parameter or body field instead of a path segment.\n",
+    "rationale": "IDs that require special encoding cause subtle bugs, security issues, and routing problems across clients, SDKs, and gateways.",
+    "compatNotes": "Clarification. New APIs should adopt safe IDs; legacy APIs may need migration/aliasing if they currently expose unsafe IDs."
+  },
+  "reviewNotes": []
+}

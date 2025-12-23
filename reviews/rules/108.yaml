@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "108",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#108",
+    "url": "/docs/rules/api-contract-and-documentation#108"
+  },
+  "currentTitle": "MUST use camelCase for query parameters",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use camelCase for query parameters",
+    "proposedText": "**Intent**: keep the request surface consistent with JSON conventions and reduce cognitive load.\n\nQuery parameter names MUST use **camelCase**.\n\n**Examples**:\n\n- ✅ `?sortOrder=asc&maxResults=50`\n- ✅ `?includeDisabled=true`\n- ✅ `?createdAfter=2026-01-01T00:00:00Z`\n\n**Anti-examples**:\n\n- ❌ `?sort_order=asc` (snake_case)\n- ❌ `?SortOrder=asc` (PascalCase)\n- ❌ `?include-disabled=true` (kebab-case)\n\n**Notes**:\n\n- Prefer conventional query parameter names for pagination/filtering/sorting (see [#600]).\n- Be consistent across endpoints (don’t use `pageSize` in one API and `limit` in another).\n\n**Testability**:\n\n- OpenAPI parameter names are camelCase.\n",
+    "rationale": "A single convention makes APIs easier to learn and reduces translation errors in client code. camelCase also aligns with typical JSON property naming in many SDKs.",
+    "compatNotes": "Renaming query parameters is breaking for clients. Apply consistently for new endpoints and only change via versioning or backward-compatible aliasing."
+  },
+  "reviewNotes": [
+    "Expand with more examples and tie back to conventional pagination/filter/sort parameters."
+  ]
+}

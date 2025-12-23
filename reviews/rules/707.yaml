@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "707",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#707",
+    "url": "/docs/rules/payload-conventions#707"
+  },
+  "currentTitle": "MUST define defaults for optional boolean properties",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make optional booleans predictable and eliminate guesswork.\n\nEvery optional boolean property MUST have a documented default behavior that applies when the property is absent.\n\n**Rules**:\n\n- Booleans MUST never be `null` (see [#122]).\n- If omitted, the server MUST behave as if the default value was supplied.\n- Document the default:\n  - in OpenAPI (use `default` when it is truly stable)\n  - and in prose (especially if default is contextual)\n\n**Examples**:\n\n- `includeDisabled` (optional): default is `false`.\n- `count` (optional): default is `false`.\n\n**Testability**:\n\n- Reviewers can determine the default behavior for every optional boolean.\n",
+    "rationale": "Optional booleans without defaults cause inconsistent client behavior and subtle bugs. Making defaults explicit improves interoperability and reduces support load.",
+    "compatNotes": "Documentation clarification; servers may need to align runtime behavior with documented defaults."
+  },
+  "reviewNotes": []
+}

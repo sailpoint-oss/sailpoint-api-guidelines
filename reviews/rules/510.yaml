@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "510",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#510",
+    "url": "/docs/rules/resource-modeling-and-urls#510"
+  },
+  "currentTitle": "SHOULD limit nesting depth",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD limit nesting depth",
+    "proposedText": "**Intent**: keep URLs readable and avoid deeply-coupled endpoint hierarchies.\n\nLimit URL path nesting depth to **3 levels or fewer**.\n\n**Examples**:\n\n- ✅ `/accounts/{accountId}/entitlements`\n- ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`\n- ❌ `/orgs/{orgId}/identities/{identityId}/accounts/{accountId}/entitlements`\n\n**If you need more depth**:\n\n- Flatten and filter: `GET /entitlements?accountId=...`\n- Use relationship resources: `GET /account-entitlements?accountId=...`\n- Use links in payloads to guide navigation.\n\n**Testability**:\n\n- New endpoints exceeding 3 levels include justification and are reviewed for usability.\n",
+    "rationale": "Deep nesting tends to encode implementation joins and creates brittle contracts. Shallow URLs are easier to evolve and document.",
+    "compatNotes": "Restructuring deep URLs is breaking; prefer choosing shallow patterns early."
+  },
+  "reviewNotes": []
+}

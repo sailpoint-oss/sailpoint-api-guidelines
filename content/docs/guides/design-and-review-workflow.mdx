@@ -1,0 +1,61 @@
+---
+title: Design & review workflow
+description: How to use Rules and Guides in API design, review, and implementation (for internal and external readers).
+---
+
+# Design & review workflow
+
+This guide describes a lightweight workflow for designing, reviewing, and publishing APIs using this
+hub.
+
+## When to use this guide
+
+- You’re about to design a new API and want a consistent process.
+- You’re reviewing an API change and need a shared checklist language.
+- You’re consuming an API and want to understand what “good” looks like.
+
+## Key idea: Rules are the contract; Guides explain how to apply them
+
+- **Rules** are normative (MUST/SHOULD/MAY) and have stable numeric IDs you can cite.
+- **Guides** are explanatory and pattern-oriented.
+- **Appendices** are reusable reference/recipes (copy/paste contracts, checklists, glossary).
+
+## For external readers (integrators)
+
+- Treat the Rules as a **public checklist**: URL design, error handling, pagination, and auth patterns.
+- If you find inconsistencies, include **the rule ID** in feedback (“this violates [#404]”) and link to
+  the relevant rule section.
+
+## For internal teams (designers/implementers/reviewers)
+
+### A recommended workflow
+
+1. **Start with a resource model**
+   - Identify primary resources, identifiers, and relationships.
+   - Sketch list/search shapes and expected filters/sorts.
+
+2. **Write the OpenAPI contract first**
+   - Keep OpenAPI as the single source of truth for contract + docs.
+   - Add examples early (success + error).
+
+3. **Run a structured review**
+   - Review against the Rules category-by-category (URLs, payloads, errors, pagination, security).
+   - Cite rule IDs in review comments for clarity and durable references.
+
+4. **Implement and validate**
+   - Ensure runtime behavior matches OpenAPI examples and descriptions.
+   - Keep compatibility in mind: avoid breaking changes; evolve additively.
+
+5. **Publish and maintain**
+   - Document non-obvious decisions.
+   - When changing behavior, include a compatibility note and migration guidance.
+
+## Review checklist shortcuts
+
+- Start with the [Review checklist](/docs/appendices/review-checklist).
+- For deeper patterns, use:
+  - [Error model & Problem Details](/docs/guides/error-model-and-problem-details)
+  - [Pagination & filtering](/docs/guides/pagination-and-filtering)
+  - [Idempotency & retries](/docs/guides/idempotency-and-retries)
+
+

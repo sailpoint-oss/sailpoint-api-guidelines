@@ -1,0 +1,43 @@
+---
+title: OpenAPI authoring
+description: Author and maintain OpenAPI as the single source of truth—descriptions, examples, and reusable patterns.
+---
+
+# OpenAPI authoring
+
+High-quality OpenAPI is the fastest path to consistent APIs: it enables design review, documentation,
+SDK generation, and automated checks.
+
+## When to use this guide
+
+- You’re designing a new endpoint or resource and need to structure the spec.
+- You want to standardize examples, errors, pagination, and auth across APIs.
+
+## Principles
+
+- **Spec-first**: write OpenAPI before implementation hardens.
+- **Examples are part of the contract**: examples must be realistic and match production behavior.
+- **Reuse**: centralize shared schemas (errors, pagination envelopes, common types).
+
+## Recommended structure
+
+- Define reusable schemas under `components/schemas`.
+- Define reusable errors under `components/responses` (or shared schema + per-operation response).
+- Define security under `components/securitySchemes` and apply per operation as needed.
+
+## Documentation hygiene
+
+- Every operation should have:
+  - a clear `summary`
+  - a descriptive `description` (include edge cases and compatibility notes)
+  - at least one success example and one error example
+- Use `externalDocs` to link to supporting guidance (Rules/Guides) when a concept is too large to fit
+  inline.
+
+## Copy/paste resources
+
+- [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
+- [Error model & Problem Details](/docs/guides/error-model-and-problem-details)
+- [Pagination recipes](/docs/appendices/pagination-recipes)
+
+

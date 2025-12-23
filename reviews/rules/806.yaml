@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "806",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#806",
+    "url": "/docs/rules/data-types-and-common-objects#806"
+  },
+  "currentTitle": "MUST use standardized property formats",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use standardized property formats (and validate them)",
+    "proposedText": "**Intent**: make schemas self-describing and enable validation/codegen.\n\nFor common string/number shapes, APIs MUST use standardized OpenAPI formats where they apply, and SHOULD validate them at runtime.\n\n**Requirements**:\n\n- Use `format` only when it accurately describes the values emitted/accepted.\n- Provide examples that match the declared format.\n- Prefer standards-based formats instead of ad-hoc regexes in prose.\n\n**Common formats** (examples):\n\n- `date-time` / `date` (see [#802])\n- `uuid` for UUID strings\n- `uri` for absolute URIs; `uri-reference` when relative references are allowed\n- `email` for email addresses\n- `ipv4` / `ipv6` for IP literals\n\n**OpenAPI example**:\n\n```yaml\ntype: object\nproperties:\n  createdAt:\n    type: string\n    format: date-time\n  email:\n    type: string\n    format: email\n  callbackUrl:\n    type: string\n    format: uri\n  requestId:\n    type: string\n    format: uuid\n```\n\n**Notes**:\n\n- `format` is a hint in many toolchains; if a field must be constrained beyond what `format` provides, add explicit constraints (`minLength`, `maxLength`, `pattern`) and document them.\n- Do not misuse `format` for internal implementation types.\n",
+    "rationale": "Standard formats improve interop across validators, SDK generators, and documentation tooling, reducing ambiguous string fields.",
+    "compatNotes": "Documentation clarification. Adding formats may reveal existing inconsistencies; align actual values with declared formats."
+  },
+  "reviewNotes": []
+}

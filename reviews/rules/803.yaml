@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "803",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#803",
+    "url": "/docs/rules/data-types-and-common-objects#803"
+  },
+  "currentTitle": "MUST use standards for country/language/currency codes",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST use standards for country/language/currency codes",
+    "proposedText": "**Intent**: ensure international interoperability and avoid ambiguous, product-specific code systems.\n\nUse the appropriate standards:\n\n- **Country codes**: ISO 3166-1 alpha-2 (e.g., `US`, `DE`)\n- **Language tags**: BCP 47 (e.g., `en-US`, `de-DE`)\n- **Currency codes**: ISO 4217 (e.g., `USD`, `EUR`)\n\n**Examples**:\n\n- Country: `US`, `DE`\n- Language: `en-US`, `de-DE`\n- Currency: `USD`, `EUR`\n\n**OpenAPI guidance** (examples):\n\n```yaml\ncountryCode:\n  type: string\n  description: ISO 3166-1 alpha-2 country code.\n  example: US\nlanguageTag:\n  type: string\n  description: BCP 47 language tag.\n  example: en-US\ncurrency:\n  type: string\n  description: ISO 4217 currency code.\n  example: USD\n```\n\n**Testability**:\n\n- Field descriptions reference the standard.\n- Examples use valid values.\n",
+    "rationale": "Using common global standards prevents rework and reduces integration friction with downstream systems.",
+    "compatNotes": "Switching code systems later is breaking. Standardize from the start."
+  },
+  "reviewNotes": []
+}

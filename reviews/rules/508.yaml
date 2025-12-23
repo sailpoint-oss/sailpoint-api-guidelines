@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "508",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#508",
+    "url": "/docs/rules/resource-modeling-and-urls#508"
+  },
+  "currentTitle": "SHOULD prefer non-nested URLs when resources are independently addressable",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD prefer non-nested URLs when resources are independently addressable",
+    "proposedText": "**Intent**: keep URLs stable, shallow, and reusable when resources have independent identity/lifecycle.\n\nPrefer flat (non-nested) URLs when a resource is independently addressable.\n\n**A resource is independently addressable when**:\n\n- It has a globally unique ID.\n- It can exist without a single parent.\n- It has its own lifecycle and can be linked/referenced from multiple parents.\n\n**Examples (prefer flat)**:\n\n- ✅ `/access-requests/{accessRequestId}` (global workflow resource)\n- ✅ `/entitlements/{entitlementId}` (if entitlements exist globally)\n- ✅ `/accounts?identityId=...` (filter instead of nesting)\n\n**Acceptable alternatives to deep nesting**:\n\n- Filtering on parent ID: `GET /entitlements?accountId={accountId}`\n- Relationship resources: `GET /account-entitlements?accountId=...`\n- Links in payloads: `{ \"links\": { \"entitlements\": \"/entitlements?accountId=...\" } }`\n\n**Testability**:\n\n- URLs do not exceed the recommended nesting depth unless justified (see [#510]).\n",
+    "rationale": "Flat URLs are easier to cache, document, and evolve. Over-nesting often encodes implementation joins rather than real ownership.",
+    "compatNotes": "Changing nesting strategy is breaking; decide based on lifecycle/identity and keep consistent."
+  },
+  "reviewNotes": []
+}

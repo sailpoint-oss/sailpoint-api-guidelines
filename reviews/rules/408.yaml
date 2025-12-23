@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "408",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#408",
+    "url": "/docs/rules/http-semantics#408"
+  },
+  "currentTitle": "MUST not expose stack traces or internal details",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST not expose stack traces or internal details",
+    "proposedText": "Never include stack traces, internal error details, or system information in API error responses.\n\n**Examples of forbidden data**:\n\n- stack traces / exception class names\n- internal hostnames, file paths, database keys\n- raw upstream service messages\n- SQL queries, secrets, tokens, cryptographic material\n\n**What to do instead**:\n\n- Log detailed diagnostics server-side.\n- Return sanitized Problem Details to clients (see [#404]).\n- Include a stable `correlationId` (or equivalent) for support/debugging.\n\n**Example (sanitized)**:\n\n```json\n{\n  \"type\": \"https://developer.sailpoint.com/problems/internal-error\",\n  \"title\": \"Internal error\",\n  \"status\": 500,\n  \"detail\": \"An unexpected error occurred.\",\n  \"instance\": \"/accounts/123\",\n  \"correlationId\": \"3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b\"\n}\n```\n",
+    "rationale": "Modern systems are composed of many internal services; leaking internals increases security risk and makes clients depend on unstable implementation details.",
+    "compatNotes": "No breaking change; strengthen wording and add concrete examples."
+  },
+  "reviewNotes": [
+    "Tighten wording and add examples + guidance to use correlation IDs and server-side logging."
+  ]
+}

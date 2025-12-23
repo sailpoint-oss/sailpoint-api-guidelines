@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "200",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#200",
+    "url": "/docs/rules/lifecycle-and-compatibility#200"
+  },
+  "currentTitle": "not break backward compatibility",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

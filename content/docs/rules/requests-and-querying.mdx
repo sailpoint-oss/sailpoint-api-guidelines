@@ -1,0 +1,250 @@
+---
+title: "Requests & Querying"
+description: Rules for query parameters, filtering, sorting, pagination, and request patterns.
+---
+
+These rules define request/query conventions (filtering, sorting, pagination) so list/search endpoints
+are consistent across APIs.
+
+**Related guides**:
+- [Pagination & filtering](/docs/guides/pagination-and-filtering)
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+
+**Related reference**:
+- [Pagination recipes](/docs/appendices/pagination-recipes)
+- [Review checklist](/docs/appendices/review-checklist)
+
+## Query Parameters & Filtering
+<RuleHeader id="600" level="MUST" title="Use conventional query parameters" />
+### #600 - Use Conventional Query Parameters
+
+**Intent**: keep APIs predictable and make client libraries reusable.
+
+Use consistent, conventional query parameter names and semantics across APIs.
+
+**How to implement**:
+
+- Use **`limit`** + **`offset`** for offset-based pagination (see [Pagination](#pagination)).
+- Use **`count`** (boolean) when you support returning a total count (be explicit about cost/performance).
+- Use **`filters`** for filter expressions and **`sorters`** for ordering (see guidance in [API Contract & Documentation](/docs/rules/api-contract-and-documentation)).
+- Document the **allowed fields** (whitelist) for filtering and sorting. If the set differs per endpoint, document per endpoint.
+
+**Standards guidance**:
+
+- Avoid inventing per-endpoint bespoke query DSLs.
+- Prefer OpenAPI-defined encoding for arrays/objects (`style`/`explode`) when parameters are multi-valued (see [#601]).
+
+**Examples**:
+
+```http
+GET /accounts?limit=50&offset=0&filters=status eq \"ACTIVE\"&sorters=name:asc
+```
+
+**Testability**:
+
+- Reviewers can verify each endpoint uses conventional parameter names and documents the supported field lists.
+
+<RuleHeader id="601" level="MUST" title="Define collection formats for header/query params" />
+### #601 - Define Collection Formats for Header/query Params
+
+**Intent**: ensure clients can reliably generate requests and servers can parse them.
+
+**Recommendation**:
+
+- For multi-valued query params, prefer repeated parameters:
+  - `?status=ACTIVE&status=DISABLED`
+- If you need a compact representation, use comma-separated values:
+  - `?status=ACTIVE,DISABLED`
+
+**Rules**:
+
+- Choose one canonical encoding per parameter.
+- Do not accept multiple encodings unless you explicitly document which encodings are supported and which one is canonical.
+
+**OpenAPI guidance** (examples):
+
+- Repeated parameters:
+
+```yaml
+parameters:
+  - in: query
+    name: status
+    required: false
+    schema:
+      type: array
+      items:
+        type: string
+    style: form
+    explode: true
+```
+
+- Comma-separated:
+
+```yaml
+parameters:
+  - in: query
+    name: status
+    required: false
+    schema:
+      type: array
+      items:
+        type: string
+    style: form
+    explode: false
+```
+
+**Testability**:
+
+- Ensure the OpenAPI parameter definition includes `style` and `explode` (or an explicit description of the encoding).
+
+<RuleHeader id="603" level="MUST" title="Document implicit filters and default sorting" />
+### #603 - Document Implicit Filters and Default Sorting
+
+**Intent**: prevent “missing data” surprises and make list results reproducible.
+
+List/search endpoints MUST document any implicit constraints that affect which items appear, and MUST document the default ordering applied when the caller does not specify sorters.
+
+## 1) Implicit filtering
+
+**Examples of implicit filtering**:
+
+- Results are scoped to the authenticated tenant/org.
+- Results are limited to “resources visible to the caller” (RBAC/ABAC visibility filtering).
+- Results exclude soft-deleted entities by default.
+- Results exclude items in certain lifecycle states unless explicitly requested.
+
+**How to document**:
+
+- In the OpenAPI operation description, explicitly state the implicit constraints.
+- If behavior is caller-dependent (authorization), say so clearly.
+- If possible, expose explicit parameters to control behavior (e.g., `includeDeleted=true`) and document defaults.
+
+## 2) Default sorting (required)
+
+For every collection/list endpoint (including POST-based search endpoints), if the caller does not provide an explicit sorter, the API MUST apply **exactly one documented default ordering policy**.
+
+**Requirements**:
+
+- The default ordering is deterministic (repeat requests return consistent ordering absent data changes).
+- The default ordering is documented per endpoint.
+- The default ordering is stable enough for pagination (especially offset-based pagination).
+
+**Notes**:
+
+- The default ordering MAY be multi-field for tie-breaking stability, but it is documented as a single default policy (e.g., “default order: `createdAt desc, id asc`”).
+
+**Example (docs text)**:
+
+- If `sorters` is omitted, results are ordered by `createdAt:desc` (ties broken by `id:asc`).
+
+**Related rules**: [#600], [#602], [#604]
+
+---
+
+<RuleHeader id="604" level="MUST" title="Use one query format across the API" />
+### #604 - Use One Query Format Across the API
+
+**Intent**: make querying consistent so documentation, parsing, and shared client/server logic can be reused.
+
+APIs MUST align on a single, consistent query format across endpoints so all query experiences share the same documentation patterns and parsing logic.
+
+**Baseline conventions**:
+
+- Use the same parameter names and shapes across APIs:
+  - `filters` for filter expressions
+  - `sorters` for ordering
+  - `limit`/`offset` for pagination (see [Pagination](#pagination))
+- The **grammar** for `filters` and `sorters` MUST be consistent across endpoints.
+- Endpoints MUST document the **allowed field list** for filtering and sorting.
+
+## 1) Simple queries via query parameters (GET)
+
+Use query params for simple filters and ordering.
+
+**Example**:
+
+```http
+GET /accounts?filters=status eq "ACTIVE"&sorters=createdAt:desc&limit=50&offset=0
+```
+
+## 2) Complex queries via a single standard search endpoint pattern (POST)
+
+When queries exceed practical URL length/complexity, use a dedicated POST search endpoint with **GET-like semantics** (no resource creation):
+
+- `POST /{resource}/search`
+
+**Requirements**:
+
+- Clearly document “search semantics; no creation”.
+- Safe to retry when combined with idempotency guidance (see [#409], [#410]).
+- Use a single standard request body shape across APIs (same field names, same operator set).
+
+**Example**:
+
+```http
+POST /accounts/search
+Content-Type: application/json
+
+{
+  "filters": [
+    { "field": "status", "op": "eq", "value": "ACTIVE" },
+    { "field": "createdAt", "op": "gte", "value": "2025-01-01T00:00:00Z" }
+  ],
+  "sorters": [{ "field": "createdAt", "direction": "desc" }],
+  "limit": 50,
+  "offset": 0
+}
+```
+
+**Notes**:
+
+- Do not invent bespoke query syntaxes per endpoint.
+- Keep the documentation for the shared query grammar in one place and link to it from endpoints.
+
+**Related rules**: [#600], [#601], [#603]
+
+---
+
+## Pagination
+<RuleHeader id="602" level="MUST" title="Support offset pagination for list endpoints" />
+### #602 - Support Offset Pagination for List Endpoints
+
+**Intent**: protect services and clients from unbounded responses, and provide consistent navigation.
+
+List endpoints MUST support **offset-based pagination** using `limit` and `offset`.
+
+**Required request parameters**:
+
+- `limit` (integer): number of items to return
+  - MUST document **default** and **max**
+- `offset` (integer): number of items to skip (default 0)
+- `count` (boolean, optional): whether to include total count (if supported)
+
+**Response shape (required)**:
+
+Return an object wrapper to preserve compatibility and allow metadata:
+
+```json
+{
+  "items": [{ "id": "A" }, { "id": "B" }],
+  "limit": 2,
+  "offset": 0,
+  "count": 123
+}
+```
+
+**Critical requirements**:
+
+- Define a stable default sort order (otherwise pagination is non-deterministic).
+- Document performance characteristics:
+  - maximum supported `offset`
+  - cost of `count=true`
+
+**Cursor-based pagination**:
+
+- Not standard for these guidelines.
+- Allowed **only by exception** and MUST be explicitly justified and documented (including sort stability, cursor encoding, and expiration semantics).
+
+**Related rules**: [#204], [#600]
+
+---

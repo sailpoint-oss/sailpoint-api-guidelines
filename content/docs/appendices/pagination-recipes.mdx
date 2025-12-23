@@ -1,0 +1,54 @@
+---
+title: Pagination recipes
+description: Practical pagination contracts and examples.
+---
+
+# Pagination recipes
+
+## Offset/limit (default recommendation)
+
+Use `limit` + `offset` for most list endpoints:
+
+- `limit`: number of items to return (default and max documented)
+- `offset`: number of items to skip (default 0)
+- `count`: optional boolean for whether to return total counts (if supported)
+
+### Response shape (example)
+
+```json
+{
+  "items": [
+    { "id": "A" },
+    { "id": "B" }
+  ],
+  "limit": 2,
+  "offset": 0,
+  "count": 123
+}
+```
+
+### Important details
+
+- Always define a stable default sort order (otherwise pagination is non-deterministic).
+- Document maximum `limit` and expected performance characteristics.
+
+## Cursor-based pagination (for large/volatile datasets)
+
+Prefer cursor pagination when datasets are large or change rapidly:
+
+- Request includes a `cursor` token and a `limit`.
+- Response returns `nextCursor` (and optionally `prevCursor`).
+
+Example:
+
+```json
+{
+  "items": [{ "id": "A" }],
+  "limit": 1,
+  "nextCursor": "eyJpZCI6IkEifQ=="
+}
+```
+
+Cursor contracts must be stable and opaque—clients should not parse cursor contents.
+
+

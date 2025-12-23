@@ -1,0 +1,33 @@
+---
+title: Compatibility checklist
+description: Practical guidance for evolving APIs safely without breaking clients.
+---
+
+# Compatibility checklist
+
+Use this checklist when changing an existing API. It focuses on the common ways teams accidentally
+break clients.
+
+## Generally safe (often compatible)
+
+- Adding optional response fields.
+- Adding new endpoints or new optional query parameters.
+- Adding new enum values (if clients tolerate unknown values).
+- Adding new error types (when status codes and contract are stable).
+
+## High risk (often breaking)
+
+- Removing fields or changing field meaning.
+- Changing required/optional status for existing fields.
+- Tightening validation of existing inputs (rejecting values previously accepted).
+- Changing default sorting/pagination behavior in a way that alters client-visible results.
+- Changing error schema shape or semantics without a versioning/migration plan.
+
+## Checklist for a proposed change
+
+- What existing clients might rely on this behavior?
+- Is the change additive? If not, what is the migration plan?
+- Are examples updated in OpenAPI to match the new behavior?
+- Are changes called out in release notes/changelog?
+
+

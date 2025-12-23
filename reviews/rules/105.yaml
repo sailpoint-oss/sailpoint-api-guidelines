@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "105",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#105",
+    "url": "/docs/rules/api-contract-and-documentation#105"
+  },
+  "currentTitle": "MUST define and assign permissions (scopes)",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make authorization predictable by defining stable scopes and assigning them consistently per operation.\n\nDefine OAuth scopes for your API and assign required scopes per endpoint.\n\n**Requirements**:\n\n- Required scopes MUST be documented per operation using OpenAPI `security`.\n- Scope requirements for an operation MUST be unambiguous:\n  - If multiple scopes are listed in a single `security` requirement, they are treated as **AND** (all required).\n  - If multiple `security` requirements are listed, they are treated as **OR** (any requirement satisfies auth).\n\n**Guidance**:\n\n- Prefer least privilege and minimal scope sets.\n- If an operation behaves differently depending on scopes, consider splitting it into separate operations/endpoints rather than overloading one behavior.\n\n**Testability**:\n\n- OpenAPI `security` requirements match the documented expectations for AND vs OR.\n- For each operation, a reviewer can answer: “Which single token/scopes are required to call this?”\n",
+    "rationale": "Teams frequently misinterpret how OpenAPI scope lists work; clarifying AND/OR semantics prevents accidental over-exposure or overly restrictive APIs.",
+    "compatNotes": "Doc-only change; clarifies OpenAPI semantics and encourages splitting when behavior differs by scope."
+  },
+  "reviewNotes": [
+    "Clarify AND vs OR semantics in OpenAPI `security` and add guidance to split operations when behavior differs by scopes.",
+    "Accepted for Phase A implementation."
+  ]
+}

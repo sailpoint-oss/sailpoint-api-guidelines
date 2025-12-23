@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "115",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#115",
+    "url": "/docs/rules/api-contract-and-documentation#115"
+  },
+  "currentTitle": "MUST describe every parameter and property",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: remove ambiguity so clients can implement correctly without guesswork.\n\nEvery query parameter, path parameter, request property, and response property MUST have a clear description.\n\n**Descriptions MUST cover** (as applicable):\n\n- Meaning/semantics (what it represents, not just its data type).\n- Constraints: allowed values, ranges, patterns, maximum lengths.\n- Default behavior when omitted (see [#709], [#707]).\n- Null/omission behavior where relevant (see [#123], [#711]).\n- Any security/privacy implications (e.g., whether values are tenant-scoped, PII).\n\n**Anti-patterns**:\n\n- Empty descriptions.\n- Descriptions that restate the property name (e.g., “The status.”).\n\n**Testability**:\n\n- Reviewers can read the spec and understand how to populate requests and interpret responses without external tribal knowledge.\n",
+    "rationale": "Strong descriptions reduce integration defects, make SDK generation more valuable, and improve long-term maintainability of the contract.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

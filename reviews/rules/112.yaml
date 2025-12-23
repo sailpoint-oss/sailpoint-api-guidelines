@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "112",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#112",
+    "url": "/docs/rules/api-contract-and-documentation#112"
+  },
+  "currentTitle": "MUST declare enum values in UPPER_SNAKE_CASE strings",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST declare enum values in UPPER_SNAKE_CASE strings",
+    "proposedText": "**Intent**: make enum tokens stable, readable API identifiers.\n\nEnum values MUST be expressed as **UPPER_SNAKE_CASE strings**.\n\n**Examples**:\n\n- ✅ `\"ACTIVE\"`\n- ✅ `\"PENDING_APPROVAL\"`\n- ❌ `\"active\"` (wrong case)\n- ❌ `\"PendingApproval\"` (camel/Pascal case)\n- ❌ `\"Pending Approval\"` (spaces)\n\n**Compatibility**:\n\n- Enum tokens are part of the public contract. Do not rename existing enum values without a compatibility/migration plan.\n\n**OpenAPI example**:\n\n```yaml\nstatus:\n  type: string\n  enum: [ACTIVE, PENDING_APPROVAL, DISABLED]\n```\n",
+    "rationale": "Consistent enum tokens improve readability, reduce client-side normalization logic, and avoid breaking changes caused by token churn.",
+    "compatNotes": "Documentation clarification. Existing APIs can migrate tokens with a deprecation window if needed; avoid silently changing enum values."
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "110",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#110",
+    "url": "/docs/rules/api-contract-and-documentation#110"
+  },
+  "currentTitle": "MUST pluralize collection resource names",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST pluralize collection resource names",
+    "proposedText": "**Intent**: make endpoints predictable and self-describing.\n\nCollection endpoints MUST use plural resource names.\n\n**Examples**:\n\n- ✅ `GET /accounts` (collection)\n- ✅ `GET /accounts/{accountId}` (single resource)\n- ✅ `GET /identity-profiles` / `GET /identity-profiles/{identityProfileId}`\n\n**Anti-examples**:\n\n- ❌ `GET /account` (ambiguous)\n- ❌ `GET /Accounts` (wrong casing)\n\n**Notes**:\n\n- Use domain language and stable nouns (see [#506]).\n- If a term is uncountable (rare), pick a consistent convention and document it.\n\n**Testability**:\n\n- New resources follow plural collection naming consistently.\n",
+    "rationale": "Plural collection naming is a widely-recognized REST convention and makes it easier for consumers to guess endpoints without memorizing exceptions.",
+    "compatNotes": "Changing resource paths is breaking. Apply consistently for new resources."
+  },
+  "reviewNotes": [
+    "Add more examples and clarify collection vs item usage."
+  ]
+}

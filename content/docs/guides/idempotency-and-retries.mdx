@@ -1,0 +1,46 @@
+---
+title: Idempotency & retries
+description: Patterns for safe retries, idempotent writes, and concurrency control (ETags, Idempotency-Key).
+---
+
+# Idempotency & retries
+
+Clients retry requests (network issues, timeouts, transient failures). APIs should make retries safe
+and predictable.
+
+## When to use this guide
+
+- You’re designing POST/PUT/PATCH endpoints and want safe retry behavior.
+- You’re implementing concurrency control for updates.
+
+## Recommended patterns
+
+### Optimistic locking for updates
+
+For updates, prefer HTTP-native optimistic locking using `ETag` + `If-Match` (or date-based
+preconditions when necessary).
+
+- [Optimistic locking (Appendix)](/docs/appendices/optimistic-locking)
+
+### Idempotency keys for safe retries
+
+For operations that might be retried (especially POST that creates resources), consider a client
+provided idempotency key.
+
+Recommended behavior:
+
+- Client sends `Idempotency-Key` on the request.
+- Server deduplicates requests with the same key for a fixed window.
+- Server returns the original result for duplicate submissions.
+
+### Alternate keys / natural keys (use carefully)
+
+Some domains have natural keys that can prevent duplicates. If used, document them explicitly and be
+clear about conflict behavior.
+
+## Related reading
+
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+- [Review checklist](/docs/appendices/review-checklist)
+
+

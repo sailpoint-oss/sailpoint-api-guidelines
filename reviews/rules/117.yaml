@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "117",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#117",
+    "url": "/docs/rules/api-contract-and-documentation#117"
+  },
+  "currentTitle": "SHOULD keep operation summaries at five or less words",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: keep generated docs scannable.\n\nOperation `summary` fields SHOULD be concise (prefer five words or fewer).\n\n**Guidance**:\n\n- Put details, caveats, and semantics in `description`.\n- Prefer action-oriented summaries aligned with the HTTP method (e.g., “List accounts”, “Get account”, “Create account”).\n",
+    "rationale": "Short summaries improve readability in Swagger UI / API explorers while keeping the detailed narrative in descriptions.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

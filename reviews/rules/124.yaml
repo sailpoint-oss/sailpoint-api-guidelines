@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "124",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#124",
+    "url": "/docs/rules/api-contract-and-documentation#124"
+  },
+  "currentTitle": "MUST not use null for empty arrays",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST not use null for empty arrays",
+    "proposedText": "**Intent**: keep collections easy to consume and avoid pointless null-checks.\n\nEmpty collections MUST be represented as empty arrays (`[]`), not `null`.\n\n**Examples**:\n\n- ✅ `{ \"items\": [] }`\n- ❌ `{ \"items\": null }`\n\n**Notes**:\n\n- If the property itself is optional, omission is allowed; but if the property is present, it must be an array.\n\n**Testability**:\n\n- Example payloads never use `null` for array fields.\n- OpenAPI array properties are not marked `nullable: true`.\n",
+    "rationale": "`null` forces clients to branch and often causes runtime errors when consumers assume iterability. `[]` is the universal, safe empty collection representation in JSON.",
+    "compatNotes": "If legacy APIs return null arrays, migrate carefully; changing null→[] is usually safe for tolerant clients but can still break strict schema validators."
+  },
+  "reviewNotes": [
+    "Strengthen and clarify: if the array property is present it must be an array; empty means `[]`."
+  ]
+}

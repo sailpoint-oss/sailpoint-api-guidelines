@@ -3,3 +3,12 @@
 .project
 .idea
 .DS_Store
+
+# Node / FumaDocs site
+node_modules/
+.next/
+.source/
+out/
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*

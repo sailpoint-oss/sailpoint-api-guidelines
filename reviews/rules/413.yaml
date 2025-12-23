@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "413",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#413",
+    "url": "/docs/rules/http-semantics#413"
+  },
+  "currentTitle": "MUST use a standardized error schema across APIs",
+  "status": "rejected",
+  "decision": {
+    "changeType": "merge",
+    "proposedTitle": "MERGED into [#151] (Error contract + standardized schema)",
+    "proposedText": "This rule has been merged into [#404], which now defines the standardized error schema requirement as part of the canonical error contract.",
+    "rationale": "A single canonical error-contract rule improves compliance and avoids duplicative guidance.",
+    "compatNotes": "Use [#151] as the canonical reference."
+  },
+  "reviewNotes": [
+    "Merged into #151 to create a single canonical error-contract rule."
+  ]
+}

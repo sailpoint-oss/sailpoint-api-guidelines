@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "212",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#212",
+    "url": "/docs/rules/lifecycle-and-compatibility#212"
+  },
+  "currentTitle": "SHOULD have clients monitor Deprecation/Sunset headers",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD have clients monitor Deprecation/Sunset headers",
+    "proposedText": "**Intent**: ensure clients learn about deprecations early and can plan migrations.\n\nAPI clients SHOULD treat `Deprecation` and `Sunset` response headers as actionable signals (when present) and surface them to developers/operators.\n\n**Client expectations**:\n\n- Log and/or emit telemetry when `Deprecation` is present.\n- If `Sunset` is present, record the sunset date and create an alert/ticket within the client owner team.\n- For SDKs and shared client libraries, provide a common hook/middleware so application teams do not need to implement this repeatedly.\n\n**Recommended behaviors** (examples):\n\n- CLI / local dev:\n  - warn once per endpoint per run when `Deprecation` is present\n- Production:\n  - count deprecated calls (metric)\n  - alert when deprecated usage is non-zero past a threshold\n  - alert when current date is within N days of `Sunset`\n\n**Notes**:\n\n- Presence/absence of headers MUST NOT be the only way clients learn about deprecation; specs and docs remain canonical (see [#209]).\n- Clients MUST NOT ignore server-side deprecation just because headers are missing.\n",
+    "rationale": "Deprecation headers provide a low-friction, machine-readable signal that can be wired into logs/metrics/alerts to prevent surprise sunsets.",
+    "compatNotes": "Documentation-only. Client behavior is recommended; it can be added incrementally via shared middleware."
+  },
+  "reviewNotes": []
+}

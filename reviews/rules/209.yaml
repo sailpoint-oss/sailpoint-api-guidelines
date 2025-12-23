@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "209",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#209",
+    "url": "/docs/rules/lifecycle-and-compatibility#209"
+  },
+  "currentTitle": "MUST reflect deprecation in API specifications",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST reflect deprecation in API specifications (and docs)",
+    "proposedText": "**Intent**: make deprecations visible, machine-readable, and actionable for clients.\n\nWhen deprecating any API element (operation, parameter, schema, field):\n\n- Mark it as deprecated in OpenAPI (`deprecated: true`).\n- Provide a clear migration path (replacement endpoint/field/version).\n- Publish a sunset timeline (date) and link to migration documentation.\n\n**OpenAPI example**:\n\n```yaml\npaths:\n  /accounts/{id}:\n    get:\n      deprecated: true\n      summary: Get account (deprecated)\n      description: |\n        Deprecated. Use GET /v2027/accounts/{id}.\n        Sunset: 2027-06-30.\n      externalDocs:\n        description: Migration guide\n        url: https://developer.sailpoint.com/docs/guides/.../migration\n      responses:\n        \"200\": { ... }\n```\n\n**Docs requirements**:\n\n- State **what is deprecated**, **what to use instead**, and **by when**.\n- Call out any behavior differences clients must handle.\n\n**Testability**:\n\n- OpenAPI contains `deprecated: true` and migration guidance for deprecated elements.\n- A documented sunset date exists and is communicated consistently.\n",
+    "rationale": "Deprecation that isn't reflected in the contract and docs is invisible to consumers. Machine-readable deprecations enable tooling and proactive migration.",
+    "compatNotes": "Deprecation should be additive and should not break existing clients immediately; use a documented sunset/migration window."
+  },
+  "reviewNotes": []
+}

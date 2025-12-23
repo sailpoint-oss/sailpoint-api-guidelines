@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "800",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#800",
+    "url": "/docs/rules/data-types-and-common-objects#800"
+  },
+  "currentTitle": "SHOULD use RFC 3339 date/time values; store UTC",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD use RFC 3339 date/time values; store UTC",
+    "proposedText": "**Intent**: prevent timezone ambiguity and simplify client handling.\n\nTimestamps SHOULD use RFC 3339 format and SHOULD be stored/transmitted in UTC (`Z`) whenever possible.\n\n**Examples (recommended)**:\n\n- ✅ `2026-01-15T14:30:00Z`\n- ✅ `2026-01-15T14:30:00.123Z` (fractional seconds)\n\n**Examples (allowed but discouraged)**:\n\n- ⚠ `2026-01-15T09:30:00-05:00` (valid RFC 3339, but prefer UTC)\n\n**Forbidden**:\n\n- ❌ `01/15/2026 2:30pm`\n- ❌ `15-01-2026`\n\n**Precision guidance**:\n\n- Be consistent about fractional-second precision across endpoints.\n- If you emit milliseconds, always emit milliseconds (don’t sometimes emit `.1` and sometimes omit it).\n\n**Related**:\n\n- Use the standard `date-time` format in OpenAPI (see [#802]).\n\n**Testability**:\n\n- OpenAPI schemas use `type: string` + `format: date-time`.\n- Example payloads include real RFC 3339 strings (prefer UTC).\n",
+    "rationale": "Timezones and ambiguous date formats are a major source of integration bugs. UTC + RFC 3339 is the most interoperable, least surprising default.",
+    "compatNotes": "Changing timestamp formats is breaking. Establish and document the format from the start."
+  },
+  "reviewNotes": [
+    "Expand with more examples, add precision guidance, and connect to OpenAPI date-time format rule."
+  ]
+}

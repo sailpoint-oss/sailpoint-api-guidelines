@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "410",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#410",
+    "url": "/docs/rules/http-semantics#410"
+  },
+  "currentTitle": "MAY support Idempotency-Key",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MAY support Idempotency-Key (recommended contract)",
+    "proposedText": "**Intent**: enable safe retries for non-idempotent operations.\n\nAPIs MAY support the `Idempotency-Key` request header for side-effecting operations (typically POST, sometimes PATCH) so clients can retry safely.\n\n**If you support it, you MUST define a clear contract**:\n\n- **Where accepted**: which endpoints/methods honor the header.\n- **Key format**: recommend UUID v4 (string).\n- **Scope**: keys are scoped to *(client, endpoint, method)* at minimum.\n- **Uniqueness semantics**: reusing a key with a different request payload is an error.\n- **Retention window**: how long keys are remembered (e.g., 24 hours) and what happens after expiry.\n- **Replay behavior**: responses are replayed consistently (status code + body + headers) within the retention window.\n\n**Recommended server behavior**:\n\n- Store a digest of the request (and the resulting response) for the retention window.\n- If the same key is received again:\n  - If the request matches: return the recorded response.\n  - If the request differs: return `409 Conflict` (or `400`) with a clear error message.\n\n**Example**:\n\n```http\nPOST /accounts\nIdempotency-Key: 4d2b8c2d-6dbe-4c5e-9b8f-2d3b5a6c7d8e\nContent-Type: application/json\n\n{ \"name\": \"Example\" }\n```\n\n**Notes**:\n\n- `Idempotency-Key` does not replace optimistic locking; use `If-Match` for updates to existing resources.\n- Document whether the key is honored on `429`/`5xx` retries.\n",
+    "rationale": "A consistent idempotency-key contract prevents duplicate creates and repeated side effects during retries, especially across gateways/timeouts.",
+    "compatNotes": "Additive feature. Clients can opt in incrementally. Ensure consistent semantics across APIs that adopt it."
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "900",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#900",
+    "url": "/docs/rules/operations-and-quality#900"
+  },
+  "currentTitle": "SHOULD support partial responses via fields filtering",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD support partial responses via fields filtering",
+    "proposedText": "**Intent**: reduce payload size and improve performance without creating many bespoke endpoints.\n\nSupport a `fields` query parameter to allow clients to request only specific fields in the response.\n\n**Rules**:\n\n- Field filtering MUST NOT apply by default.\n- `fields` MUST be explicitly documented (allowed values and syntax).\n- Prefer a simple, consistent syntax, e.g. `fields=(id,name,status)`.\n\n**Examples**:\n\n- ✅ `GET /accounts/{id}?fields=(id,name,status)`\n- ✅ `GET /accounts?fields=(id,name)&limit=50&offset=0`\n\n**Notes**:\n\n- Treat `fields` as part of the cache key for GET requests.\n- If nested selection is supported, document limits and behavior.\n\n**Testability**:\n\n- Docs include examples and explain what happens when an unknown field is requested.\n",
+    "rationale": "Field selection helps clients optimize bandwidth and improves perceived performance while preserving a stable resource model.",
+    "compatNotes": "Adding `fields` is additive. If you implement it, keep syntax stable across endpoints."
+  },
+  "reviewNotes": []
+}

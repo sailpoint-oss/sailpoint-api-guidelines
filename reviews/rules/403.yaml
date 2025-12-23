@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "403",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#403",
+    "url": "/docs/rules/http-semantics#403"
+  },
+  "currentTitle": "MUST use standard HTTP status codes",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use standard HTTP status codes",
+    "proposedText": "**Intent**: preserve interoperability and predictable client behavior.\n\nUse only standard HTTP status codes defined in RFCs and/or the IANA HTTP Status Code Registry. Do not invent custom status codes and do not repurpose codes with different semantics.\n\n**Required baseline mappings** (common cases):\n\n- 400: validation errors, malformed requests\n- 401: missing/invalid authentication\n- 403: authenticated but not authorized (when revealing existence is acceptable)\n- 404: resource not found (or “not authorized to know it exists”)\n- 409: conflicts (state transitions, uniqueness constraints)\n- 412: conditional request / optimistic locking failures (ETag/If-Match)\n- 429: rate limiting\n- 5xx: unexpected server failures\n\n**Guidance**:\n\n- Choose the **most semantically appropriate** status code for each condition (precision matters).\n- When ambiguous, prefer secure defaults that avoid leaking sensitive information (e.g., use `404` rather than `403` when resource existence is sensitive).\n- Prefer widely-supported, semantically clear codes (e.g., 400/401/403/404/409/412/429).\n- Avoid using `5xx` for client mistakes (validation, authorization, conflicts).\n- If you choose a less common but standard code (e.g., `422 Unprocessable Content`), document when it occurs and why.\n- Be consistent: do not return different codes for the same condition across endpoints.\n",
+    "rationale": "Modern clients, gateways, and SDKs assume standard HTTP semantics. Anchoring to the IANA registry avoids debates about what is 'standard' and keeps behavior predictable across tooling.",
+    "compatNotes": "No runtime breaking change; this is clarification. Existing APIs using nonstandard codes should treat this as a migration item, not an immediate breaking change."
+  },
+  "reviewNotes": [
+    "Add explicit baseline mappings and emphasize consistency across endpoints."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "114",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#114",
+    "url": "/docs/rules/api-contract-and-documentation#114"
+  },
+  "currentTitle": "MUST provide detailed API description",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make an API usable without tribal knowledge.\n\nAPIs MUST provide a detailed description that covers what the API does and how consumers should use it.\n\n**Minimum content**:\n\n- Purpose and scope (what is in-scope vs out-of-scope).\n- Intended audience (internal vs external) and required licensing/entitlements (see [#302]).\n- Authentication model and high-level authorization expectations (see [#104], [#105]).\n- Primary workflows and “happy path” usage (link to guides/user manual where applicable; see [#102]).\n- Major edge cases and semantics that affect client correctness:\n  - pagination defaults\n  - filtering/sorting constraints\n  - idempotency/retry guidance\n  - consistency expectations\n- Versioning/deprecation model and how changes are communicated (see [#116], [#209]).\n\n**Where to put it**:\n\n- In OpenAPI `info.description` and/or tag-level descriptions.\n- Link to deeper guides via OpenAPI `externalDocs`.\n\n**Testability**:\n\n- A reviewer can answer: what is this API for, who can use it, and how do I perform the primary workflows?\n",
+    "rationale": "Well-written descriptions prevent support load and misuse, and they let docs/SDKs expose the right conceptual entry points.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

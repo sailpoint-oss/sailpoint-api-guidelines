@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "104",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#104",
+    "url": "/docs/rules/api-contract-and-documentation#104"
+  },
+  "currentTitle": "MUST secure endpoints with OAuth 2.0",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: ensure every operation has explicit authentication + authorization requirements.\n\nSecure all API endpoints using OAuth 2.0.\n\n**Requirements**:\n\n- Each operation MUST declare its security requirements in OpenAPI (`security`).\n- Each operation MUST specify whether it is **user-context** (`userAuth`) and/or **system/service-context** (`applicationAuth`).\n- Required scopes MUST be listed per operation (do not rely on global defaults when behavior differs).\n\n**Guidance**:\n\n- Use least privilege: keep required scope sets minimal.\n- If an operation supports both user and service contexts, document the difference in behavior and required scopes/capabilities.\n\n**Testability**:\n\n- OpenAPI includes an OAuth 2.0 security scheme.\n- Every operation has a non-empty `security` requirement with the documented scopes.\n- Docs state the execution context (user vs service) and any additional authorization gates.\n",
+    "rationale": "OAuth 2.0 is the authentication baseline, but clients and reviewers need per-operation clarity on scopes and context to avoid under/over-privileging and accidental exposure.",
+    "compatNotes": "Doc-only change; strengthens per-operation clarity (context + scopes) without changing the authentication mechanism."
+  },
+  "reviewNotes": [
+    "Expand to require explicit per-operation context (userAuth vs applicationAuth) and per-operation scopes in OpenAPI.",
+    "Accepted for Phase A implementation."
+  ]
+}

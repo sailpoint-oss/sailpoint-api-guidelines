@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "106",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#106",
+    "url": "/docs/rules/api-contract-and-documentation#106"
+  },
+  "currentTitle": "MUST not break backward compatibility",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: allow clients to upgrade safely without urgent rewrites.\n\nWithin the same major version, changes MUST remain backward compatible.\n\n**Breaking changes (avoid within a major version)**:\n\n- Remove or rename endpoints, fields, enum values, or query parameters.\n- Change a field type or shape (e.g., `string` → `object`, array ↔ object).\n- Change formats or constraints in a way that rejects previously valid data (e.g., tighter regex, smaller max length, new required fields).\n- Tighten request validation when clients may already be sending additional fields.\n- Change default behavior in a visible way (sorting, pagination defaults, implicit filters).\n- Change authorization requirements for existing operations (new scopes/capabilities) without a compatible migration path.\n- Change error contracts in a way that breaks parsing/branching (different media type, different envelope, removed fields).\n\n**Compatible changes (generally safe within a major version)**:\n\n- Add new optional response fields.\n- Add new endpoints.\n- Add new optional request fields with safe defaults (and server-side tolerance).\n- Add new enum values only if clients are prepared to handle unknowns (see [#202]).\n\n**Testability**:\n\n- Spec diffs are reviewed for compatibility impacts.\n- Clients/SDKs tolerate unknown response fields and unknown enum values.\n",
+    "rationale": "Most integrations assume minor/patch updates are safe. A concrete compatibility rubric reduces accidental breaking changes and strengthens consumer trust.",
+    "compatNotes": "Doc-only change; expands examples and clarifies that auth and error contracts are part of backward compatibility."
+  },
+  "reviewNotes": [
+    "Expand with concrete breaking/non-breaking lists including schema, validation, defaults, auth requirements, and error contracts.",
+    "Accepted for Phase A implementation."
+  ]
+}

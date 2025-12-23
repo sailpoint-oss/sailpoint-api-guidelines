@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "801",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#801",
+    "url": "/docs/rules/data-types-and-common-objects#801"
+  },
+  "currentTitle": "SHOULD use ISO 8601 duration/interval strings",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD use ISO 8601 duration/interval strings",
+    "proposedText": "**Intent**: avoid unit ambiguity and enable interoperable duration handling.\n\nDurations and time intervals SHOULD use ISO 8601 formats.\n\n**Examples**:\n\n- `PT15M` (15 minutes)\n- `PT1H30M` (1 hour, 30 minutes)\n- `P7D` (7 days)\n\n**Avoid**:\n\n- ❌ `900` (is that seconds? ms?)\n- ❌ `1h30m` (non-standard)\n\n**Testability**:\n\n- OpenAPI examples show ISO 8601 strings for duration fields.\n",
+    "rationale": "Durations represented as plain numbers are frequently misinterpreted across clients. ISO 8601 is widely recognized and unambiguous.",
+    "compatNotes": "Changing units or representation later is breaking; choose a standard at design time."
+  },
+  "reviewNotes": [
+    "Add more examples and explicitly call out the unit ambiguity problem with numeric durations."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "407",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#407",
+    "url": "/docs/rules/http-semantics#407"
+  },
+  "currentTitle": "MUST use Problem Details (RFC 9457) for error responses",
+  "status": "rejected",
+  "decision": {
+    "changeType": "merge",
+    "proposedTitle": "MERGED into [#151] (Error contract + Problem Details)",
+    "proposedText": "This rule has been merged into [#404], which now defines the full standardized error contract (including Problem Details RFC 9457 requirements).",
+    "rationale": "Keeping error-contract requirements in one place reduces duplication and improves compliance.",
+    "compatNotes": "Use [#151] as the canonical reference."
+  },
+  "reviewNotes": [
+    "Merged into #151 to create a single canonical error-contract rule."
+  ]
+}

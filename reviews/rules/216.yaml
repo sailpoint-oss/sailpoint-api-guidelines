@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "216",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#216",
+    "url": "/docs/rules/lifecycle-and-compatibility#216"
+  },
+  "currentTitle": "SHOULD define maps using additionalProperties",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD define maps using additionalProperties (and document key constraints)",
+    "proposedText": "**Intent**: keep schemas valid and codegen-friendly when keys are dynamic.\n\nWhen representing a map/dictionary with dynamic keys in JSON, model it as an object with `additionalProperties` describing the value type.\n\n**Requirements**:\n\n- Document the **key space** (what keys mean, how they are constructed, constraints).\n- Document whether keys are **stable** (contracted) or arbitrary (user-provided).\n- Avoid maps when the key set is actually bounded/known: use explicit properties or an array of objects instead.\n\n**OpenAPI examples**:\n\n- Map of string → string:\n\n```yaml\ntype: object\ndescription: Map from feature flag name to state.\nadditionalProperties:\n  type: string\n```\n\n- Map of string → object:\n\n```yaml\ntype: object\ndescription: Map from attribute name to attribute metadata.\nadditionalProperties:\n  $ref: \"#/components/schemas/AttributeMetadata\"\n```\n\n**Alternative (prefer when ordering/duplication matters)**:\n\nIf clients need ordering, duplicates, or additional per-entry metadata, prefer an array:\n\n```json\n{\n  \"attributes\": [\n    { \"key\": \"department\", \"value\": \"Engineering\" },\n    { \"key\": \"region\", \"value\": \"US\" }\n  ]\n}\n```\n\n**Notes**:\n\n- Free-form maps make filtering, sorting, and partial updates harder; use them intentionally.\n- If keys are user-provided, call out any normalization rules (case sensitivity, allowed characters).\n",
+    "rationale": "Dynamic-key objects are common, but without `additionalProperties` they become untyped/uncodegenable. Documenting key constraints prevents accidental 'anything goes' contracts.",
+    "compatNotes": "Documentation-only; schema improvements may require small contract updates when currently modeled as untyped objects."
+  },
+  "reviewNotes": []
+}

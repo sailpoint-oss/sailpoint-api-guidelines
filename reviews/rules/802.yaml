@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "802",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#802",
+    "url": "/docs/rules/data-types-and-common-objects#802"
+  },
+  "currentTitle": "MUST use standard date/time formats",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST use standard date/time formats (JSON vs HTTP headers)",
+    "proposedText": "**Intent**: prevent ambiguity and ensure consistent parsing across clients.\n\n**JSON payloads**:\n\n- Date-time values MUST use RFC 3339 / ISO 8601 date-time strings (OpenAPI `format: date-time`).\n  - Prefer UTC `Z` (see [#800]).\n- Date-only values (no time) MUST use ISO 8601 full-date `YYYY-MM-DD` (OpenAPI `format: date`).\n\n**HTTP headers**:\n\n- Date/time values in HTTP headers MUST use HTTP-date format (IMF-fixdate; RFC 9110).\n\n**Examples (JSON date-time)**:\n\n- ✅ `2026-01-15T14:30:00Z`\n- ✅ `2026-01-15T14:30:00.123Z`\n- ❌ `01/15/2026 2:30pm`\n\n**Examples (JSON date-only)**:\n\n- ✅ `2026-01-15`\n- ❌ `15-01-2026`\n\n**Examples (HTTP-date header)**:\n\n```http\nLast-Modified: Tue, 15 Jan 2026 14:30:00 GMT\n```\n\n**OpenAPI guidance**:\n\n```yaml\ncreatedAt:\n  type: string\n  format: date-time\nbirthDate:\n  type: string\n  format: date\n```\n\n**Testability**:\n\n- Schemas use `format: date-time` or `format: date`.\n- Examples use valid RFC 3339 / ISO 8601 representations.\n",
+    "rationale": "Date/time ambiguity is a top source of integration bugs. Using explicit, standard formats makes behavior predictable across languages and tooling.",
+    "compatNotes": "Changing date/time formats is breaking. Enforce from the start."
+  },
+  "reviewNotes": []
+}

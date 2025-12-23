@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "215",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#215",
+    "url": "/docs/rules/lifecycle-and-compatibility#215"
+  },
+  "currentTitle": "MUST provide API audience",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make intended consumers and publication expectations explicit.\n\nAPIs MUST declare the intended audience in OpenAPI using `info.x-audience`.\n\n**Allowed values**:\n\n- `internal-company`: internal-only APIs\n- `external-public`: customer/partner-facing APIs\n\n**Guidance**:\n\n- Audience affects publishing, support expectations, and compatibility rigor.\n- Ensure the audience value matches how the API is actually exposed and documented.\n\n**OpenAPI example**:\n\n```yaml\ninfo:\n  x-audience: external-public\n```\n\n**Testability**:\n\n- OpenAPI contains `info.x-audience` with an allowed value.\n",
+    "rationale": "Audience classification prevents accidental exposure and ensures teams apply the right stability/support standards for consumers.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

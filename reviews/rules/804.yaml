@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "804",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#804",
+    "url": "/docs/rules/data-types-and-common-objects#804"
+  },
+  "currentTitle": "MUST define number/integer formats",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST define number/integer formats (OpenAPI-prescriptive)",
+    "proposedText": "**Intent**: avoid precision loss and ambiguous integer ranges in generated SDKs.\n\nNumeric fields MUST be modeled with explicit OpenAPI types and formats.\n\n**Integers**:\n\n- Use `type: integer`.\n- Use `format: int32` for 32-bit ranges.\n- Use `format: int64` for 64-bit ranges.\n\n**Floating point**:\n\n- Use `type: number` with `format: float` or `double` only when floating-point is acceptable.\n\n**Decimals / money-like precision**:\n\n- Do NOT use floating-point for money or high-precision decimals.\n- Use `type: string` with a documented decimal format (or a dedicated object) and provide examples.\n\n**IDs and opaque identifiers**:\n\n- Do not model IDs as numbers.\n- Use `type: string` (see [#512]) to avoid precision loss in JavaScript and other clients.\n\n**OpenAPI examples**:\n\n```yaml\ncount:\n  type: integer\n  format: int32\nsizeBytes:\n  type: integer\n  format: int64\nratio:\n  type: number\n  format: double\namount:\n  type: string\n  description: Decimal string.\n  example: \"123.45\"\nresourceId:\n  type: string\n  format: uuid\n```\n\n**Testability**:\n\n- OpenAPI does not leave numeric ranges ambiguous.\n- IDs are not represented as numbers.\n",
+    "rationale": "Clients (especially JS/TS) lose precision for large integers and floating-point for money. Explicit OpenAPI typing produces safer SDKs and fewer integration bugs.",
+    "compatNotes": "Changing numeric representation later is breaking. Decide early and keep stable."
+  },
+  "reviewNotes": []
+}

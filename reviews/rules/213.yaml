@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "213",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#213",
+    "url": "/docs/rules/lifecycle-and-compatibility#213"
+  },
+  "currentTitle": "MUST not start using deprecated APIs/features",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: stop the spread of deprecated dependencies so retirement is possible.\n\nTeams MUST NOT start new dependencies on APIs/features that are already marked deprecated.\n\n**What “start using” means**:\n\n- New code paths calling deprecated endpoints/fields.\n- New integrations/clients adopting deprecated behavior.\n- New tenants/environments enabling or onboarding onto deprecated versions.\n\n**Exceptions**:\n\n- Only allowed with explicit owner approval and a documented remediation plan (timeline + migration).\n\n**Testability**:\n\n- Reviews/CI checks prevent introducing new calls to deprecated endpoints (where feasible).\n- Any exceptions are documented and time-bounded.\n",
+    "rationale": "If deprecated APIs keep gaining new consumers, sunsets become impossible and operational burden grows indefinitely.",
+    "compatNotes": "Process guidance; does not affect existing consumers."
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "405",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#405",
+    "url": "/docs/rules/http-semantics#405"
+  },
+  "currentTitle": "SHOULD use 207 (or 200) for batch/bulk responses with per-item results",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "SHOULD use 207 (or 200) for batch/bulk responses with per-item results",
+    "proposedText": "**Intent**: represent partial success for multi-item operations.\n\nFor batch or bulk operations that process multiple items:\n\n- Return **per-item results** in the response body (status + error details for each item).\n- Use `207 Multi-Status` when you need to explicitly represent a mixed outcome at the HTTP layer.\n- If your platform/tooling does not support `207` well, `200 OK` is acceptable **as long as** the body clearly communicates per-item outcomes.\n\n**Example shape**:\n\n```json\n{\n  \"items\": [\n    { \"id\": \"A\", \"status\": 204 },\n    { \"id\": \"B\", \"status\": 409, \"error\": { \"title\": \"Conflict\", \"detail\": \"Already exists.\" } }\n  ]\n}\n```\n",
+    "rationale": "In practice, many clients/proxies handle 207 inconsistently, but the underlying requirement is the per-item outcome model. This update keeps interoperability while preserving the intent of communicating partial success.",
+    "compatNotes": "This relaxes a MUST-to-SHOULD and explicitly allows 200+per-item results for environments that struggle with 207. Existing 207 implementations remain compliant."
+  },
+  "reviewNotes": [
+    "Modernize: focus on per-item outcome requirement; keep 207 as preferred but allow 200 when tooling makes 207 impractical."
+  ]
+}

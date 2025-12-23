@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "214",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#214",
+    "url": "/docs/rules/lifecycle-and-compatibility#214"
+  },
+  "currentTitle": "contain API meta information",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

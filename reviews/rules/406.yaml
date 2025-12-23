@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "406",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#406",
+    "url": "/docs/rules/http-semantics#406"
+  },
+  "currentTitle": "MUST use 429 with retry/rate-limit headers for rate limits",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use 429 with retry/rate-limit headers for rate limits",
+    "proposedText": "**Intent**: support safe retry behavior.\n\nWhen rate limiting requests, return `429 Too Many Requests` and include guidance for clients:\n\n- **Retry timing**: include `Retry-After` when you can provide a meaningful retry delay.\n- **Rate limit metadata (recommended)**: use the standard `RateLimit-*` header fields (RFC 9235) to expose limit/remaining/reset policy.\n\n**Example**:\n\n```http\nHTTP/1.1 429 Too Many Requests\nRetry-After: 10\nContent-Type: application/problem+json\n```\n",
+    "rationale": "RFC 9235 standardized `RateLimit-*` fields; preferring those improves interoperability over vendor `X-RateLimit-*` conventions while still allowing Retry-After for immediate retry guidance.",
+    "compatNotes": "Existing `X-RateLimit-*` can remain during migration. New APIs should prefer `RateLimit-*` and use `Retry-After` when possible."
+  },
+  "reviewNotes": [
+    "Modernize headers: prefer RFC 9235 `RateLimit-*`; keep Retry-After guidance; treat `X-RateLimit-*` as migration-only."
+  ]
+}

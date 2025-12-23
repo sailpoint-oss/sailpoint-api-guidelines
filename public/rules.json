@@ -1,0 +1,529 @@
+{
+  "rules": [
+    {
+      "id": "100",
+      "title": "follow API First principle",
+      "url": "/docs/rules/api-contract-and-documentation#100"
+    },
+    {
+      "id": "101",
+      "title": "provide API specification using OpenAPI",
+      "url": "/docs/rules/api-contract-and-documentation#101"
+    },
+    {
+      "id": "102",
+      "title": "provide an API user manual",
+      "url": "/docs/rules/api-contract-and-documentation#102"
+    },
+    {
+      "id": "103",
+      "title": "write APIs using U.S. English",
+      "url": "/docs/rules/api-contract-and-documentation#103"
+    },
+    {
+      "id": "104",
+      "title": "use camelCase for JSON property names",
+      "url": "/docs/rules/api-contract-and-documentation#104"
+    },
+    {
+      "id": "105",
+      "title": "use ASCII for API identifiers",
+      "url": "/docs/rules/api-contract-and-documentation#105"
+    },
+    {
+      "id": "106",
+      "title": "pluralize array property names",
+      "url": "/docs/rules/api-contract-and-documentation#106"
+    },
+    {
+      "id": "107",
+      "title": "use lowercase hyphenated path segments; camelCase path params",
+      "url": "/docs/rules/api-contract-and-documentation#107"
+    },
+    {
+      "id": "108",
+      "title": "use camelCase for query parameters",
+      "url": "/docs/rules/api-contract-and-documentation#108"
+    },
+    {
+      "id": "109",
+      "title": "use Upper-Case Words with hyphens",
+      "url": "/docs/rules/api-contract-and-documentation#109"
+    },
+    {
+      "id": "110",
+      "title": "pluralize collection resource names",
+      "url": "/docs/rules/api-contract-and-documentation#110"
+    },
+    {
+      "id": "111",
+      "title": "follow naming convention for permissions (scopes)",
+      "url": "/docs/rules/api-contract-and-documentation#111"
+    },
+    {
+      "id": "112",
+      "title": "declare enum values in UPPER_SNAKE_CASE strings",
+      "url": "/docs/rules/api-contract-and-documentation#112"
+    },
+    {
+      "id": "113",
+      "title": "follow SailPoint API Guidelines",
+      "url": "/docs/rules/api-contract-and-documentation#113"
+    },
+    {
+      "id": "114",
+      "title": "provide detailed API description",
+      "url": "/docs/rules/api-contract-and-documentation#114"
+    },
+    {
+      "id": "115",
+      "title": "describe every parameter and property",
+      "url": "/docs/rules/api-contract-and-documentation#115"
+    },
+    {
+      "id": "116",
+      "title": "provide an example for every parameter and property",
+      "url": "/docs/rules/api-contract-and-documentation#116"
+    },
+    {
+      "id": "117",
+      "title": "keep operation summaries at five or less words",
+      "url": "/docs/rules/api-contract-and-documentation#117"
+    },
+    {
+      "id": "118",
+      "title": "avoid qualifying verbs",
+      "url": "/docs/rules/api-contract-and-documentation#118"
+    },
+    {
+      "id": "119",
+      "title": "use positive semantics for boolean fields",
+      "url": "/docs/rules/api-contract-and-documentation#119"
+    },
+    {
+      "id": "120",
+      "title": "use prescribed description format for filters parameter",
+      "url": "/docs/rules/api-contract-and-documentation#120"
+    },
+    {
+      "id": "121",
+      "title": "use prescribed description format for sorters parameter",
+      "url": "/docs/rules/api-contract-and-documentation#121"
+    },
+    {
+      "id": "122",
+      "title": "provide a valid operationId in camelCase for each operation",
+      "url": "/docs/rules/api-contract-and-documentation#122"
+    },
+    {
+      "id": "123",
+      "title": "provide a valid tag for each operation",
+      "url": "/docs/rules/api-contract-and-documentation#123"
+    },
+    {
+      "id": "124",
+      "title": "provide a valid operationId in camelCase under x-sailpoint-resource-operation-id for path parameters",
+      "url": "/docs/rules/api-contract-and-documentation#124"
+    },
+    {
+      "id": "200",
+      "title": "not break backward compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#200"
+    },
+    {
+      "id": "201",
+      "title": "prefer compatible extensions",
+      "url": "/docs/rules/lifecycle-and-compatibility#201"
+    },
+    {
+      "id": "202",
+      "title": "prepare clients for compatible extensions",
+      "url": "/docs/rules/lifecycle-and-compatibility#202"
+    },
+    {
+      "id": "203",
+      "title": "design APIs conservatively (inputs)",
+      "url": "/docs/rules/lifecycle-and-compatibility#203"
+    },
+    {
+      "id": "204",
+      "title": "return JSON objects as top-level structures",
+      "url": "/docs/rules/lifecycle-and-compatibility#204"
+    },
+    {
+      "id": "205",
+      "title": "treat OpenAPI objects as open for extension by default",
+      "url": "/docs/rules/lifecycle-and-compatibility#205"
+    },
+    {
+      "id": "206",
+      "title": "avoid breaking changes as a versioning strategy",
+      "url": "/docs/rules/lifecycle-and-compatibility#206"
+    },
+    {
+      "id": "207",
+      "title": "use URI (path) versioning when multiple versions must coexist",
+      "url": "/docs/rules/lifecycle-and-compatibility#207"
+    },
+    {
+      "id": "208",
+      "title": "use year-based API versioning (`YYYY.{revision}`)",
+      "url": "/docs/rules/lifecycle-and-compatibility#208"
+    },
+    {
+      "id": "209",
+      "title": "reflect deprecation in API specifications",
+      "url": "/docs/rules/lifecycle-and-compatibility#209"
+    },
+    {
+      "id": "210",
+      "title": "monitor usage of deprecated APIs",
+      "url": "/docs/rules/lifecycle-and-compatibility#210"
+    },
+    {
+      "id": "211",
+      "title": "add Deprecation and Sunset headers",
+      "url": "/docs/rules/lifecycle-and-compatibility#211"
+    },
+    {
+      "id": "212",
+      "title": "have clients monitor Deprecation/Sunset headers",
+      "url": "/docs/rules/lifecycle-and-compatibility#212"
+    },
+    {
+      "id": "213",
+      "title": "not start using deprecated APIs/features",
+      "url": "/docs/rules/lifecycle-and-compatibility#213"
+    },
+    {
+      "id": "214",
+      "title": "contain API meta information",
+      "url": "/docs/rules/lifecycle-and-compatibility#214"
+    },
+    {
+      "id": "215",
+      "title": "provide API audience",
+      "url": "/docs/rules/lifecycle-and-compatibility#215"
+    },
+    {
+      "id": "216",
+      "title": "follow versioned API requirements",
+      "url": "/docs/rules/lifecycle-and-compatibility#216"
+    },
+    {
+      "id": "217",
+      "title": "follow beta API requirements when applicable",
+      "url": "/docs/rules/lifecycle-and-compatibility#217"
+    },
+    {
+      "id": "218",
+      "title": "agree on deprecation timeframes with clients",
+      "url": "/docs/rules/lifecycle-and-compatibility#218"
+    },
+    {
+      "id": "300",
+      "title": "secure endpoints with OAuth 2.0",
+      "url": "/docs/rules/security-and-authorization#300"
+    },
+    {
+      "id": "301",
+      "title": "define and assign permissions (scopes)",
+      "url": "/docs/rules/security-and-authorization#301"
+    },
+    {
+      "id": "302",
+      "title": "document required license add-ons for API collections",
+      "url": "/docs/rules/security-and-authorization#302"
+    },
+    {
+      "id": "303",
+      "title": "define user levels (capabilities) for endpoints using userAuth",
+      "url": "/docs/rules/security-and-authorization#303"
+    },
+    {
+      "id": "400",
+      "title": "use standardized HTTP headers when implementing standard semantics",
+      "url": "/docs/rules/http-semantics#400"
+    },
+    {
+      "id": "401",
+      "title": "use HTTP methods correctly",
+      "url": "/docs/rules/http-semantics#401"
+    },
+    {
+      "id": "402",
+      "title": "fulfill method properties",
+      "url": "/docs/rules/http-semantics#402"
+    },
+    {
+      "id": "403",
+      "title": "use standard HTTP status codes",
+      "url": "/docs/rules/http-semantics#403"
+    },
+    {
+      "id": "404",
+      "title": "define a complete, standardized error contract in OpenAPI (Problem Details)",
+      "url": "/docs/rules/http-semantics#404"
+    },
+    {
+      "id": "405",
+      "title": "use 207 (or 200) for batch/bulk responses with per-item results",
+      "url": "/docs/rules/http-semantics#405"
+    },
+    {
+      "id": "406",
+      "title": "use 429 with retry/rate-limit headers for rate limits",
+      "url": "/docs/rules/http-semantics#406"
+    },
+    {
+      "id": "407",
+      "title": "MERGED into [#404] (Problem Details)",
+      "url": "/docs/rules/http-semantics#407"
+    },
+    {
+      "id": "408",
+      "title": "not expose stack traces or internal details",
+      "url": "/docs/rules/http-semantics#408"
+    },
+    {
+      "id": "409",
+      "title": "consider idempotent POST/PATCH",
+      "url": "/docs/rules/http-semantics#409"
+    },
+    {
+      "id": "410",
+      "title": "support Idempotency-Key",
+      "url": "/docs/rules/http-semantics#410"
+    },
+    {
+      "id": "411",
+      "title": "use secondary key for idempotent POST",
+      "url": "/docs/rules/http-semantics#411"
+    },
+    {
+      "id": "412",
+      "title": "use accurate response examples per endpoint",
+      "url": "/docs/rules/http-semantics#412"
+    },
+    {
+      "id": "413",
+      "title": "MERGED into [#404] (standardized error schema)",
+      "url": "/docs/rules/http-semantics#413"
+    },
+    {
+      "id": "500",
+      "title": "not use &quot;/api&quot; as base path",
+      "url": "/docs/rules/resource-modeling-and-urls#500"
+    },
+    {
+      "id": "501",
+      "title": "normalize paths and define canonical URL forms",
+      "url": "/docs/rules/resource-modeling-and-urls#501"
+    },
+    {
+      "id": "502",
+      "title": "avoid action-style endpoints; model resources",
+      "url": "/docs/rules/resource-modeling-and-urls#502"
+    },
+    {
+      "id": "503",
+      "title": "model complete business processes",
+      "url": "/docs/rules/resource-modeling-and-urls#503"
+    },
+    {
+      "id": "504",
+      "title": "define useful resources",
+      "url": "/docs/rules/resource-modeling-and-urls#504"
+    },
+    {
+      "id": "505",
+      "title": "keep URLs verb-free",
+      "url": "/docs/rules/resource-modeling-and-urls#505"
+    },
+    {
+      "id": "506",
+      "title": "use domain-specific resource names",
+      "url": "/docs/rules/resource-modeling-and-urls#506"
+    },
+    {
+      "id": "507",
+      "title": "identify sub-resources via nested path segments when tightly coupled",
+      "url": "/docs/rules/resource-modeling-and-urls#507"
+    },
+    {
+      "id": "508",
+      "title": "prefer non-nested URLs when resources are independently addressable",
+      "url": "/docs/rules/resource-modeling-and-urls#508"
+    },
+    {
+      "id": "509",
+      "title": "limit number of resource types",
+      "url": "/docs/rules/resource-modeling-and-urls#509"
+    },
+    {
+      "id": "510",
+      "title": "limit nesting depth",
+      "url": "/docs/rules/resource-modeling-and-urls#510"
+    },
+    {
+      "id": "511",
+      "title": "target REST maturity level 2",
+      "url": "/docs/rules/resource-modeling-and-urls#511"
+    },
+    {
+      "id": "512",
+      "title": "use URL-friendly IDs",
+      "url": "/docs/rules/resource-modeling-and-urls#512"
+    },
+    {
+      "id": "513",
+      "title": "never include customer org name in public API paths",
+      "url": "/docs/rules/resource-modeling-and-urls#513"
+    },
+    {
+      "id": "514",
+      "title": "not use sequential numeric IDs",
+      "url": "/docs/rules/resource-modeling-and-urls#514"
+    },
+    {
+      "id": "600",
+      "title": "stick to conventional query parameters",
+      "url": "/docs/rules/requests-and-querying#600"
+    },
+    {
+      "id": "601",
+      "title": "define collection format of header/query parameters",
+      "url": "/docs/rules/requests-and-querying#601"
+    },
+    {
+      "id": "602",
+      "title": "support offset-based pagination for list endpoints",
+      "url": "/docs/rules/requests-and-querying#602"
+    },
+    {
+      "id": "603",
+      "title": "document implicit filtering and default sorting behavior",
+      "url": "/docs/rules/requests-and-querying#603"
+    },
+    {
+      "id": "604",
+      "title": "align on a single query format across the API (filters/sorters; GET + POST search)",
+      "url": "/docs/rules/requests-and-querying#604"
+    },
+    {
+      "id": "700",
+      "title": "not use null for boolean properties",
+      "url": "/docs/rules/payload-conventions#700"
+    },
+    {
+      "id": "701",
+      "title": "use same semantics for null vs. absent properties",
+      "url": "/docs/rules/payload-conventions#701"
+    },
+    {
+      "id": "702",
+      "title": "not use null for empty arrays",
+      "url": "/docs/rules/payload-conventions#702"
+    },
+    {
+      "id": "703",
+      "title": "use JSON for payloads with objects as top-level",
+      "url": "/docs/rules/payload-conventions#703"
+    },
+    {
+      "id": "704",
+      "title": "pass non-JSON media types via standard formats",
+      "url": "/docs/rules/payload-conventions#704"
+    },
+    {
+      "id": "705",
+      "title": "use standard media types",
+      "url": "/docs/rules/payload-conventions#705"
+    },
+    {
+      "id": "706",
+      "title": "define maps using additionalProperties",
+      "url": "/docs/rules/payload-conventions#706"
+    },
+    {
+      "id": "707",
+      "title": "define defaults for optional boolean properties",
+      "url": "/docs/rules/payload-conventions#707"
+    },
+    {
+      "id": "708",
+      "title": "avoid nested objects",
+      "url": "/docs/rules/payload-conventions#708"
+    },
+    {
+      "id": "709",
+      "title": "define defaults for optional properties",
+      "url": "/docs/rules/payload-conventions#709"
+    },
+    {
+      "id": "710",
+      "title": "define &quot;required&quot; for objects/params per OpenAPI",
+      "url": "/docs/rules/payload-conventions#710"
+    },
+    {
+      "id": "711",
+      "title": "mark nullable: true when null is possible",
+      "url": "/docs/rules/payload-conventions#711"
+    },
+    {
+      "id": "800",
+      "title": "use RFC 3339 date/time values; store UTC",
+      "url": "/docs/rules/data-types-and-common-objects#800"
+    },
+    {
+      "id": "801",
+      "title": "use ISO 8601 duration/interval strings",
+      "url": "/docs/rules/data-types-and-common-objects#801"
+    },
+    {
+      "id": "802",
+      "title": "use standard date/time formats",
+      "url": "/docs/rules/data-types-and-common-objects#802"
+    },
+    {
+      "id": "803",
+      "title": "use standards for country/language/currency codes",
+      "url": "/docs/rules/data-types-and-common-objects#803"
+    },
+    {
+      "id": "804",
+      "title": "define number/integer formats",
+      "url": "/docs/rules/data-types-and-common-objects#804"
+    },
+    {
+      "id": "805",
+      "title": "use common field names and semantics",
+      "url": "/docs/rules/data-types-and-common-objects#805"
+    },
+    {
+      "id": "806",
+      "title": "use standardized property formats",
+      "url": "/docs/rules/data-types-and-common-objects#806"
+    },
+    {
+      "id": "807",
+      "title": "encode embedded binary as base64url",
+      "url": "/docs/rules/data-types-and-common-objects#807"
+    },
+    {
+      "id": "900",
+      "title": "support partial responses via fields filtering",
+      "url": "/docs/rules/operations-and-quality#900"
+    },
+    {
+      "id": "901",
+      "title": "allow optional embedding of sub-resources",
+      "url": "/docs/rules/operations-and-quality#901"
+    },
+    {
+      "id": "902",
+      "title": "publish OpenAPI specification (and meet documentation quality levels)",
+      "url": "/docs/rules/operations-and-quality#902"
+    }
+  ]
+}

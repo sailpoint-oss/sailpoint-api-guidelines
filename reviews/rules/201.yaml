@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "201",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#201",
+    "url": "/docs/rules/lifecycle-and-compatibility#201"
+  },
+  "currentTitle": "SHOULD prefer compatible extensions",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: evolve APIs by adding capabilities rather than mutating existing behavior.\n\nWhen evolving an API, prefer **compatible extensions** over breaking changes.\n\n**Examples of compatible extensions**:\n\n- Add a new optional response field.\n- Add a new optional request field with a safe default.\n- Add a new query parameter that does not change behavior when omitted.\n- Add a new endpoint instead of overloading an existing one.\n\n**Examples that are often mistaken as compatible but can be breaking**:\n\n- Adding a new enum value (server-compatible, but can break naive clients; see [#202]).\n- Tightening validation (rejecting inputs that used to pass).\n- Changing default sort order, pagination defaults, or implicit filtering.\n\n**Guidance**:\n\n- If behavior must change, prefer a new endpoint or a new major version rather than changing semantics in-place.\n\n**Testability**:\n\n- Proposed changes include a compatibility assessment (what clients might break and why).\n",
+    "rationale": "Additive evolution preserves existing client behavior while still allowing the platform to grow new capabilities.",
+    "compatNotes": "Doc-only change; clarifies what “compatible extension” means and calls out common footguns."
+  },
+  "reviewNotes": [
+    "Define compatible extensions with concrete examples and call out common changes that look additive but still break clients.",
+    "Accepted for Phase A implementation."
+  ]
+}

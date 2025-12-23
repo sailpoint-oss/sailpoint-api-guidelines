@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "412",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#412",
+    "url": "/docs/rules/http-semantics#412"
+  },
+  "currentTitle": "MUST use accurate response examples per endpoint",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use accurate response examples per endpoint",
+    "proposedText": "**Intent**: examples are what consumers copy/paste—make them correct, safe, and endpoint-specific.\n\nEvery operation MUST include realistic, accurate examples for both success and error responses.\n\n**Requirements**:\n\n- Include at least one **2xx** example and at least one **error** example per operation.\n- Examples MUST match:\n  - the operation’s documented schema\n  - the documented status code\n  - the documented content type\n- Examples MUST be specific to the endpoint’s behavior and edge cases; avoid generic examples that don’t demonstrate what the endpoint actually returns.\n- Never include secrets, real customer data, or environment-specific identifiers.\n\n**OpenAPI guidance**:\n\n- Use `content.application/json.example` for a single canonical example.\n- Use `content.application/json.examples` when you need multiple named examples (recommended for distinct error cases).\n\n## Examples\n\n### 1) Success example (list endpoint)\n\n```http\nGET /accounts?limit=2&offset=0\n```\n\n```json\n{\n  \"items\": [\n    { \"id\": \"2c9180...\", \"name\": \"Example A\", \"status\": \"ACTIVE\" },\n    { \"id\": \"2c9180...\", \"name\": \"Example B\", \"status\": \"DISABLED\" }\n  ],\n  \"count\": 123,\n  \"limit\": 2,\n  \"offset\": 0\n}\n```\n\n### 2) Error example (validation error)\n\n```json\n{\n  \"type\": \"https://developer.sailpoint.com/problems/validation-error\",\n  \"title\": \"Validation error\",\n  \"status\": 400,\n  \"detail\": \"One or more fields are invalid.\",\n  \"instance\": \"/accounts\",\n  \"errors\": [\n    { \"field\": \"name\", \"message\": \"Must not be blank.\" }\n  ],\n  \"correlationId\": \"3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b\"\n}\n```\n\n### 3) Error example (conflict)\n\n```json\n{\n  \"type\": \"https://developer.sailpoint.com/problems/conflict\",\n  \"title\": \"Conflict\",\n  \"status\": 409,\n  \"detail\": \"An account with the same externalId already exists.\",\n  \"instance\": \"/accounts\",\n  \"code\": \"DUPLICATE_EXTERNAL_ID\"\n}\n```\n\n**Testability**:\n\n- A reviewer can match each example to the schema and confirm it would validate.\n- Each endpoint’s examples demonstrate its actual edge cases (not generic placeholders).\n",
+    "rationale": "Examples are what developers copy/paste. Making them accurate and safe prevents integration bugs and avoids leaking sensitive data into public artifacts.",
+    "compatNotes": "Doc-only change."
+  },
+  "reviewNotes": [
+    "Add safety note (no secrets/real data) and minor OpenAPI guidance (`examples`)."
+  ]
+}

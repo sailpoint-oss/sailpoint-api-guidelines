@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "107",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#107",
+    "url": "/docs/rules/api-contract-and-documentation#107"
+  },
+  "currentTitle": "MUST use lowercase hyphenated path segments; camelCase path params",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use lowercase hyphenated path segments; camelCase path params",
+    "proposedText": "**Intent**: keep URLs readable, consistent, and predictable across services.\n\n- URL **path segments** MUST be lowercase and hyphenated (kebab-case).\n- **Path parameter names** MUST be camelCase.\n\n**Examples**:\n\n- ✅ `/identity-profiles/{identityProfileId}`\n- ✅ `/accounts/{accountId}/entitlements`\n- ✅ `/access-requests/{accessRequestId}`\n\n**Anti-examples**:\n\n- ❌ `/IdentityProfiles/{IdentityProfileId}` (wrong casing)\n- ❌ `/identityProfiles/{identity_profile_id}` (mixed conventions)\n- ❌ `/identity_profiles/{identity_profile_id}` (snake_case)\n\n**Acronyms**:\n\n- Prefer `/oauth-clients/{oauthClientId}` (not `/OAuthClients/{OAuthClientID}`).\n\n**Testability**:\n\n- New paths and parameter names conform to casing rules.\n",
+    "rationale": "Consistent URL casing reduces confusion and makes it easier for consumers to guess endpoints and for tooling to remain consistent across a large API surface.",
+    "compatNotes": "Changing paths or parameter names is breaking. Apply for new endpoints and new path parameters; migrate old ones only through versioning/redirects."
+  },
+  "reviewNotes": [
+    "Expand with more examples, anti-examples, and acronym guidance."
+  ]
+}

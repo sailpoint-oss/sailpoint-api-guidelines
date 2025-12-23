@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "302",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#302",
+    "url": "/docs/rules/security-and-authorization#302"
+  },
+  "currentTitle": "MUST document required license add-ons for API collections",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST document required license add-ons for API collections",
+    "proposedText": "**Intent**: prevent failed integrations caused by undiscoverable licensing/entitlement prerequisites.\n\nIf any API collection (tag/group) or operation requires a specific license add-on, entitlement, or feature flag, teams MUST document that requirement.\n\n**Where to document**:\n\n- In OpenAPI tag descriptions for collection-wide requirements.\n- In operation descriptions when requirements differ per endpoint.\n- In guides/user manuals for how a customer enables the add-on.\n\n**Recommended OpenAPI approach**:\n\n- Use a consistent vendor extension so tooling can surface it (example):\n\n```yaml\ntags:\n  - name: Accounts\n    description: Manage accounts.\n    x-license-addons:\n      - IdentitySecurityCloud_Core\n      - LifecycleManagement\n```\n\nAnd for endpoint-specific requirements:\n\n```yaml\npaths:\n  /accounts/imports:\n    post:\n      summary: Create account import\n      description: Requires the LifecycleManagement add-on.\n      x-license-addons: [LifecycleManagement]\n```\n\n**Rules**:\n\n- Requirements MUST be explicit and machine-discoverable where feasible (extensions + docs).\n- Do not rely on support tickets or product UIs as the only source of truth.\n\n**Testability**:\n\n- Reviewers can determine licensing prerequisites from the published OpenAPI and docs.\n",
+    "rationale": "Licensing gates are a common source of customer confusion; documenting them upfront reduces support load and integration churn.",
+    "compatNotes": "Documentation-only. Adding vendor extensions is additive."
+  },
+  "reviewNotes": []
+}

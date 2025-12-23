@@ -1,0 +1,17 @@
+{
+  "title": "Rules",
+  "description": "Core tenets of API design",
+  "icon": "BookOpenText",
+  "pages": [
+    "index",
+    "api-contract-and-documentation",
+    "lifecycle-and-compatibility",
+    "security-and-authorization",
+    "http-semantics",
+    "resource-modeling-and-urls",
+    "requests-and-querying",
+    "payload-conventions",
+    "data-types-and-common-objects",
+    "operations-and-quality"
+  ]
+}

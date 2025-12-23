@@ -1,0 +1,90 @@
+---
+title: OpenAPI snippet library
+description: Copy/paste snippets for common patterns (errors, pagination, headers, and reusable schemas).
+---
+
+# OpenAPI snippet library
+
+This page provides copy/paste snippets you can adapt into your OpenAPI spec. Treat these as starting
+points: align naming and details with your API’s domain and Rules.
+
+## Problem Details (RFC 7807) schema (example)
+
+```yaml
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          description: Stable URI identifying the problem type.
+          format: uri
+        title:
+          type: string
+          description: Short, human-readable summary of the problem type.
+        status:
+          type: integer
+          description: HTTP status code.
+          minimum: 100
+          maximum: 599
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+        instance:
+          type: string
+          description: URI reference identifying the specific occurrence.
+          format: uri
+```
+
+## Offset/limit pagination response (example)
+
+```yaml
+components:
+  schemas:
+    PagedResponse:
+      type: object
+      required: [items, limit, offset]
+      properties:
+        items:
+          type: array
+          items: {}
+          description: Items in the current page.
+        limit:
+          type: integer
+          minimum: 1
+        offset:
+          type: integer
+          minimum: 0
+        count:
+          type: integer
+          minimum: 0
+          description: Optional total count when supported.
+```
+
+## ETag and optimistic locking (documentation hint)
+
+```yaml
+paths:
+  /resources/{id}:
+    get:
+      responses:
+        "200":
+          description: OK
+          headers:
+            ETag:
+              description: Version identifier for optimistic locking.
+              schema:
+                type: string
+    patch:
+      parameters:
+        - in: header
+          name: If-Match
+          description: Provide the ETag from the last read to prevent lost updates.
+          required: true
+          schema:
+            type: string
+```
+
+

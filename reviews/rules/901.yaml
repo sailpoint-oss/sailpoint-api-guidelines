@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "901",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#901",
+    "url": "/docs/rules/operations-and-quality#901"
+  },
+  "currentTitle": "SHOULD allow optional embedding of sub-resources",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD allow optional embedding of sub-resources",
+    "proposedText": "**Intent**: reduce round trips for common UI/workflow use cases while keeping default responses lean.\n\nSupport an `embed` query parameter to optionally include related sub-resources.\n\n**Rules**:\n\n- Embedding MUST be opt-in (not default).\n- Define an allowlist of embeddable relationships per endpoint.\n- Limit embedding depth (recommend depth = 1).\n- Document performance considerations and any maximums.\n\n**Examples**:\n\n- ✅ `GET /accounts/{id}?embed=(ownerRef,sourceRef)`\n- ✅ `GET /accounts?embed=(ownerRef)&limit=50&offset=0`\n\n**Anti-examples**:\n\n- ❌ unlimited recursive embedding\n- ❌ `embed=*` without documented limits\n\n**Testability**:\n\n- OpenAPI documents allowed embed values and shows examples.\n- Default response remains minimal.\n",
+    "rationale": "Embedding is a practical way to improve client performance and UX without introducing many bespoke endpoints—if constrained and documented.",
+    "compatNotes": "Adding optional embed is additive. Keep embed tokens and behavior stable."
+  },
+  "reviewNotes": []
+}

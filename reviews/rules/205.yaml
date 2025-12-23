@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "205",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#205",
+    "url": "/docs/rules/lifecycle-and-compatibility#205"
+  },
+  "currentTitle": "treat OpenAPI objects as open for extension by default",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "401",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#401",
+    "url": "/docs/rules/http-semantics#401"
+  },
+  "currentTitle": "MUST use HTTP methods correctly",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST use HTTP methods correctly",
+    "proposedText": "**Intent**: preserve interoperability and make APIs intuitive for every client.\n\nUse HTTP methods according to their standard semantics (RFC 9110 / RFC 7231 lineage). Misusing methods is one of the fastest ways to break caching, retries, SDKs, and client expectations.\n\n## GET\n\nGET MUST be **safe** and **side-effect free**.\n\n**Allowed**:\n\n- Read a resource or collection.\n- Compute a response based on server state (as long as it does not persist changes).\n\n**Not allowed**:\n\n- Mutations (even “small” ones like marking as viewed).\n- Triggering background jobs that change server state.\n\n**Examples**:\n\n- ✅ `GET /accounts/{accountId}`\n- ✅ `GET /accounts?limit=50&offset=0`\n- ❌ `GET /accounts/{accountId}/disable`\n- ❌ `GET /accounts/{accountId}` that updates `lastAccessedAt`\n\n## POST\n\nPOST is used for **creating subordinate resources**, **non-idempotent** operations, or **request/job resources**.\n\n**Create resource**:\n\n- ✅ `POST /accounts` → `201 Created` + `Location: /accounts/{id}`\n\n**Search with body (GET-like semantics)**:\n\n- ✅ `POST /accounts/search` with body describing filters/sorters, MUST NOT create a resource, MUST be safe to retry.\n\n**Command/request resource**:\n\n- ✅ `POST /accounts/{accountId}/disable-requests` (creates a disable request resource)\n\n**Anti-examples**:\n\n- ❌ `POST /accounts/{id}` to update (use PATCH/PUT)\n- ❌ `POST /accounts/{id}/get` (use GET)\n\n## PUT\n\nPUT replaces the **entire** resource representation.\n\n**Rules**:\n\n- Missing fields are not “leave unchanged”.\n- If you need partial updates, use PATCH.\n\n**Examples**:\n\n- ✅ `PUT /accounts/{accountId}` with full representation\n- ❌ `PUT /accounts/{accountId}` with only changed fields\n\n## PATCH\n\nPATCH applies a **partial update**.\n\n**Rules**:\n\n- Explicitly document patch format:\n  - resource-specific patch schema OR JSON Merge Patch OR JSON Patch.\n- Define null semantics (does `null` clear, or is it invalid?).\n\n**Examples**:\n\n- ✅ `PATCH /accounts/{accountId}` with `{ \"status\": \"DISABLED\" }`\n- ✅ `PATCH /accounts/{accountId}` with JSON Patch ops (if documented)\n\n## DELETE\n\nDELETE removes a resource (or performs a documented soft-delete).\n\n**Examples**:\n\n- ✅ `DELETE /accounts/{accountId}` → `204 No Content`\n- ❌ `GET /accounts/{accountId}/delete`\n\n## Review checklist (enforcement)\n\n- GET endpoints are demonstrably safe (no writes, no job triggers).\n- PUT is full replacement; PATCH is partial update.\n- Search-with-body uses POST and is documented as GET-like semantics.\n- Paths are noun-based and align with method semantics.\n",
+    "rationale": "Teams often misuse methods (especially GET-with-side-effects and POST-for-updates). This rule makes semantics explicit so reviewers can enforce consistent patterns.",
+    "compatNotes": "Fixing method misuse is often breaking for clients relying on prior behavior; prefer introducing new endpoints/operations and deprecating old behavior where necessary."
+  },
+  "reviewNotes": []
+}

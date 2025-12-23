@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "121",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#121",
+    "url": "/docs/rules/api-contract-and-documentation#121"
+  },
+  "currentTitle": "MUST use prescribed description format for sorters parameter",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use prescribed description format for sorters parameter",
+    "proposedText": "**Intent**: keep sorting documentation consistent so consumers can reuse knowledge across endpoints.\n\nWhen an endpoint supports the `sorters` parameter, APIs MUST use the prescribed description template (and customize the supported-field list per endpoint).\n\n**Template (copy/paste into OpenAPI description)**:\n\n```text\nSorts results by one or more fields.\n\nSyntax:\n  sorters=<field>:<direction>[,<field>:<direction>...]\n\nDirection:\n  asc | desc\n\nSupported fields:\n  - <name>\n  - <createdAt>\n  - <status>\n\nDefault ordering:\n  If sorters is omitted, results are ordered by <defaultSortPolicy>.\n\nExamples:\n  sorters=name:asc\n  sorters=status:asc,createdAt:desc\n```\n\n**Rules**:\n\n- The supported-field list MUST be accurate per endpoint.\n- The default ordering policy MUST be documented (see [#603]).\n\n**Related**: shared query story in [#604].\n",
+    "rationale": "A consistent template makes sorting predictable and reduces endpoint-by-endpoint documentation variance.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

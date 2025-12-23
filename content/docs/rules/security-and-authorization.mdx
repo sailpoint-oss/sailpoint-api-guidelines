@@ -1,0 +1,144 @@
+---
+title: "Security & Authorization"
+description: Rules for OAuth, scopes, licensing/entitlements, and secure-by-default API behavior.
+---
+
+These rules define baseline authentication/authorization expectations and how to document them for
+consumers.
+
+**Related guides**:
+- [Authentication, authorization, & scopes](/docs/guides/authn-authz-and-scopes)
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+
+**Related reference**:
+- [Review checklist](/docs/appendices/review-checklist)
+
+<RuleHeader id="300" level="MUST" title="Secure endpoints with OAuth 2.0" />
+### #300 - Secure Endpoints with OAuth 2.0
+
+**Intent**: ensure every operation has explicit authentication + authorization requirements.
+
+Secure all API endpoints using OAuth 2.0.
+
+**Requirements**:
+
+- Each operation MUST declare its security requirements in OpenAPI (`security`).
+- Each operation MUST specify whether it is **user-context** (`userAuth`) and/or **system/service-context** (`applicationAuth`).
+- Required scopes MUST be listed per operation (do not rely on global defaults when behavior differs).
+
+**Guidance**:
+
+- Use least privilege: keep required scope sets minimal.
+- If an operation supports both user and service contexts, document the difference in behavior and required scopes/capabilities.
+
+**Testability**:
+
+- OpenAPI includes an OAuth 2.0 security scheme.
+- Every operation has a non-empty `security` requirement with the documented scopes.
+- Docs state the execution context (user vs service) and any additional authorization gates.
+
+<RuleHeader id="301" level="MUST" title="Define and assign scopes" />
+### #301 - Define and Assign Scopes
+
+**Intent**: make authorization predictable by defining stable scopes and assigning them consistently per operation.
+
+Define OAuth scopes for your API and assign required scopes per endpoint.
+
+**Requirements**:
+
+- Required scopes MUST be documented per operation using OpenAPI `security`.
+- Scope requirements for an operation MUST be unambiguous:
+  - If multiple scopes are listed in a single `security` requirement, they are treated as **AND** (all required).
+  - If multiple `security` requirements are listed, they are treated as **OR** (any requirement satisfies auth).
+
+**Guidance**:
+
+- Prefer least privilege and minimal scope sets.
+- If an operation behaves differently depending on scopes, consider splitting it into separate operations/endpoints rather than overloading one behavior.
+
+**Testability**:
+
+- OpenAPI `security` requirements match the documented expectations for AND vs OR.
+- For each operation, a reviewer can answer: “Which single token/scopes are required to call this?”
+
+<RuleHeader id="302" level="MUST" title="Document required licenses for API collections" />
+### #302 - Document Required Licenses for API Collections
+
+**Intent**: prevent failed integrations caused by undiscoverable licensing/entitlement prerequisites.
+
+If any API collection (tag/group) or operation requires a specific license add-on, entitlement, or feature flag, teams MUST document that requirement.
+
+**Where to document**:
+
+- In OpenAPI tag descriptions for collection-wide requirements.
+- In operation descriptions when requirements differ per endpoint.
+- In guides/user manuals for how a customer enables the add-on.
+
+**Recommended OpenAPI approach**:
+
+- Use a consistent vendor extension so tooling can surface it (example):
+
+```yaml
+tags:
+  - name: Accounts
+    description: Manage accounts.
+    x-license-addons:
+      - IdentitySecurityCloud_Core
+      - LifecycleManagement
+```
+
+And for endpoint-specific requirements:
+
+```yaml
+paths:
+  /accounts/imports:
+    post:
+      summary: Create account import
+      description: Requires the LifecycleManagement add-on.
+      x-license-addons: [LifecycleManagement]
+```
+
+**Rules**:
+
+- Requirements MUST be explicit and machine-discoverable where feasible (extensions + docs).
+- Do not rely on support tickets or product UIs as the only source of truth.
+
+**Testability**:
+
+- Reviewers can determine licensing prerequisites from the published OpenAPI and docs.
+
+### MUST enforce HTTPS/TLS for all endpoints
+
+All API endpoints must be accessible only via HTTPS with proper TLS encryption to protect data in transit and prevent man-in-the-middle attacks.
+
+### MUST not place secrets or credentials in URLs
+
+Never include sensitive information such as secrets, credentials, API keys, or tokens in URL paths or query parameters. Always use HTTP headers or request body for sensitive data.
+
+### MUST authenticate and authorize requests before processing payloads
+
+Validate authentication and authorization before parsing or processing request payloads to prevent potential security vulnerabilities from malicious payload data.
+
+---
+
+<RuleHeader id="303" level="MUST" title="Define user capabilities for userAuth endpoints" />
+### #303 - Define User Capabilities for userAuth Endpoints
+
+**Intent**: make authorization requirements explicit beyond OAuth scopes.
+
+For endpoints that use `userAuth`, APIs MUST document the required user capability levels/roles in addition to OAuth scopes.
+
+**Requirements**:
+
+- State the required user level/role(s) for the operation.
+- If authorization differs by operation mode (read vs write), document the differences.
+- If the requirement is conditional (feature flags, tenant config), document the condition.
+
+**Where to document**:
+
+- In the OpenAPI operation description.
+- Prefer a consistent vendor extension if tooling consumes it (if available in your platform).
+
+**Testability**:
+
+- A reviewer can answer: “Which scopes are required?” and “Which user roles/capabilities are required?” from the OpenAPI + docs.

@@ -1,0 +1,43 @@
+---
+title: Glossary
+description: Shared terminology used across Rules, Guides, and Appendices.
+---
+
+# Glossary
+
+This glossary defines terms used across the API Guidelines so teams and integrators share the same
+language.
+
+## Terms
+
+### Resource
+
+An addressable domain concept exposed via the API (e.g., an `account`, `role`, or `campaign`), usually
+represented as JSON and identified by a stable identifier.
+
+### Representation
+
+The JSON shape you exchange over the wire for a resource (often a subset/variant of an internal domain
+model).
+
+### Compatibility (backwards compatibility)
+
+The ability for existing clients to continue working without code changes. Additive changes are
+typically safe; semantic changes often are not.
+
+### Idempotency
+
+A property where repeating the same request has the same effect as making it once (or yields the same
+result). Important for safe retries.
+
+### Optimistic locking
+
+A concurrency pattern that detects conflicting updates (commonly using HTTP preconditions like
+`ETag`/`If-Match`) and fails writes when the resource changed since the client last read it.
+
+### Cursor pagination
+
+Pagination using an opaque token (“cursor”) that points to a position in a result set, typically used
+for large or rapidly changing datasets.
+
+

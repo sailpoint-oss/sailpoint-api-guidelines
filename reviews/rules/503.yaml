@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "503",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#503",
+    "url": "/docs/rules/resource-modeling-and-urls#503"
+  },
+  "currentTitle": "SHOULD model complete business processes",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD model complete business processes (not just CRUD)",
+    "proposedText": "**Intent**: enable real customer workflows without forcing clients to stitch together fragile sequences.\n\nAPIs SHOULD model complete business processes and workflows—not just database tables.\n\n**What this means**:\n\n- Identify the primary workflows for an API slice and ensure the API supports them end-to-end.\n- Prefer stable workflow resources that can be created/queried/audited over ad-hoc “doThing” endpoints.\n- Document the workflow in a step-by-step guide (see [#102]).\n\n**Examples**:\n\n- Access request workflow:\n  - ✅ `POST /access-requests` (create request)\n  - ✅ `GET /access-requests/{id}` (check status)\n  - ✅ `GET /access-requests?filters=...` (list)\n\n- Long-running workflow:\n  - ✅ `POST /imports` (create import job)\n  - ✅ `GET /imports/{id}` (status/results)\n\n**Anti-patterns**:\n\n- ❌ Exposing only low-level CRUD and requiring clients to reverse-engineer process state machines.\n- ❌ Modeling workflows only as RPC verbs (e.g., `/startImport`, `/completeImport`) without durable resources.\n\n**Testability**:\n\n- A guide exists describing the primary workflows and references the canonical endpoints.\n",
+    "rationale": "Most integration failures happen at the workflow level (sequencing, state, error handling), not individual endpoint shapes. Making workflows first-class improves usability and reduces support burden.",
+    "compatNotes": "Workflow modeling is design guidance; apply to new APIs and major revisions."
+  },
+  "reviewNotes": []
+}

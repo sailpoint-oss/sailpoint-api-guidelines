@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "210",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#210",
+    "url": "/docs/rules/lifecycle-and-compatibility#210"
+  },
+  "currentTitle": "MUST monitor usage of deprecated APIs",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST monitor usage of deprecated APIs and notify consumers",
+    "proposedText": "**Intent**: enable safe retirement by knowing who still depends on deprecated behavior.\n\nWhen an API element is deprecated (see [#209]), teams MUST monitor usage and proactively notify consumers.\n\n**Minimum expectations**:\n\n- Track calls to deprecated operations (and, where feasible, deprecated parameters/fields).\n- Identify calling clients (token client ID, integration identifier, or other stable identifier).\n- Maintain dashboards and alerts leading up to sunset.\n\n**Recommended workflow**:\n\n- At deprecation time:\n  - announce deprecation, replacement, and sunset date\n- During migration window:\n  - notify top callers and provide migration support\n- Before sunset:\n  - escalate notifications and confirm readiness\n\n**Testability**:\n\n- There is a queryable metric/log dimension for deprecated usage.\n- Ownership has a playbook for contacting consumers.\n",
+    "rationale": "You cannot safely remove deprecated behavior if you can’t measure who will break. Monitoring turns deprecation into an executable process rather than a hope.",
+    "compatNotes": "Monitoring/notifications are operational requirements; implement before enforcing sunsets."
+  },
+  "reviewNotes": []
+}

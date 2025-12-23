@@ -1,0 +1,292 @@
+---
+title: "Data Types & Common Objects"
+description: Rules for consistent data formats (dates, durations, identifiers) and reusable common objects.
+---
+
+These rules standardize common data types and formats so APIs are consistent across languages,
+timezones, and tooling.
+
+**Related reference**:
+- [Glossary](/docs/appendices/glossary)
+- [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
+
+## Data Types & Formats
+<RuleHeader id="800" level="SHOULD" title="Use RFC 3339 timestamps; store UTC" />
+### #800 - Use RFC 3339 Timestamps; Store UTC
+
+**Intent**: prevent timezone ambiguity and simplify client handling.
+
+Timestamps SHOULD use RFC 3339 format and SHOULD be stored/transmitted in UTC (`Z`) whenever possible.
+
+**Examples**:
+
+- ✅ `2025-10-15T14:30:00Z`
+- ✅ `2025-10-15T14:30:00.123Z` (fractional seconds)
+- ⚠ `2025-10-15T14:30:00-05:00` (allowed by RFC 3339, but prefer UTC)
+- ❌ `10/15/2025 2:30pm`
+
+**Precision guidance**:
+
+- Be consistent about fractional-second precision across endpoints.
+- If you emit milliseconds, always emit milliseconds (don’t sometimes emit `.1` and sometimes omit it).
+
+<RuleHeader id="801" level="SHOULD" title="Use ISO 8601 durations and intervals" />
+### #801 - Use ISO 8601 Durations and Intervals
+
+**Intent**: make durations unambiguous and interoperable across languages and SDKs.
+
+Represent durations and time intervals using ISO 8601 format (e.g., `"P3Y6M4DT12H30M5S"` for periods, `"PT1H30M"` for durations) for international standard compliance.
+
+**Examples**:
+
+- `PT15M` (15 minutes)
+- `PT1H30M` (1 hour, 30 minutes)
+- `P7D` (7 days)
+
+**Avoid**:
+
+- ❌ `900` (is that seconds? ms?)
+- ❌ `1h30m` (non-standard)
+
+**Testability**:
+
+- OpenAPI schemas and examples use ISO 8601 duration strings consistently for duration-like fields.
+
+<RuleHeader id="802" level="MUST" title="Use standard date/time formats" />
+### #802 - Use Standard Date/time Formats
+
+**Intent**: prevent ambiguity and ensure consistent parsing across clients.
+
+**JSON payloads**:
+
+- Date-time values MUST use RFC 3339 / ISO 8601 date-time strings (OpenAPI `format: date-time`).
+  - Prefer UTC `Z` (see [#800]).
+- Date-only values (no time) MUST use ISO 8601 full-date `YYYY-MM-DD` (OpenAPI `format: date`).
+
+**HTTP headers**:
+
+- Date/time values in HTTP headers MUST use HTTP-date format (IMF-fixdate; RFC 9110).
+
+**Examples (JSON date-time)**:
+
+- ✅ `2026-01-15T14:30:00Z`
+- ✅ `2026-01-15T14:30:00.123Z`
+- ❌ `01/15/2026 2:30pm`
+
+**Examples (JSON date-only)**:
+
+- ✅ `2026-01-15`
+- ❌ `15-01-2026`
+
+**Example (HTTP-date header)**:
+
+```http
+Last-Modified: Tue, 15 Jan 2026 14:30:00 GMT
+```
+
+**OpenAPI example**:
+
+```yaml
+createdAt:
+  type: string
+  format: date-time
+birthDate:
+  type: string
+  format: date
+```
+
+<RuleHeader id="803" level="MUST" title="Use standard country, language, and currency codes" />
+### #803 - Use Standard Country, Language, and Currency Codes
+
+**Intent**: ensure international interoperability and avoid ambiguous, product-specific code systems.
+
+Use the appropriate standards:
+
+- **Country codes**: ISO 3166-1 alpha-2 (e.g., `US`, `DE`)
+- **Language tags**: BCP 47 (e.g., `en-US`, `de-DE`)
+- **Currency codes**: ISO 4217 (e.g., `USD`, `EUR`)
+
+**Examples**:
+
+- Country: `US`, `DE`
+- Language: `en-US`, `de-DE`
+- Currency: `USD`, `EUR`
+
+**OpenAPI guidance** (examples):
+
+```yaml
+countryCode:
+  type: string
+  description: ISO 3166-1 alpha-2 country code.
+  example: US
+languageTag:
+  type: string
+  description: BCP 47 language tag.
+  example: en-US
+currency:
+  type: string
+  description: ISO 4217 currency code.
+  example: USD
+```
+
+<RuleHeader id="804" level="MUST" title="Define numeric formats" />
+### #804 - Define Numeric Formats
+
+**Intent**: avoid precision loss and ambiguous integer ranges.
+
+Numeric fields MUST be modeled with explicit OpenAPI types and formats.
+
+**Integers**:
+
+- Use `type: integer`.
+- Use `format: int32` for 32-bit ranges.
+- Use `format: int64` for 64-bit ranges.
+
+**Floating point**:
+
+- Use `type: number` with `format: float` or `double` only when floating-point is acceptable.
+
+**Decimals / money-like precision**:
+
+- Do NOT use floating-point for money or high-precision decimals.
+- Use `type: string` with a documented decimal format (or a dedicated object) and provide examples.
+
+**IDs and opaque identifiers**:
+
+- Do not model IDs as numbers.
+- Use `type: string` to avoid precision loss in JavaScript and other clients.
+
+**OpenAPI examples**:
+
+```yaml
+count:
+  type: integer
+  format: int32
+sizeBytes:
+  type: integer
+  format: int64
+ratio:
+  type: number
+  format: double
+amount:
+  type: string
+  description: Decimal string.
+  example: "123.45"
+resourceId:
+  type: string
+  format: uuid
+```
+
+<RuleHeader id="806" level="MUST" title="Use standard property formats" externalDocs={[{ label: "RFC 3339 — Date and Time on the Internet", href: "https://www.rfc-editor.org/rfc/rfc3339" }, { label: "IANA Media Types Registry", href: "https://www.iana.org/assignments/media-types/media-types.xhtml" }]} />
+### #806 - Use Standard Property Formats
+
+**Intent**: make schemas self-describing and enable validation/codegen.
+
+For common string/number shapes, APIs MUST use standardized OpenAPI formats where they apply, and SHOULD validate them at runtime.
+
+**Requirements**:
+
+- Use `format` only when it accurately describes the values emitted/accepted.
+- Provide examples that match the declared format.
+- Prefer standards-based formats instead of ad-hoc regexes in prose.
+
+**Common formats** (examples):
+
+- `date-time` / `date` (see [#802])
+- `uuid` for UUID strings
+- `uri` for absolute URIs; `uri-reference` when relative references are allowed
+- `email` for email addresses
+- `ipv4` / `ipv6` for IP literals
+
+**Examples** (OpenAPI):
+
+```yaml
+type: object
+properties:
+  created:
+    type: string
+    format: date-time
+  email:
+    type: string
+    format: email
+  callbackUrl:
+    type: string
+    format: uri
+  requestId:
+    type: string
+    format: uuid
+```
+
+**Notes**:
+
+- `format` is a hint in many toolchains; if a field must be constrained beyond what `format` provides, add explicit constraints (`minLength`, `maxLength`, `pattern`) and document them.
+- Do not misuse `format` for internal implementation types.
+
+<RuleHeader id="807" level="MUST" title="Encode embedded binary as base64url" />
+### #807 - Encode Embedded Binary as base64url
+
+**Intent**: ensure embedded binary is safe for JSON transport and URL contexts.
+
+**Default policy**: do not embed binary in JSON. Prefer non-JSON upload/download endpoints and standard media types (see [#704]).
+
+**If embedding is unavoidable**:
+
+- Use **standard base64** for binary embedded in JSON payloads.
+- Use **base64url** only when the encoded value must be URL-safe (e.g., used inside a URL or otherwise constrained by URL-safe character sets).
+- Include metadata so clients can interpret the value:
+  - `contentType` (e.g., `image/png`)
+  - `encoding` (`base64` or `base64url`)
+  - optional `sizeBytes` (recommended)
+
+**Constraints**:
+
+- Document maximum allowed size (and reject oversize payloads with a clear error).
+- Prefer references/links for large binaries rather than embedding.
+
+**Example**:
+
+```json
+{
+  "contentType": "image/png",
+  "encoding": "base64",
+  "data": "iVBORw0KGgoAAAANSUhEUg..."
+}
+```
+
+---
+
+---
+
+## Common Data Types & Objects
+<RuleHeader id="805" level="MUST" title="Use common field names" />
+### #805 - Use Common Field Names
+
+**Intent**: reduce cognitive load and prevent “same concept, different name” drift across APIs.
+
+APIs MUST reuse common field names and semantics for shared concepts.
+
+**Baseline field registry** (expand over time):
+
+- `id` (string): stable identifier for the resource (URL-friendly; see [#512])
+- `name` (string): human-readable display name
+- `description` (string): human-readable description (optional)
+- `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#802])
+- `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#802])
+- `type` (string): discriminator/type label when needed
+- `status` (string/enum): lifecycle status (document enum values; see [#112])
+- `enabled` (boolean): boolean flags are true/false only (see [#700])
+
+**Rules**:
+
+- Do not invent synonyms (`created` vs `createdAt`, `lastModified` vs `modifiedAt`) without a strong reason.
+- If you already have a legacy name, do not rename without a compatibility plan; prefer the standard name for new APIs/fields.
+
+**If you model money-like values** (optional pattern):
+
+- Use `amount` as a decimal string (see [#804]) and `currency` as ISO 4217 (see [#803]).
+
+**Testability**:
+
+- Reviewers can spot-check schemas across APIs for consistent naming and formats.
+
+---

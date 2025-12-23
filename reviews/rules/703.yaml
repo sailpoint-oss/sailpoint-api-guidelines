@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "703",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#703",
+    "url": "/docs/rules/payload-conventions#703"
+  },
+  "currentTitle": "MUST use JSON for payloads with objects as top-level",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make responses extensible without breaking clients.\n\nUse JSON as the default payload format for requests and responses. Payloads MUST use a JSON **object** at the top level (not a top-level array).\n\n**Why**:\n\n- A top-level object allows adding metadata (pagination, links, counts) without changing the shape clients parse.\n\n**Patterns**:\n\n- Collection responses: wrap in an envelope like `{ items, count, limit, offset }`.\n- Single-resource responses: return the resource object.\n- Errors: use Problem Details (`application/problem+json`) (see [#404]).\n\n**Exceptions**:\n\n- Non-JSON success responses are allowed for downloads/uploads when appropriate (see [#704]), but error responses should remain JSON (Problem Details).\n\n**Testability**:\n\n- No endpoints return a top-level array for JSON responses.\n",
+    "rationale": "Top-level arrays force breaking changes when you need to add metadata later and make clients more brittle.",
+    "compatNotes": "Existing APIs returning top-level arrays should migrate via additive endpoints/versions or envelopes with compatibility guidance."
+  },
+  "reviewNotes": []
+}

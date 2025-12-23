@@ -1,0 +1,43 @@
+---
+title: Principles
+description: The guiding principles behind SailPoint’s API rules.
+---
+
+# Principles
+
+These principles explain *why* the rules exist and how to make tradeoffs when designing APIs for
+customers and partners.
+
+## API as a product
+
+Treat the API as a first-class product:
+
+- Define the target audience and primary use cases.
+- Optimize for clarity and long-term maintenance, not internal implementation convenience.
+- Assume your consumers will integrate slowly and upgrade cautiously—design for safe evolution.
+
+## API First
+
+Design the API before implementation:
+
+- Use the OpenAPI spec as the single source of truth for contract, docs, and tooling.
+- Get early review (peers/architecture/security) before code hardens.
+- Keep the spec in version control alongside the service code.
+
+## Compatibility philosophy
+
+Prefer compatible evolution:
+
+- Add optional fields and additive endpoints rather than changing semantics.
+- Avoid tightening validation for existing inputs in a way that breaks older clients.
+- Ensure clients tolerate unknown fields and new enum values.
+
+## Security by default
+
+Secure and authorize early:
+
+- Authenticate and authorize before processing request payloads.
+- Never leak sensitive details in error messages or status codes.
+- Treat public API paths as stable identifiers—avoid embedding tenant/customer identifiers.
+
+

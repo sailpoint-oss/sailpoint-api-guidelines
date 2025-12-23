@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "711",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#711",
+    "url": "/docs/rules/payload-conventions#711"
+  },
+  "currentTitle": "MUST mark nullable: true when null is possible",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: ensure schemas match runtime behavior so validation and codegen are correct.\n\nIf an API can legitimately return or accept `null` for a field, the OpenAPI schema MUST model that.\n\n**Rules**:\n\n- If `null` is allowed at runtime, it must be modeled.\n- If `null` is not modeled, it MUST NOT appear at runtime.\n- Prefer omitting optional fields rather than returning `null` (see [#123]).\n- Booleans MUST never be nullable (see [#122]).\n\n**OpenAPI guidance**:\n\n- For OpenAPI 3.0.x: use `nullable: true`.\n- For OpenAPI 3.1.x: use JSON Schema unions (e.g., `type: [string, \"null\"]`).\n\n**Example (OAS 3.0)**:\n\n```yaml\nmiddleName:\n  type: string\n  nullable: true\n```\n\n**Testability**:\n\n- If responses contain `null`, the spec reflects it.\n- If the spec does not mark nullable, responses do not contain `null` for that field.\n",
+    "rationale": "Mismatches between runtime nullability and the schema are a common source of client crashes and broken validation/codegen.",
+    "compatNotes": "Schema/documentation alignment. Fix either the schema or the runtime behavior so they match."
+  },
+  "reviewNotes": []
+}

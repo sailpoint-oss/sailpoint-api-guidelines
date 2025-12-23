@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "100",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#100",
+    "url": "/docs/rules/api-contract-and-documentation#100"
+  },
+  "currentTitle": "SHOULD follow API First principle",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: design the contract first so implementation and client integrations converge on a stable, reviewable API.\n\nDefine and review the API specification **before** implementation hardens.\n\n**How to implement**:\n\n- Draft OpenAPI early (paths, schemas, errors, auth, pagination, filtering).\n- Review the design with stakeholders (API owners, SDK/tooling owners, and at least one consumer) **before** writing production code.\n- Keep spec and code in lockstep in version control; treat the spec as a first-class artifact.\n- Prefer contract tests (or spec validation) in CI so changes are visible and reviewable.\n\n**Checklist**:\n\n- OpenAPI exists for the service and is in the same repo as the implementation.\n- Every operation has: summary/description, `operationId`, tags, request/response schemas, error responses, and security requirements.\n- Examples are present for key request/response bodies.\n- Backward-compatibility is evaluated for any change within the same major version.\n\n**Testability**:\n\n- CI runs OpenAPI validation and fails on invalid specs.\n- Breaking changes are detected in review (diffs + compatibility checks) before release.\n",
+    "rationale": "API-first reduces rework, enables parallel implementation/consumer work, and makes design issues visible early via a concrete contract (OpenAPI).",
+    "compatNotes": "Doc-only change; clarifies expectations and adds a practical checklist/testability hooks."
+  },
+  "reviewNotes": [
+    "Expand API-first guidance into a practical workflow + checklist + testability expectations.",
+    "Accepted for Phase A implementation."
+  ]
+}

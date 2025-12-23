@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "211",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#211",
+    "url": "/docs/rules/lifecycle-and-compatibility#211"
+  },
+  "currentTitle": "SHOULD add Deprecation and Sunset headers",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: provide machine-readable deprecation signals in live traffic.\n\nWhen an endpoint is deprecated, APIs SHOULD include `Deprecation` and `Sunset` headers in responses from that endpoint.\n\n**Guidance**:\n\n- `Deprecation` indicates the endpoint is deprecated.\n- `Sunset` indicates the planned date/time the endpoint will no longer be available.\n- Headers complement (but do not replace) OpenAPI `deprecated: true` + migration guidance (see [#209]).\n\n**Example**:\n\n```http\nHTTP/1.1 200 OK\nContent-Type: application/json\nDeprecation: true\nSunset: Tue, 30 Jun 2027 00:00:00 GMT\n\n{ \"id\": \"123\", \"name\": \"Example\" }\n```\n\n**Testability**:\n\n- Deprecated endpoints consistently return the deprecation headers.\n",
+    "rationale": "Headers allow clients/SDKs to detect deprecations programmatically and surface warnings before sunset dates.",
+    "compatNotes": "Additive; safe to introduce without breaking clients."
+  },
+  "reviewNotes": []
+}

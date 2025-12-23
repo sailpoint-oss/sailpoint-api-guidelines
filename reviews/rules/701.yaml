@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "701",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#701",
+    "url": "/docs/rules/payload-conventions#701"
+  },
+  "currentTitle": "use same semantics for null vs. absent properties",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

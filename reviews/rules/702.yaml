@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "702",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#702",
+    "url": "/docs/rules/payload-conventions#702"
+  },
+  "currentTitle": "not use null for empty arrays",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

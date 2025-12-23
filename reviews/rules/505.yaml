@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "505",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#505",
+    "url": "/docs/rules/resource-modeling-and-urls#505"
+  },
+  "currentTitle": "SHOULD keep URLs verb-free",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD keep URLs verb-free",
+    "proposedText": "**Intent**: keep the URL space stable and expressive via HTTP methods.\n\nPrefer noun-based URL paths. Avoid verbs in paths; use HTTP methods to express the action.\n\n**Examples**:\n\n- ✅ `DELETE /accounts/{accountId}`\n- ✅ `POST /accounts` (create)\n- ❌ `GET /accounts/{accountId}/delete`\n- ❌ `POST /accounts/{accountId}/get`\n\n**If you need a workflow/action**:\n\nRepresent it as a noun-like sub-resource (a request/job):\n\n- ✅ `POST /accounts/{accountId}/disable-requests`\n- ✅ `POST /exports` (export job)\n- ❌ `POST /accounts/{accountId}/disable`\n\n**Testability**:\n\n- Paths describe domain nouns; verbs appear only in HTTP methods.\n",
+    "rationale": "Verb-heavy paths tend to lead to inconsistent RPC APIs. Noun resources + standard methods are easier to learn and enforce.",
+    "compatNotes": "Renaming endpoints is breaking; apply to new endpoints and new versions."
+  },
+  "reviewNotes": []
+}

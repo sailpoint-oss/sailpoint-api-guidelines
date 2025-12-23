@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "603",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#603",
+    "url": "/docs/rules/requests-and-querying#603"
+  },
+  "currentTitle": "MUST document implicit filtering behavior",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST document implicit filtering and default sorting behavior",
+    "proposedText": "**Intent**: prevent “missing data” surprises and make list results reproducible.\n\nList/search endpoints MUST document any implicit constraints that affect which items appear, and MUST document the default ordering applied when the caller does not specify sorters.\n\n## 1) Implicit filtering\n\n**Examples of implicit filtering**:\n\n- Results are scoped to the authenticated tenant/org.\n- Results are limited to “resources visible to the caller” (RBAC/ABAC visibility filtering).\n- Results exclude soft-deleted entities by default.\n- Results exclude items in certain lifecycle states unless explicitly requested.\n\n**How to document**:\n\n- In the OpenAPI operation description, explicitly state the implicit constraints.\n- If behavior is caller-dependent (authorization), say so clearly.\n- If possible, expose explicit parameters to control behavior (e.g., `includeDeleted=true`) and document defaults.\n\n## 2) Default sorting (required)\n\nFor every collection/list endpoint (including POST-based search endpoints), if the caller does not provide an explicit sorter, the API MUST apply **exactly one documented default ordering policy**.\n\n**Requirements**:\n\n- The default ordering is deterministic (repeat requests return consistent ordering absent data changes).\n- The default ordering is documented per endpoint.\n- The default ordering is stable enough for pagination (especially offset-based pagination).\n\n**Notes**:\n\n- The default ordering MAY be multi-field for tie-breaking stability, but it is documented as a single default policy (e.g., “default order: `createdAt desc, id asc`”).\n\n**Example (docs text)**:\n\n- If `sorters` is omitted, results are ordered by `createdAt:desc` (ties broken by `id:asc`).\n\n**Related rules**: [#600], [#602], [#604]\n",
+    "rationale": "Undocumented implicit constraints and undocumented default ordering cause client confusion and break pagination correctness. A single, well-documented default ordering reduces surprises and improves debuggability.",
+    "compatNotes": "Documentation-only. Some APIs may need to standardize behavior to match the documented default ordering over time."
+  },
+  "reviewNotes": []
+}

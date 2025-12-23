@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "208",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#208",
+    "url": "/docs/rules/lifecycle-and-compatibility#208"
+  },
+  "currentTitle": "use year-based API versioning (`YYYY.{revision}`)",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

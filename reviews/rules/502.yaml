@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "502",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#502",
+    "url": "/docs/rules/resource-modeling-and-urls#502"
+  },
+  "currentTitle": "SHOULD avoid action-style endpoints; model resources",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD avoid action-style endpoints; model resources",
+    "proposedText": "**Intent**: keep APIs consistent, predictable, and aligned with HTTP semantics.\n\nPrefer resource-oriented endpoints over RPC/action-style endpoints. Model operations as HTTP verbs applied to resources.\n\n**Examples**:\n\n- ✅ `POST /accounts` (create an account)\n- ✅ `PATCH /accounts/{accountId}` (update an account)\n- ❌ `POST /accounts/{accountId}/update`\n- ❌ `GET /accounts/{accountId}/disable`\n\n**When you really need an action**:\n\nPrefer creating a noun-like **command/request resource** rather than embedding a verb:\n\n- ✅ `POST /accounts/{accountId}/disable-requests`\n- ✅ `POST /access-requests` (request resource)\n- ❌ `POST /accounts/{accountId}/disable`\n\n**Testability**:\n\n- New endpoints can be explained as a noun resource + standard HTTP method semantics.\n",
+    "rationale": "Action endpoints tend to proliferate inconsistent patterns and bypass HTTP semantics. Resource modeling improves discoverability, reuse, and consistency across teams.",
+    "compatNotes": "Renaming action endpoints to resource-oriented endpoints is breaking; prefer new endpoints and deprecate old ones."
+  },
+  "reviewNotes": []
+}

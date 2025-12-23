@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "507",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#507",
+    "url": "/docs/rules/resource-modeling-and-urls#507"
+  },
+  "currentTitle": "MUST identify sub-resources via nested path segments when tightly coupled",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST identify sub-resources via nested path segments when tightly coupled",
+    "proposedText": "**Intent**: express ownership/scoping clearly and prevent ambiguous identifiers.\n\nUse nested URL paths for sub-resources that are **tightly coupled** to a parent and cannot exist independently.\n\n**A sub-resource is \"tightly coupled\" when**:\n\n- It has no meaning without the parent (lifecycle is owned by parent).\n- Authorization is scoped to the parent.\n- The sub-resource identity is only unique within the parent.\n\n**Examples (nested is correct)**:\n\n- ✅ `/users/{userId}/preferences`\n- ✅ `/accounts/{accountId}/entitlements` (if entitlements are scoped to the account context)\n- ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`\n\n**Anti-examples (nested is misleading)**:\n\n- ❌ `/accounts/{accountId}/access-requests/{accessRequestId}` if access requests have a global ID and independent lifecycle (prefer `/access-requests/{accessRequestId}` with filters)\n\n**Testability**:\n\n- Removing the parent segment would make the resource ambiguous or incorrectly scoped.\n",
+    "rationale": "Nesting communicates ownership and scoping. When used correctly it improves clarity; when overused it creates deep, brittle URLs (see [#145], [#147]).",
+    "compatNotes": "Changing URL structure is breaking; choose nesting based on lifecycle/authorization, not database joins."
+  },
+  "reviewNotes": []
+}

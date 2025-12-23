@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "101",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#101",
+    "url": "/docs/rules/api-contract-and-documentation#101"
+  },
+  "currentTitle": "MUST provide API specification using OpenAPI",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make the API contract discoverable, reviewable, and suitable for tooling/SDK generation.\n\nProvide an OpenAPI Specification (OAS) for every API and keep it current.\n\n**Requirements**:\n\n- The OpenAPI document MUST be stored in version control alongside the service code.\n- The OpenAPI document MUST be published for consumers (docs site, artifact registry, or served by the service).\n- The OpenAPI document MUST be validated in CI (linting/validation) so invalid specs cannot be released.\n\n**Recommended**:\n\n- Use a changelog or release notes that reference spec changes.\n- Keep examples accurate and safe (no secrets or real customer data).\n\n**Testability**:\n\n- CI fails on invalid OpenAPI syntax.\n- CI or review checks enforce required per-operation metadata (tags, `operationId`, security, responses).\n",
+    "rationale": "OpenAPI is the primary contract for humans and tools; making it versioned and validated prevents drift and supports consistent documentation and SDK generation.",
+    "compatNotes": "Doc-only change; clarifies what “provide” means (store, publish, validate)."
+  },
+  "reviewNotes": [
+    "Light polish: clarify that OpenAPI must be version-controlled, published, and validated in CI.",
+    "Accepted for Phase A implementation."
+  ]
+}

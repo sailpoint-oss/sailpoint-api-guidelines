@@ -1,0 +1,67 @@
+---
+title: Optimistic locking
+description: Patterns for safe concurrent updates (ETag/If-Match, version fields, dates).
+---
+
+# Optimistic locking
+
+Optimistic locking prevents lost updates when multiple clients update the same resource concurrently.
+Clients read a representation, then supply a *version reference* when updating. If the resource changed
+since the read, the update fails.
+
+## Preferred patterns
+
+### 1) ETag + If-Match (HTTP-native)
+
+- Server returns an `ETag` header on `GET /resource/{id}`.
+- Client sends `If-Match: <etag>` on `PUT`/`PATCH`.
+- If the ETag no longer matches, server returns **412 Precondition Failed**.
+
+Example:
+
+```http
+GET /orders/O0000042
+
+HTTP/1.1 200 OK
+ETag: "osjnfkjbnkq3jlnk"
+Content-Type: application/json
+
+{ "id": "O0000042", "status": "OPEN" }
+```
+
+```http
+PATCH /orders/O0000042
+If-Match: "osjnfkjbnkq3jlnk"
+Content-Type: application/json
+
+{ "status": "CLOSED" }
+```
+
+```http
+HTTP/1.1 204 No Content
+```
+
+### 2) Last-Modified + If-Unmodified-Since (date-based)
+
+- Server returns `Last-Modified` on reads.
+- Client sends `If-Unmodified-Since` on writes.
+- If resource changed since that date, server returns **412 Precondition Failed**.
+
+This can be a good option when you already track update timestamps and want a simple header-based
+approach.
+
+## Patterns to avoid (or use deliberately)
+
+### Embedding ETags/version in business objects
+
+Embedding an `etag` or `version` field inside the resource itself can be convenient for bulk/search
+responses, but it mixes HTTP concerns into your domain object. If you do it, make sure it’s clearly
+documented and treated as read-only.
+
+## Implementation checklist
+
+- Define the conflict response and error schema in OpenAPI.
+- Document the concurrency contract on the write operations.
+- Ensure clients know which header to send for retries and how to recover (re-GET then retry update).
+
+

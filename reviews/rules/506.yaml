@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "506",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#506",
+    "url": "/docs/rules/resource-modeling-and-urls#506"
+  },
+  "currentTitle": "MUST use domain-specific resource names",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use domain-specific resource names",
+    "proposedText": "**Intent**: make the API intuitive for customers/partners and stable across internal refactors.\n\nResource names MUST reflect domain concepts and business terminology rather than technical implementation details.\n\n**Examples**:\n\n- ✅ `/accounts`, `/entitlements`, `/identity-profiles`, `/access-requests`\n- ❌ `/dbUsers`, `/tblEntitlements`, `/internalAccounts`, `/accountJpaEntities`\n\n**Guidance**:\n\n- Prefer stable nouns that match product language.\n- Avoid leaking internal system names, database table names, or service names.\n\n**Testability**:\n\n- A domain expert can recognize what the resource is without knowing internal architecture.\n",
+    "rationale": "Domain names reduce churn: internal implementation changes shouldn’t force public URL renames. They also improve discoverability and developer experience.",
+    "compatNotes": "Renaming resource paths is breaking; choose domain names carefully at design time."
+  },
+  "reviewNotes": []
+}

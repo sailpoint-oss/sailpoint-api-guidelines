@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "103",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#103",
+    "url": "/docs/rules/api-contract-and-documentation#103"
+  },
+  "currentTitle": "MUST write APIs using U.S. English",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make APIs consistent and predictable for a global audience by using a single English variant.\n\nUse **U.S. English** spelling and conventions across the API surface and documentation.\n\n**Scope**:\n\n- OpenAPI descriptions, summaries, tags, and schema documentation.\n- Error `title`/`detail` text and any human-readable messages.\n- Developer documentation (guides, rule pages).\n\n**Notes**:\n\n- This rule does not require clients to send U.S. English values unless a field is explicitly documented as English text.\n- Prefer consistent terminology across endpoints (avoid synonyms for the same concept).\n\n**Checklist**:\n\n- U.S. spelling is used consistently (e.g., \"authorization\" not \"authorisation\").\n- The same terms are used for the same concepts across the API (avoid renaming concepts in prose).\n- Acronyms are used consistently and expanded once when first introduced.\n\n**Testability**:\n\n- Reviewers spot-check new/changed endpoints and descriptions for consistent spelling/terminology.\n",
+    "rationale": "A consistent language standard reduces confusion and avoids subtle inconsistencies that leak into SDKs, docs, and error messages.",
+    "compatNotes": "Doc-only change; clarifies scope and adds a consistency checklist."
+  },
+  "reviewNotes": [
+    "Refine the rule to clarify scope (docs, descriptions, error messages) and provide a consistency checklist.",
+    "Accepted for Phase A implementation."
+  ]
+}

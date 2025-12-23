@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "706",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#706",
+    "url": "/docs/rules/payload-conventions#706"
+  },
+  "currentTitle": "define maps using additionalProperties",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "120",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#120",
+    "url": "/docs/rules/api-contract-and-documentation#120"
+  },
+  "currentTitle": "MUST use prescribed description format for filters parameter",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST use prescribed description format for filters parameter",
+    "proposedText": "**Intent**: keep filter documentation consistent so consumers can reuse knowledge across endpoints.\n\nWhen an endpoint supports the `filters` parameter, APIs MUST use the prescribed description template (and customize the supported-field list per endpoint).\n\n**Template (copy/paste into OpenAPI description)**:\n\n```text\nFilters results using the standard expression language.\n\nSyntax:\n  filters=<expr>\n\nOperators:\n  eq, ne, lt, lte, gt, gte,\n  co (contains), sw (startsWith), ew (endsWith),\n  in (set membership), pr (present)\n\nGrouping:\n  Use parentheses for grouping and AND/OR for boolean composition.\n\nSupported fields:\n  - <fieldA> (string)\n  - <fieldB> (enum: ...)\n  - <createdAt> (date-time)\n\nExamples:\n  filters=status eq \"ACTIVE\"\n  filters=(status eq \"ACTIVE\" or status eq \"PENDING\") and createdAt gt \"2025-01-01T00:00:00Z\"\n```\n\n**Rules**:\n\n- The supported-field list MUST be accurate per endpoint (do not copy a generic list).\n- Filter field names MUST match the API’s actual property names.\n\n**Related**: shared query story in [#604] and implicit/default behavior guidance in [#603].\n",
+    "rationale": "A consistent template prevents every team from inventing its own filter DSL documentation and reduces consumer confusion.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

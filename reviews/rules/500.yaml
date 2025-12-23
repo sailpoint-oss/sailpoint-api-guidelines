@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "500",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#500",
+    "url": "/docs/rules/resource-modeling-and-urls#500"
+  },
+  "currentTitle": "MUST not use \"/api\" as base path",
+  "status": "accepted",
+  "decision": {
+    "changeType": "move",
+    "proposedTitle": "MUST avoid redundant base path segments like \"/api\"",
+    "proposedText": "**Intent**: keep public URLs clean and avoid redundant, implementation-driven path segments.\n\nAvoid redundant base path segments like `/api` in public-facing URL paths.\n\n- Prefer configuring environment-specific base URLs via OpenAPI `servers`.\n- Prefer meaningful, domain-driven resource paths (see [#506]).\n\n**Examples**:\n\n- ✅ `https://example.sailpoint.com/v2026/accounts`\n- ❌ `https://example.sailpoint.com/api/v2026/accounts`\n\n**Note**:\n\n- This guidance is part of overall URL hygiene; see [#501] for normalization and canonical path rules.\n",
+    "rationale": "Including `/api` is usually redundant and leaks internal implementation conventions into public contracts. Cleaner base URLs improve developer experience and reduce churn when infrastructure changes.",
+    "compatNotes": "Changing base paths is breaking. Apply for new APIs; migrate existing ones via versioning/redirects where feasible."
+  },
+  "reviewNotes": [
+    "Keep the idea but treat it as URL hygiene; align it with #136 to avoid isolated \"common sense\" rules."
+  ]
+}

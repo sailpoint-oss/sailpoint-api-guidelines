@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "111",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#111",
+    "url": "/docs/rules/api-contract-and-documentation#111"
+  },
+  "currentTitle": "MUST treat OpenAPI objects as open for extension by default",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST treat response objects as open for extension by default",
+    "proposedText": "**Intent**: enable additive evolution without breaking existing clients.\n\nObject schemas in responses MUST be treated as **open for extension** by default. Servers MAY add new optional properties over time without requiring clients to upgrade.\n\n**What this means in practice**:\n\n- Clients MUST ignore unknown response fields (see [#202]).\n- Servers MUST NOT make new fields required in existing responses.\n- Enum sets may grow over time; clients must tolerate unknown enum values (see [#202]).\n\n**Examples**:\n\n- Additive field (compatible):\n\n```json\n{ \"id\": \"123\", \"name\": \"Example\", \"createdAt\": \"2026-01-01T00:00:00Z\" }\n```\n\n- Additive link/hypermedia (compatible):\n\n```json\n{ \"id\": \"123\", \"links\": { \"self\": \"/accounts/123\", \"owner\": \"/users/9\" } }\n```\n\n- Enum expansion (server-compatible; client must be resilient):\n  - Before: `status ∈ {\"ACTIVE\",\"INACTIVE\"}`\n  - After: server returns `\"PENDING\"`\n\n**OpenAPI guidance**:\n\n- Model objects as extensible by default. Avoid describing schemas in a way that implies clients must fail on unknown fields.\n\n**Testability**:\n\n- SDKs and client examples demonstrate tolerant parsing.\n- Adding an optional response field does not require a new API version.\n",
+    "rationale": "Most API evolution is additive (new fields, new links, new enum values). This rule makes that safe by setting the expectation that clients are forward-compatible.",
+    "compatNotes": "If legacy SDKs are strict, they should be updated to tolerate unknown fields/enums before relying on additive evolution."
+  },
+  "reviewNotes": [
+    "Expand with concrete examples for new fields/links/enums and clarify this is primarily about response objects."
+  ]
+}

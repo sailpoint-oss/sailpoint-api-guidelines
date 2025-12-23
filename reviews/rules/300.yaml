@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "300",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#300",
+    "url": "/docs/rules/security-and-authorization#300"
+  },
+  "currentTitle": "secure endpoints with OAuth 2.0",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

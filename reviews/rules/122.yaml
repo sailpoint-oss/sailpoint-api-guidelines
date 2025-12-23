@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "122",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#122",
+    "url": "/docs/rules/api-contract-and-documentation#122"
+  },
+  "currentTitle": "MUST not use null for boolean properties",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST not use null for boolean properties",
+    "proposedText": "**Intent**: avoid tri-state confusion and simplify client code.\n\nBoolean properties MUST never be `null`.\n\n**Rules**:\n\n- If a boolean is required, it MUST be present and MUST be `true` or `false`.\n- If a boolean is optional and not applicable, omit it (do not send `null`).\n- If you truly need three states, use an explicit enum (e.g., `\"ENABLED\" | \"DISABLED\" | \"UNKNOWN\"`) and document the semantics.\n\n**Examples**:\n\n- ✅ `{ \"enabled\": true }`\n- ✅ `{}` (if `enabled` is optional and not applicable)\n- ❌ `{ \"enabled\": null }`\n\n**Testability**:\n\n- OpenAPI schemas do not mark boolean fields as `nullable: true`.\n- Example payloads never use `null` for booleans.\n",
+    "rationale": "Null booleans cause subtle bugs and explode the number of cases clients must handle. Avoiding them improves correctness and reduces friction for SDKs and UIs.",
+    "compatNotes": "If legacy APIs emit null booleans, treat migration as a contract change: update SDKs, then migrate responses via additive behavior (prefer omission) or versioning."
+  },
+  "reviewNotes": [
+    "Strengthen: null booleans are never allowed; omission is the right representation for optional/not-applicable."
+  ]
+}

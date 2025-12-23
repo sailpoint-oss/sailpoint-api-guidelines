@@ -1,0 +1,694 @@
+---
+title: "API Contract & Documentation"
+description: Rules for API-first design, OpenAPI quality, and publishable documentation.
+---
+
+These rules define how APIs should be specified, documented, and published. They emphasize
+spec-first workflows, high-quality OpenAPI, and documentation that is usable by customers and
+partners.
+
+{/* **Related guides**:
+- [Design & review workflow](/docs/guides/design-and-review-workflow)
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+- [Error model & Problem Details](/docs/guides/error-model-and-problem-details)
+
+**Related reference**:
+- [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
+- [Review checklist](/docs/appendices/review-checklist) */}
+
+## API Design & Documentation
+
+### #100 - Follow API-first
+<RuleHeader id="100" level="SHOULD" title="Follow API-first" externalDocs={[{ href: "/docs/guides/api-first", label: "API-first" }]} implementation={[{ href: "/docs/guides/api-first", label: "API-first" }]} />
+
+**Intent**: design the contract first so implementation and client integrations converge on a stable, reviewable API.
+
+Define and review the API specification **before** implementation hardens.
+
+**How to implement**:
+
+- Draft OpenAPI early (paths, schemas, errors, auth, pagination, filtering).
+- Review the design with stakeholders (API owners, SDK/tooling owners, and at least one consumer) **before** writing production code.
+- Keep spec and code in lockstep in version control; treat the spec as a first-class artifact.
+- Prefer contract tests (or spec validation) in CI so changes are visible and reviewable.
+
+**Checklist**:
+
+- OpenAPI exists for the service and is in the same repo as the implementation.
+- Every operation has: summary/description, `operationId`, tags, request/response schemas, error responses, and security requirements.
+- Examples are present for key request/response bodies.
+- Backward-compatibility is evaluated for any change within the same major version.
+
+**Testability**:
+
+- CI runs OpenAPI validation and fails on invalid specs.
+- Breaking changes are detected in review (diffs + compatibility checks) before release.
+
+<RuleHeader id="101" level="MUST" title="Provide OpenAPI specification" />
+### #101 - Provide OpenAPI Specification
+
+**Intent**: make the API contract discoverable, reviewable, and suitable for tooling/SDK generation.
+
+Provide an OpenAPI Specification (OAS) for every API and keep it current.
+
+**Requirements**:
+
+- The OpenAPI document MUST be stored in version control alongside the service code.
+- The OpenAPI document MUST be published for consumers (docs site, artifact registry, or served by the service).
+- The OpenAPI document MUST be validated in CI (linting/validation) so invalid specs cannot be released.
+
+**Recommended**:
+
+- Use a changelog or release notes that reference spec changes.
+- Keep examples accurate and safe (no secrets or real customer data).
+
+**Testability**:
+
+- CI fails on invalid OpenAPI syntax.
+- CI or review checks enforce required per-operation metadata (tags, `operationId`, security, responses).
+
+<RuleHeader id="102" level="SHOULD" title="Provide API user manual" />
+### #102 - Provide API User Manual
+
+**Intent**: make APIs usable without tribal knowledge by documenting real workflows, edge cases, and operational expectations.
+
+Provide an API user manual that complements OpenAPI.
+
+**What to include**:
+
+- **Getting started**: authentication approach, base URLs/environments, common headers.
+- **Core workflows**: step-by-step guides per API slice / use case (create, update, search, pagination).
+- **Edge cases**: validation rules, idempotency expectations, conflict handling, eventual consistency.
+- **Error handling**: common errors and recommended client behavior (retry vs no-retry).
+- **Performance**: pagination guidance, filtering/sorting limitations, rate limits if applicable.
+
+**OpenAPI linkage (recommended)**:
+
+- Link the manual using OpenAPI `externalDocs` (root-level and/or per-tag / per-operation where appropriate).
+
+**Testability**:
+
+- Documentation exists and is reachable from the published OpenAPI (via `externalDocs`).
+- At least one end-to-end example per primary workflow is present and matches schemas.
+
+<RuleHeader id="113" level="MUST" title="Follow SailPoint API guidelines" />
+### #113 - Follow SailPoint API Guidelines
+
+**Intent**: enforce a consistent API experience across products and teams.
+
+APIs MUST follow these guidelines.
+
+**How this is enforced**:
+
+- Treat the OpenAPI spec as the contract and review guideline compliance as part of API review.
+- Use automated checks where possible (linting, OpenAPI validation, compatibility checks, contract tests).
+
+**Exceptions**:
+
+- Any deliberate exception MUST be documented with rationale (and a remediation plan where applicable) using the review ledger.
+
+**Testability**:
+
+- Use the Rules JSON (`/rules.json`) for deep links and tooling references.
+
+<RuleHeader id="114" level="MUST" title="Provide detailed API description" />
+### #114 - Provide Detailed API Description
+
+**Intent**: make an API usable without tribal knowledge.
+
+APIs MUST provide a detailed description that covers what the API does and how consumers should use it.
+
+**Minimum content**:
+
+- Purpose and scope (what is in-scope vs out-of-scope).
+- Intended audience (internal vs external) and required licensing/entitlements (see [#115]).
+- Authentication model and high-level authorization expectations (see [#300], [#206]).
+- Primary workflows and “happy path” usage (link to guides/user manual where applicable; see [#102]).
+- Major edge cases and semantics that affect client correctness:
+  - pagination defaults
+  - filtering/sorting constraints
+  - idempotency/retry guidance
+  - consistency expectations
+- Versioning/deprecation model and how changes are communicated (see [#208], [#209]).
+
+**Where to put it**:
+
+- In OpenAPI `info.description` and/or tag-level descriptions.
+- Link to deeper guides via OpenAPI `externalDocs`.
+
+**Testability**:
+
+- A reviewer can answer: what is this API for, who can use it, and how do I perform the primary workflows?
+
+<RuleHeader id="115" level="MUST" title="Describe every parameter and property" />
+### #115 - Describe Every Parameter and Property
+
+**Intent**: remove ambiguity so clients can implement correctly without guesswork.
+
+Every query parameter, path parameter, request property, and response property MUST have a clear description.
+
+**Descriptions MUST cover** (as applicable):
+
+- Meaning/semantics (what it represents, not just its data type).
+- Constraints: allowed values, ranges, patterns, maximum lengths.
+- Default behavior when omitted (see [#709], [#707]).
+- Null/omission behavior where relevant (see [#701], [#711]).
+- Any security/privacy implications (e.g., whether values are tenant-scoped, PII).
+
+**Anti-patterns**:
+
+- Empty descriptions.
+- Descriptions that restate the property name (e.g., “The status.”).
+
+**Testability**:
+
+- Reviewers can read the spec and understand how to populate requests and interpret responses without external tribal knowledge.
+
+<RuleHeader id="116" level="MUST" title="Provide examples for every parameter and property" />
+### #116 - Provide Examples for Every Parameter and Property
+
+**Intent**: make docs executable and reduce interpretation errors.
+
+Every query parameter, path parameter, request property, and response property MUST include at least one accurate example.
+
+**Requirements**:
+
+- Examples MUST conform to the declared schema and formats.
+- Prefer OpenAPI `example`/`examples` so tooling can render them.
+- Provide examples for both **success** and **error** responses (see [#404]).
+- Never include secrets or real customer data.
+
+**Testability**:
+
+- Examples are validated during review (or via automated checks) to match schemas.
+
+<RuleHeader id="117" level="SHOULD" title="Keep operation summaries ≤5 words" />
+### #117 - Keep Operation Summaries ≤5 Words
+
+**Intent**: keep generated docs scannable.
+
+Operation `summary` fields SHOULD be concise (prefer five words or fewer).
+
+**Guidance**:
+
+- Put details, caveats, and semantics in `description`.
+- Prefer action-oriented summaries aligned with the HTTP method (e.g., “List accounts”, “Get account”, “Create account”).
+
+**Examples**:
+
+- ✅ `List accounts`
+- ✅ `Get account`
+- ❌ `Get accounts for a given identity profile and include nested entitlements` (too long; belongs in `description`)
+
+**Testability**:
+
+- Reviewers can spot-check that summaries are short and that details live in `description`.
+
+<RuleHeader id="120" level="MUST" title="Describe filters parameter (standard format)" />
+### #120 - Describe Filters Parameter (Standard Format)
+
+**Intent**: keep filter documentation consistent so consumers can reuse knowledge across endpoints.
+
+When an endpoint supports the `filters` parameter, APIs MUST use the prescribed description template (and customize the supported-field list per endpoint).
+
+**Template (copy/paste into OpenAPI description)**:
+
+```text
+Filters results using the standard expression language.
+
+Syntax:
+  filters=<expr>
+
+Operators:
+  eq, ne, lt, lte, gt, gte, co (contains), sw (startsWith), ew (endsWith),
+  in (set membership), pr (present)
+
+Grouping:
+  Use parentheses for grouping and AND/OR for boolean composition.
+
+Supported fields:
+  - fieldA (string)
+  - fieldB (enum: ...)
+  - created (date-time)
+
+Examples:
+  filters=status eq \"ACTIVE\"
+  filters=(status eq \"ACTIVE\" or status eq \"PENDING\") and createdAt gt \"2025-01-01T00:00:00Z\"
+```
+
+**Testability**:
+
+- Ensure each endpoint documents the supported field whitelist and includes at least one filter example.
+
+**Related**: shared query story in [#604] and implicit/default behavior guidance in [#603].
+
+<RuleHeader id="121" level="MUST" title="Describe sorters parameter (standard format)" />
+### #121 - Describe Sorters Parameter (Standard Format)
+
+**Intent**: keep sorting documentation consistent so consumers can reuse knowledge across endpoints.
+
+When an endpoint supports the `sorters` parameter, APIs MUST use the prescribed description template (and customize the supported-field list per endpoint).
+
+**Template (copy/paste into OpenAPI description)**:
+
+```text
+Sorts results by one or more fields.
+
+Syntax:
+  sorters=<field>:<direction>[,<field>:<direction>...]
+
+Direction:
+  asc | desc
+
+Supported fields:
+  - name
+  - createdAt
+  - status
+
+Default ordering:
+  If sorters is omitted, results are ordered by <defaultSortPolicy>.
+
+Examples:
+  sorters=name:asc
+  sorters=status:asc,created:desc
+```
+
+**Testability**:
+
+- Ensure sort fields are documented and the API guarantees a stable ordering for pagination.
+
+**Related**: shared query story in [#604] and default ordering policy in [#603].
+
+---
+
+<RuleHeader id="122" level="MUST" title="Provide camelCase operationId for every operation" />
+### #122 - Provide camelCase operationId for Every Operation
+
+**Intent**: enable stable SDK generation and tooling references.
+
+Every operation MUST define a unique `operationId` in **camelCase**.
+
+**Stability (anti-churn)**:
+
+- `operationId` values are part of the public contract for tooling/SDKs.
+- Do not rename `operationId` values without a compatibility plan.
+- If a rename is unavoidable:
+  - keep the old `operationId` where possible (or maintain an alias in tooling)
+  - document the change in changelogs/release notes
+
+**Uniqueness**:
+
+- `operationId` MUST be unique across the entire spec (including across tags).
+
+**Recommended patterns**:
+
+- GET collection: `list<ResourcePlural>`
+- GET item: `get<Resource>`
+- POST collection: `create<Resource>`
+- PUT/PATCH: `update<Resource>`
+- DELETE: `delete<Resource>`
+
+**Additional patterns (recommended)**:
+
+- POST search endpoints (see [#604]): `search<ResourcePlural>`
+- Long-running jobs/resources:
+  - `create<Thing>Job` (POST)
+  - `get<Thing>Job` (GET)
+  - `list<Thing>Jobs` (GET)
+
+**Examples**:
+
+| Method | Path | operationId |
+| --- | --- | --- |
+| GET | `/accounts` | `listAccounts` |
+| GET | `/accounts/{id}` | `getAccount` |
+| POST | `/accounts` | `createAccount` |
+| POST | `/accounts/search` | `searchAccounts` |
+| PATCH | `/accounts/{id}` | `updateAccount` |
+| DELETE | `/accounts/{id}` | `deleteAccount` |
+
+**Testability**:
+
+- Spec validation ensures every operation has a unique, camelCase `operationId`.
+
+<RuleHeader id="123" level="MUST" title="Provide tag for every operation" />
+### #123 - Provide Tag for Every Operation
+
+**Intent**: keep docs organized and make APIs navigable.
+
+Each operation MUST be assigned exactly one tag that exists in the root spec’s `tags` array to enable proper organization and documentation generation.
+
+**Guidance**:
+
+- Prefer resource-centric tags (e.g., `Accounts`, `Entitlements`).
+- Keep tags stable across versions.
+- Ensure tag descriptions explain what belongs in the tag (helps new endpoints land in the right place).
+
+**Testability**:
+
+- Spec validation checks tags exist and operations are tagged consistently.
+
+<RuleHeader id="124" level="MUST" title="Provide x-sailpoint-resource-operation-id for path parameters" />
+### #124 - Provide X-sailpoint-resource-operation-id for Path Parameters
+
+**Intent**: enable SailPoint tooling to map path parameters to the owning resource operation consistently.
+
+For path parameters (except enums and user-defined values), APIs MUST provide a camelCase operation identifier under `x-sailpoint-resource-operation-id`.
+
+**Where it lives**:
+
+- On the **path parameter** definition in OpenAPI.
+
+**Example**:
+
+```yaml
+paths:
+  /accounts/{accountId}:
+    get:
+      operationId: getAccount
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+          x-sailpoint-resource-operation-id: getAccount
+```
+
+**Rules**:
+
+- The value MUST be camelCase.
+- The value SHOULD align with the operation’s `operationId` (see [#122]) so the mapping is stable.
+- Do not change these identifiers without a compatibility plan (tooling may depend on them).
+
+**Testability**:
+
+- Reviewers can verify each path parameter includes `x-sailpoint-resource-operation-id` when required.
+
+---
+
+## Text Formatting & Naming Conventions
+<RuleHeader id="103" level="MUST" title="Write in U.S. English" />
+### #103 - Write in U.s. English
+
+**Intent**: make APIs consistent and predictable for a global audience by using a single English variant.
+
+Use **U.S. English** spelling and conventions across the API surface and documentation.
+
+**Scope**:
+
+- OpenAPI descriptions, summaries, tags, and schema documentation.
+- Error `title`/`detail` text and any human-readable messages.
+- Developer documentation (guides, rule pages).
+
+**Notes**:
+
+- This rule does not require clients to send U.S. English values unless a field is explicitly documented as English text.
+- Prefer consistent terminology across endpoints (avoid synonyms for the same concept).
+
+**Checklist**:
+
+- U.S. spelling is used consistently (e.g., "authorization" not "authorisation").
+- The same terms are used for the same concepts across the API (avoid renaming concepts in prose).
+- Acronyms are used consistently and expanded once when first introduced.
+
+**Testability**:
+
+- Reviewers spot-check new/changed endpoints and descriptions for consistent spelling/terminology.
+
+<RuleHeader id="104" level="MUST" title="Use camelCase for JSON properties" />
+### #104 - Use camelCase for JSON Properties
+
+**Intent**: keep JSON payloads consistent and predictable across teams and SDKs.
+
+JSON property names MUST use **camelCase**.
+
+**Scope**:
+
+- Applies to JSON request/response bodies.
+- For query parameters and path parameters, use [#207] and [#114].
+- ASCII-only identifier requirements are defined in [#105].
+
+**Examples**:
+
+- ✅ `createdAt`, `identityProfileId`, `lastLogin`
+- ❌ `created_at` (snake_case)
+- ❌ `CreatedAt` (PascalCase)
+- ❌ `created-at` (kebab-case)
+
+**Acronyms**:
+
+- Prefer `oauthClientId` over `OAuthClientID`.
+- Be consistent across the entire API surface.
+
+<RuleHeader id="105" level="MUST" title="Use ASCII for API identifiers" />
+### #105 - Use ASCII for API Identifiers
+
+**Intent**: maximize interoperability across languages, tooling, URLs, and SDK generation.
+
+All API **identifiers** MUST use ASCII characters only.
+
+**Applies to**:
+
+- URL path segments (resource names)
+- Path parameter names (`{identityId}`)
+- Query parameter names (`?sortOrder=asc`)
+- JSON property names (`createdAt`)
+- Enum tokens when they represent identifiers (`"PENDING_APPROVAL"`)
+- Header names in documentation/examples
+
+**Does not apply to**:
+
+- Free-form human text fields (e.g., `displayName`, `description`) where UTF-8 is expected and documented.
+
+**Examples**:
+
+- ✅ `identityProfileId`
+- ✅ `createdAt`
+- ❌ `créatedAt`
+- ❌ `名前`
+
+<RuleHeader id="106" level="SHOULD" title="pluralize array property names" />
+### #106 - Pluralize Array Property Names
+
+**Intent**: reduce ambiguity and make payloads self-explanatory.
+
+Array properties SHOULD use plural names to signal multiple values.
+
+**Examples**:
+
+- ✅ `items`, `accounts`, `entitlements`, `roles`
+- ✅ `children` (already plural)
+- ✅ `data` / `metadata` (acceptable common exceptions; use consistently)
+- ❌ `item` for an array
+- ❌ `account` for an array
+
+**Notes**:
+
+- If a plural name is awkward or ambiguous, choose a clear collective noun and document it.
+- Be consistent across endpoints (don’t call it `items` in one response and `results` in another unless there’s a meaning difference).
+
+<RuleHeader id="107" level="MUST" title="Use lowercase hyphenated path segments; camelCase path params" />
+### #107 - Use Lowercase Hyphenated Path Segments; camelCase Path Params
+
+**Intent**: make URLs predictable, readable, and consistent across APIs.
+Use lowercase with hyphens for URL path segments (e.g., `/user-profiles`) and camelCase for path parameters (e.g., `{userId}`).
+
+**Examples**:
+
+- ✅ `/identity-profiles/{identityProfileId}`
+- ✅ `/access-requests/{accessRequestId}`
+- ❌ `/IdentityProfiles/{IdentityProfileId}` (wrong casing)
+- ❌ `/identity_profiles/{identity_profile_id}` (snake_case)
+
+**Testability**:
+
+- Reviewers can spot-check paths and parameter names for casing consistency.
+
+<RuleHeader id="108" level="MUST" title="Use camelCase for query parameters" />
+### #108 - Use camelCase for Query Parameters
+
+**Intent**: keep the request surface consistent with JSON conventions and reduce cognitive load.
+
+Query parameter names MUST use **camelCase**.
+
+**Examples**:
+
+- ✅ `?sortOrder=asc&maxResults=50`
+- ✅ `?includeDisabled=true`
+- ✅ `?createdAfter=2026-01-01T00:00:00Z`
+
+**Anti-examples**:
+
+- ❌ `?sort_order=asc` (snake_case)
+- ❌ `?SortOrder=asc` (PascalCase)
+- ❌ `?include-disabled=true` (kebab-case)
+
+**Notes**:
+
+- Prefer conventional query parameter names for pagination/filtering/sorting (see [#600]).
+- Be consistent across endpoints (don’t use `pageSize` in one API and `limit` in another).
+
+<RuleHeader id="109" level="SHOULD" title="Use Upper-Case Words with hyphens" />
+### #109 - Use Upper-Case Words with Hyphens
+
+**Intent**: improve documentation consistency and readability.
+
+When documenting HTTP header names (including custom headers), prefer the conventional **Upper-Case-Words-With-Hyphens** style.
+
+**Examples**:
+
+- ✅ `Content-Type`, `If-Match`, `If-None-Match`, `Retry-After`
+- ✅ `X-Request-Id` (if using an `X-` prefixed header during a migration)
+- ❌ `content-type`
+- ❌ `IF_MATCH`
+
+**Notes**:
+
+- HTTP header field names are case-insensitive at runtime; this is a documentation/style rule.
+- Prefer standardized headers over custom ones where possible (see [#400]).
+
+<RuleHeader id="110" level="MUST" title="pluralize collection resource names" />
+### #110 - Pluralize Collection Resource Names
+
+**Intent**: make endpoints predictable and self-describing.
+
+Collection endpoints MUST use plural resource names.
+
+**Examples**:
+
+- ✅ `GET /accounts` (collection)
+- ✅ `GET /accounts/{accountId}` (single resource)
+- ✅ `GET /identity-profiles` / `GET /identity-profiles/{identityProfileId}`
+
+**Anti-examples**:
+
+- ❌ `GET /account` (ambiguous)
+- ❌ `GET /Accounts` (wrong casing)
+
+**Notes**:
+
+- Use domain language and stable nouns (see [#506]).
+- If a term is uncountable (rare), pick a consistent convention and document it.
+
+<RuleHeader id="111" level="MUST" title="follow naming convention for permissions (scopes)" />
+### #111 - Follow Naming Convention for Permissions (Scopes)
+
+**Intent**: make scopes predictable, discoverable, and reusable across APIs and tooling.
+
+Scopes MUST follow a consistent naming convention so clients can understand and request permissions without per-service guesswork.
+
+**Canonical format**:
+
+```text
+<domain>:<resource>:<action>
+```
+
+**Conventions**:
+
+- `<domain>`: stable product/domain namespace (lowercase, ASCII)
+- `<resource>`: plural resource family (lowercase, ASCII)
+- `<action>`: one of the approved action verbs
+
+**Approved action verbs** (default set):
+
+- `read`: read-only access (GET, and “search semantics” endpoints)
+- `write`: create/update/delete access (POST/PATCH/PUT/DELETE)
+- `admin`: elevated/tenant-admin operations (break-glass or privileged operations)
+
+If you need additional verbs, they MUST be standardized for the domain and documented (avoid ad-hoc verbs per endpoint).
+
+**Examples**:
+
+- `identity:accounts:read`
+- `identity:accounts:write`
+- `identity:accounts:admin`
+- `identity:entitlements:read`
+
+**Endpoint documentation requirement** (ties to [#300]/[#206]):
+
+- OpenAPI `security` requirements MUST list the full set of scopes accepted for the operation.
+- If an endpoint supports multiple privilege modes, document them explicitly; do not hide scope requirements in prose-only text.
+
+**Anti-examples**:
+
+- `Identity.Accounts.Read` (wrong separators/case)
+- `accounts:read` (missing domain)
+- `identity:readAccounts` (inconsistent action encoding)
+
+**Testability**:
+
+- A reviewer can infer scope meaning from name alone.
+- Scopes referenced in OpenAPI match the convention and appear consistently across endpoints.
+
+---
+
+<RuleHeader id="112" level="MUST" title="declare enum values in UPPER_SNAKE_CASE strings" />
+### #112 - Declare Enum Values in UPPER_SNAKE_CASE Strings
+
+**Intent**: make enum tokens stable, readable API identifiers.
+
+Enum values MUST be expressed as **UPPER_SNAKE_CASE strings**.
+
+**Examples**:
+
+- ✅ `"ACTIVE"`
+- ✅ `"PENDING_APPROVAL"`
+- ❌ `"active"` (wrong case)
+- ❌ `"PendingApproval"` (camel/Pascal case)
+- ❌ `"Pending Approval"` (spaces)
+
+**Compatibility**:
+
+- Enum tokens are part of the public contract. Do not rename existing enum values without a compatibility/migration plan.
+
+**OpenAPI example**:
+
+```yaml
+status:
+  type: string
+  enum: [ACTIVE, PENDING_APPROVAL, DISABLED]
+```
+
+<RuleHeader id="118" level="SHOULD" title="avoid qualifying verbs" />
+### #118 - Avoid Qualifying Verbs
+
+**Intent**: keep property names concise and reduce naming churn.
+
+Boolean fields and other descriptive properties SHOULD avoid qualifying verbs like `is`, `has`, `can` when the adjective alone is clear.
+
+**Examples**:
+
+- Prefer:
+  - ✅ `enabled` over `isEnabled`
+  - ✅ `active` over `isActive`
+  - ✅ `visible` over `isVisible`
+- Acceptable exceptions:
+  - When the adjective is ambiguous without a verb (e.g., `canDelete` may be clearer than `deletable` depending on domain language).
+
+**Testability**:
+
+- Naming is consistent within a resource and avoids mixed patterns.
+
+<RuleHeader id="119" level="SHOULD" title="Use positive semantics for boolean fields" />
+### #119 - Use Positive Semantics for Boolean Fields
+
+**Intent**: reduce double-negative confusion in client code.
+
+Boolean properties SHOULD use positive semantics.
+
+**Examples**:
+
+- Prefer:
+  - ✅ `enabled` over `disabled`
+  - ✅ `included` over `excluded`
+  - ✅ `verified` over `unverified`
+
+**Legacy guidance**:
+
+- If an API already has a negative boolean (`disabled`), avoid adding a second, inverted boolean (`enabled`). Instead, keep one field and document it clearly.
+- If you must migrate, add a new positively-named field, deprecate the old one, and maintain both during a migration window.
+
+**Testability**:
+
+- New fields prefer positive semantics; any legacy inversions are documented.

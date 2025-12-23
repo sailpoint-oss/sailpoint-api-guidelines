@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "805",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#805",
+    "url": "/docs/rules/data-types-and-common-objects#805"
+  },
+  "currentTitle": "MUST use common field names and semantics",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: reduce cognitive load and prevent “same concept, different name” drift across APIs.\n\nAPIs MUST reuse common field names and semantics for shared concepts.\n\n**Baseline field registry** (expand over time):\n\n- `id` (string): stable identifier for the resource (URL-friendly; see [#512])\n- `name` (string): human-readable display name\n- `description` (string): human-readable description (optional)\n- `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#802])\n- `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#802])\n- `type` (string): discriminator/type label when needed\n- `status` (string/enum): lifecycle status (document enum values; see [#112])\n- `enabled` (boolean): boolean flags are true/false only (see [#122])\n\n**Rules**:\n\n- Do not invent synonyms (`created` vs `createdAt`, `lastModified` vs `modifiedAt`) without a strong reason.\n- If you already have a legacy name, do not rename without a compatibility plan; prefer the standard name for new APIs/fields.\n\n**If you model money-like values** (optional pattern):\n\n- Use `amount` as a decimal string (see [#804]) and `currency` as ISO 4217 (see [#803]).\n\n**Testability**:\n\n- Reviewers can spot-check schemas across APIs for consistent naming and formats.\n",
+    "rationale": "Shared field naming conventions make APIs easier to learn, reduce SDK churn, and improve cross-service consistency.",
+    "compatNotes": "Documentation guidance. Existing APIs should align over time; do not introduce breaking renames without a migration plan."
+  },
+  "reviewNotes": []
+}

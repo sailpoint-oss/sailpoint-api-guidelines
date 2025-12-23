@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "602",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#602",
+    "url": "/docs/rules/requests-and-querying#602"
+  },
+  "currentTitle": "MUST support pagination for list endpoints",
+  "status": "accepted",
+  "decision": {
+    "changeType": "normative",
+    "proposedTitle": "MUST support offset-based pagination for list endpoints",
+    "proposedText": "**Intent**: protect services and clients from unbounded responses, and provide consistent navigation.\n\nList endpoints MUST support **offset-based pagination** using `limit` and `offset`.\n\n**Required request parameters**:\n\n- `limit` (integer): number of items to return\n  - MUST document **default** and **max**\n- `offset` (integer): number of items to skip (default 0)\n- `count` (boolean, optional): whether to include total count (if supported)\n\n**Response shape (required)**:\n\nReturn a top-level object wrapper (see [#110]) with pagination metadata:\n\n```json\n{\n  \"items\": [{ \"id\": \"A\" }, { \"id\": \"B\" }],\n  \"limit\": 2,\n  \"offset\": 0,\n  \"count\": 123\n}\n```\n\n**Critical requirements**:\n\n- Define a **stable default sort order** (otherwise pagination is non-deterministic).\n- Document performance characteristics:\n  - maximum supported `offset`\n  - cost of `count=true`\n\n**Cursor-based pagination**:\n\n- Not standard for these guidelines.\n- Allowed **only by exception** and MUST be explicitly justified and documented (including sort stability, cursor encoding, and expiration semantics).\n\n**Testability**:\n\n- `limit`/`offset` defaults and maximums are documented.\n- Pagination produces deterministic results given stable sort.\n",
+    "rationale": "Offset/limit pagination is straightforward for consumers and works well with standard conventions. Unbounded list responses are a frequent source of outages and client timeouts.",
+    "compatNotes": "Changing pagination contracts is breaking. Establish defaults and max limits early and keep them stable."
+  },
+  "reviewNotes": []
+}

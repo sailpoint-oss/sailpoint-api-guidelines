@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "513",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#513",
+    "url": "/docs/rules/resource-modeling-and-urls#513"
+  },
+  "currentTitle": "MUST never include customer org name in public API paths",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: prevent tenant leakage and keep URLs stable across customer renames.\n\nPublic APIs MUST NOT embed customer org names or tenant identifiers in URL path structures.\n\n**Why**:\n\n- Org names can change and are not stable identifiers.\n- Embedding tenant identifiers increases data leakage risk and complicates caches/logs.\n\n**Preferred approach**:\n\n- Determine tenant/org scope from authentication context (token claims) and/or standard headers.\n\n**Examples**:\n\n- ✅ `GET /accounts` (scope inferred from auth context)\n- ❌ `GET /customers/acme-corp/accounts`\n- ❌ `GET /orgs/{orgName}/accounts`\n\n**Notes**:\n\n- Internal-only administrative APIs may have different constraints; this rule applies to public, customer-facing APIs.\n",
+    "rationale": "Tenant identifiers in paths create brittle URLs and increase the risk of inadvertent exposure of tenant identity and routing mistakes.",
+    "compatNotes": "Documentation clarification. Existing APIs with tenant-in-path should treat this as a migration item; avoid introducing new endpoints with tenant-in-path patterns."
+  },
+  "reviewNotes": []
+}

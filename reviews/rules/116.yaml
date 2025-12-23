@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "116",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#116",
+    "url": "/docs/rules/api-contract-and-documentation#116"
+  },
+  "currentTitle": "MUST provide an example for every parameter and property",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: make docs executable and reduce interpretation errors.\n\nEvery query parameter, path parameter, request property, and response property MUST include at least one accurate example.\n\n**Requirements**:\n\n- Examples MUST conform to the declared schema and formats.\n- Prefer OpenAPI `example`/`examples` so tooling can render them.\n- Provide examples for both **success** and **error** responses (see [#404]).\n- Never include secrets or real customer data.\n\n**Testability**:\n\n- Examples are validated during review (or via automated checks) to match schemas.\n",
+    "rationale": "Examples are the fastest way for consumers to understand correct usage; accurate examples also serve as a lightweight contract test.",
+    "compatNotes": "Documentation-only."
+  },
+  "reviewNotes": []
+}

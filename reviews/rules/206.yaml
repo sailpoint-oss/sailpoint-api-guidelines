@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "206",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#206",
+    "url": "/docs/rules/lifecycle-and-compatibility#206"
+  },
+  "currentTitle": "SHOULD avoid versioning via breaking changes",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD avoid breaking changes as a versioning strategy",
+    "proposedText": "**Intent**: keep clients stable and reduce long-term operational burden.\n\nPrefer **compatible evolution** over breaking changes. Do not treat “we can bump the version” as the default approach to making changes.\n\n**Guidance**:\n\n- Prefer additive changes:\n  - add optional fields\n  - add new endpoints\n  - add optional query parameters with safe defaults\n- Only introduce a new version when you have a clear, unavoidable breaking change and a migration plan.\n\n**Common anti-patterns** (avoid):\n\n- Breaking an endpoint and \"fixing\" it by bumping the version, even though the change could have been additive.\n- Creating a new version without a deprecation timeline for the old one.\n\n**Testability**:\n\n- Changes include a compatibility assessment (what breaks, who is affected, and how migration works).\n",
+    "rationale": "Version proliferation and breaking changes are expensive for both SailPoint and consumers. This rule keeps the default posture: evolve compatibly whenever possible.",
+    "compatNotes": "No runtime change; this is guidance to drive design decisions toward compatibility."
+  },
+  "reviewNotes": [
+    "Clarify wording: avoid treating version bumps as the default mechanism for breaking changes; prefer additive evolution."
+  ]
+}

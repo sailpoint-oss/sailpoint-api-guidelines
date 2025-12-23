@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "514",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#514",
+    "url": "/docs/rules/resource-modeling-and-urls#514"
+  },
+  "currentTitle": "MUST not use sequential numeric IDs",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: reduce enumeration risk and avoid leaking internal scale/ordering.\n\nAPIs MUST NOT expose sequential numeric identifiers as public resource IDs.\n\n**Why**:\n\n- Sequential IDs are easy to enumerate/scrape.\n- They leak business scale and internal ordering.\n\n**Preferred alternatives**:\n\n- UUID/ULID/GUID (opaque string IDs).\n- Non-sequential natural keys only when they are truly stable and non-sensitive.\n\n**Notes**:\n\n- This rule is about *public identifiers*. Internal database surrogate keys may be sequential; do not expose them directly.\n\n**Testability**:\n\n- Resource IDs shown in URLs and payloads are non-sequential and not trivially enumerable.\n",
+    "rationale": "Public sequential IDs are a common source of data scraping and privacy leaks, even when authentication exists.",
+    "compatNotes": "Guidance. Legacy APIs may require migration/aliasing; do not silently change IDs without a compatibility plan."
+  },
+  "reviewNotes": []
+}

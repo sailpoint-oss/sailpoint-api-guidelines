@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "217",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#217",
+    "url": "/docs/rules/lifecycle-and-compatibility#217"
+  },
+  "currentTitle": "SHOULD use full absolute URIs in links",
+  "status": "rejected",
+  "decision": {
+    "changeType": "deprecate",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": "Not applicable as a standalone rule in a JSON-first API styleguide; link rendering/host concerns vary by environment and are better handled by documentation/gateway configuration rather than mandated absolute URIs.",
+    "compatNotes": "Remove this rule from the ruleset. If APIs include links, ensure they are unambiguous in their environment (e.g., consistent base URL via OpenAPI `servers`)."
+  },
+  "reviewNotes": []
+}

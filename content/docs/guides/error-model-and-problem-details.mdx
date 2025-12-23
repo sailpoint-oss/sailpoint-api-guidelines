@@ -1,0 +1,42 @@
+---
+title: Error model & Problem Details
+description: A consistent error contract, status code usage, and Problem Details (RFC 7807) patterns.
+---
+
+# Error model & Problem Details
+
+Consistent error responses reduce client guesswork and make failures easier to diagnose and handle.
+
+## When to use this guide
+
+- You’re defining error responses for new endpoints.
+- You want consistent status codes + error payloads across APIs.
+
+## Recommendations
+
+- Use the most specific HTTP status code you can.
+- Keep error payloads **stable** and **documented** in OpenAPI.
+- Avoid leaking sensitive implementation details (stack traces, internal IDs, vendor exceptions).
+
+## Problem Details (RFC 7807)
+
+Problem Details provides a standard JSON shape (e.g., `type`, `title`, `status`, `detail`,
+`instance`) while still allowing extensions.
+
+### Suggested usage pattern
+
+- Use a stable `type` URI for each error category.
+- Use `title` for a short human-readable category name.
+- Use `detail` for request-specific details (safe to show to callers).
+- Add extension fields for structured, machine-readable information (e.g. `errors[]` for field-level
+  issues).
+
+## OpenAPI guidance
+
+- Document every error response per operation.
+- Provide examples for common failure modes (validation, authz, conflict, rate limiting).
+- Link to deeper reference where needed:
+  - [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
+  - [Review checklist](/docs/appendices/review-checklist)
+
+

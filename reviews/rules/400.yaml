@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "400",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#400",
+    "url": "/docs/rules/http-semantics#400"
+  },
+  "currentTitle": "MUST provide a valid operationId in camelCase for each operation",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST provide a stable operationId in camelCase for each operation",
+    "proposedText": "**Intent**: enable stable SDK generation, client integrations, and tooling references.\n\nEvery operation MUST define a unique `operationId` in **camelCase**.\n\n**Stability (anti-churn)**:\n\n- `operationId` values are part of the public contract for tooling/SDKs.\n- Do not rename `operationId` values without a compatibility plan.\n- If a rename is unavoidable:\n  - keep the old `operationId` where possible (or maintain an alias in tooling)\n  - document the change in changelogs/release notes\n\n**Uniqueness**:\n\n- `operationId` MUST be unique across the entire spec (including across tags).\n\n**Recommended patterns**:\n\n- GET collection: `list<ResourcePlural>`\n- GET item: `get<Resource>`\n- POST collection (create): `create<Resource>`\n- PUT/PATCH (update): `update<Resource>`\n- DELETE: `delete<Resource>`\n\n**Additional patterns (recommended)**:\n\n- POST search endpoints (see [#604]): `search<ResourcePlural>`\n- Long-running jobs/resources:\n  - `create<Thing>Job` (POST)\n  - `get<Thing>Job` (GET)\n  - `list<Thing>Jobs` (GET)\n\n**Examples**:\n\n| Method | Path | operationId |\n| --- | --- | --- |\n| GET | `/accounts` | `listAccounts` |\n| GET | `/accounts/{id}` | `getAccount` |\n| POST | `/accounts` | `createAccount` |\n| POST | `/accounts/search` | `searchAccounts` |\n| PATCH | `/accounts/{id}` | `updateAccount` |\n| DELETE | `/accounts/{id}` | `deleteAccount` |\n\n**Testability**:\n\n- Spec validation ensures every operation has a unique, camelCase `operationId`.\n",
+    "rationale": "Stable operation identifiers reduce churn in generated SDKs and downstream integrations that reference operations by name.",
+    "compatNotes": "Documentation clarification. Renaming operationIds can break generated clients; treat renames as compatibility-impacting changes."
+  },
+  "reviewNotes": []
+}

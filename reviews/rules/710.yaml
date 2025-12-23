@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "710",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#710",
+    "url": "/docs/rules/payload-conventions#710"
+  },
+  "currentTitle": "MUST define \"required\" for objects/params per OpenAPI",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: ensure clients and tooling know which inputs are mandatory.\n\nAPIs MUST model requiredness explicitly in OpenAPI.\n\n**Rules**:\n\n- Request bodies and parameters MUST mark required inputs using OpenAPI `required` (properties) and `required: true` (parameters).\n- Responses SHOULD also be modeled accurately: if a field is always present, mark it required; if not always present, do not mark it required.\n\n**Create vs update**:\n\n- Do not overload one schema for every operation if requiredness differs.\n- Use separate schemas (e.g., `CreateAccountRequest` vs `UpdateAccountRequest`) when the set of required fields differs.\n\n**Testability**:\n\n- A reviewer can generate SDKs/validators that correctly enforce required inputs.\n- Required fields in the spec match actual server behavior.\n",
+    "rationale": "Missing requiredness breaks validation and codegen and forces clients to learn requirements by trial-and-error.",
+    "compatNotes": "Documentation/schema improvement. Tightening requiredness may reveal existing inconsistencies that should be addressed deliberately."
+  },
+  "reviewNotes": []
+}

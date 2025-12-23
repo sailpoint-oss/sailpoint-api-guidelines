@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "501",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#501",
+    "url": "/docs/rules/resource-modeling-and-urls#501"
+  },
+  "currentTitle": "MUST normalize paths",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST normalize paths and define canonical URL forms",
+    "proposedText": "**Intent**: avoid routing ambiguity, caching surprises, and inconsistent client behavior.\n\nAPIs MUST define and enforce a canonical URL form.\n\n**Rules**:\n\n- No duplicate slashes (`//`).\n- No empty path segments.\n- Define a trailing-slash policy and apply it consistently (either always without trailing slash, or always with; prefer without).\n- Use lowercase hyphenated path segments (see [#107]).\n- Avoid redundant base path segments like `/api` in public URLs (see [#500]).\n\n**Good examples**:\n\n- ✅ `/accounts/123`\n- ✅ `/accounts/123/entitlements`\n- ✅ `/identity-profiles/{identityProfileId}`\n\n**Bad examples**:\n\n- ❌ `//accounts//123//`\n- ❌ `/accounts/123/` (if trailing slashes are not canonical)\n- ❌ `/accounts//123`\n- ❌ `/Accounts/123` (wrong casing)\n\n**Server behavior**:\n\n- If a non-canonical form is received, either:\n  - normalize internally and treat as equivalent, or\n  - redirect to the canonical form (careful with auth/caching), or\n  - reject with a clear `400` (rare; usually normalization is friendlier)\n\n**Testability**:\n\n- Routes behave consistently with and without trailing slashes according to the stated policy.\n- Documentation/examples use only canonical paths.\n",
+    "rationale": "Inconsistent URL normalization leads to hard-to-debug issues with caches, routing, and signature/auth schemes. A canonical form makes behavior predictable for clients and infrastructure.",
+    "compatNotes": "Changing canonicalization rules can break clients that rely on non-canonical forms. Document the policy and treat changes as compatibility-sensitive."
+  },
+  "reviewNotes": [
+    "Expand with lots of good/bad examples and explicitly define canonicalization expectations; incorporate the /api guidance via #135."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "203",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#203",
+    "url": "/docs/rules/lifecycle-and-compatibility#203"
+  },
+  "currentTitle": "design APIs conservatively (inputs)",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

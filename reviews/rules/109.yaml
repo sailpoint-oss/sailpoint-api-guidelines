@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "109",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#109",
+    "url": "/docs/rules/api-contract-and-documentation#109"
+  },
+  "currentTitle": "SHOULD use Upper-Case Words with hyphens",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD use Upper-Case-Words-With-Hyphens in header documentation",
+    "proposedText": "**Intent**: improve documentation consistency and readability.\n\nWhen documenting HTTP header names (including custom headers), prefer the conventional **Upper-Case-Words-With-Hyphens** style.\n\n**Examples**:\n\n- ✅ `Content-Type`, `If-Match`, `If-None-Match`, `Retry-After`\n- ✅ `X-Request-Id` (if using an `X-` prefixed header during a migration)\n- ❌ `content-type`\n- ❌ `IF_MATCH`\n\n**Notes**:\n\n- HTTP header field names are case-insensitive at runtime; this is a documentation/style rule.\n- Prefer standardized headers over custom ones where possible (see [#400]).\n",
+    "rationale": "Consistency in docs prevents confusion and makes examples easier to scan, especially across many APIs and teams.",
+    "compatNotes": "No runtime impact."
+  },
+  "reviewNotes": [
+    "Keep for doc consistency; clarify it’s a style rule and add examples."
+  ]
+}

@@ -1,0 +1,52 @@
+---
+title: Review checklist
+description: A practical, rule-aligned checklist for API design and change reviews.
+---
+
+# Review checklist
+
+Use this checklist during design reviews, PR reviews, or pre-release audits. It’s intentionally
+short—use it to find the right area, then dive into the relevant Rule category.
+
+## Contract and docs
+
+- Is OpenAPI complete (parameters, request/response schemas, and examples)?
+- Are error responses documented and consistent?
+- Are breaking changes avoided or explicitly handled?
+
+## Security
+
+- Are authentication and authorization requirements clearly documented per operation?
+- Are least-privilege scopes/permissions used?
+- Are sensitive details avoided in logs and error payloads?
+
+## HTTP semantics
+
+- Do methods and status codes match semantics (GET safe, PUT idempotent, etc.)?
+- Are caching/concurrency headers used appropriately where needed?
+
+## URLs and resource modeling
+
+- Are resources named consistently and predictably?
+- Are identifiers stable and representation shapes coherent?
+- Are relationships represented without deep nesting unless necessary?
+
+## Requests, querying, and pagination
+
+- Is default ordering stable?
+- Are pagination defaults and limits documented?
+- Are filtering/search parameters documented with examples?
+
+## Payload conventions and common objects
+
+- Are timestamps and formats consistent (RFC 3339, etc.)?
+- Are enums and optional fields handled consistently?
+- Are null/empty semantics clear?
+
+## Helpful references
+
+- [Compatibility checklist](/docs/appendices/compatibility-checklist)
+- [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
+- [Error model & Problem Details](/docs/guides/error-model-and-problem-details)
+
+

@@ -1,0 +1,41 @@
+---
+title: Pagination & filtering
+description: "Practical patterns for list endpoints: stable sorting, pagination contracts, and filter design."
+---
+
+# Pagination & filtering
+
+List endpoints are one of the highest-leverage places to be consistent: pagination, sorting, and
+filtering shape the client experience.
+
+## When to use this guide
+
+- You’re adding a list/search endpoint.
+- You’re standardizing pagination behavior across APIs.
+
+## Pagination: baseline expectations
+
+- Always define a **stable default sort order** (pagination without stable ordering is not
+  deterministic).
+- Document defaults and limits (`limit` default and maximum).
+- Make pagination behavior explicit in OpenAPI (parameters, response shape, examples).
+
+## Recommended contracts
+
+- Start with [Pagination recipes](/docs/appendices/pagination-recipes) for concrete request/response
+  shapes.
+- If you expect large or volatile datasets, consider cursor pagination; keep cursors **opaque and
+  stable**.
+
+## Filtering & searching
+
+- Prefer straightforward equality and set membership filters for common use cases.
+- If you need complex queries, document the query language clearly and provide examples.
+- Avoid breaking changes: adding filters is typically safe; changing semantics is not.
+
+## Related reading
+
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+- [Review checklist](/docs/appendices/review-checklist)
+
+

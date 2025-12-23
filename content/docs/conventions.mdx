@@ -1,0 +1,31 @@
+---
+title: Conventions
+description: How to read these guidelines, and what rule IDs mean.
+---
+
+# Conventions
+
+## Normative language
+
+These guidelines use RFC 2119 keywords:
+
+- **MUST**: required for compliance.
+- **SHOULD**: strongly recommended; exceptions must be justified and documented.
+- **MAY**: optional; use when it improves client experience or operational safety.
+
+## Rule IDs and stable references
+
+Each rule heading ends with a stable numeric ID, e.g. `[#401]`. Rule IDs exist so you can:
+
+- Reference rules in reviews and design docs (“violates [#404]”).
+- Deep-link to a specific requirement.
+- Automate checks (linters) against durable anchors.
+
+## How to use this hub
+
+- Start with **Rules** for normative “must/should” requirements.
+- Use **Guides** for patterns and rationale.
+- Prefer documenting decisions alongside the API spec (OpenAPI) and linking supporting docs via
+  `externalDocs`.
+
+

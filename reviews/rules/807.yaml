@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "807",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#807",
+    "url": "/docs/rules/data-types-and-common-objects#807"
+  },
+  "currentTitle": "MUST encode embedded binary as base64url",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST encode embedded binary safely (base64/base64url) [exception case]",
+    "proposedText": "**Intent**: keep embedded binary safe and interoperable when it must travel inside JSON.\n\n**Default policy**: do not embed binary in JSON. Prefer non-JSON upload/download endpoints and standard media types (see [#704]).\n\n**If embedding is unavoidable**:\n\n- Use **standard base64** for binary embedded in JSON payloads.\n- Use **base64url** only when the encoded value must be URL-safe (e.g., used inside a URL or otherwise constrained by URL-safe character sets).\n- Include metadata so clients can interpret the value:\n  - `contentType` (e.g., `image/png`)\n  - `encoding` (`base64` or `base64url`)\n  - optional `sizeBytes` (recommended)\n\n**Constraints**:\n\n- Document maximum allowed size (and reject oversize payloads with a clear error).\n- Prefer references/links for large binaries rather than embedding.\n\n**Example**:\n\n```json\n{\n  \"contentType\": \"image/png\",\n  \"encoding\": \"base64\",\n  \"data\": \"iVBORw0KGgoAAAANSUhEUg...\"\n}\n```\n",
+    "rationale": "Most APIs should use proper binary transfers; when embedding is required, a consistent encoding + metadata prevents ambiguity and client bugs.",
+    "compatNotes": "Documentation clarification. Existing APIs embedding binary should align on one encoding and document size constraints."
+  },
+  "reviewNotes": []
+}

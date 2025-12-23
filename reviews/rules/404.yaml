@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "404",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#404",
+    "url": "/docs/rules/http-semantics#404"
+  },
+  "currentTitle": "MUST specify success and error responses in API specs",
+  "status": "accepted",
+  "decision": {
+    "changeType": "merge",
+    "proposedTitle": "MUST define a complete, standardized error contract in OpenAPI (Problem Details)",
+    "proposedText": "**Intent**: ensure clients can reliably parse errors, retry safely, and generate SDKs from specs.\n\nEvery operation MUST define:\n\n- **Success responses**: status code + schema + examples\n- **Error responses**: status code + standardized schema + examples\n\nThis rule consolidates prior guidance on response documentation, error envelopes, and Problem Details.\n\n## 1) Document responses explicitly\n\n- For each operation, define:\n  - common success responses (2xx)\n  - common error responses (400/401/403/404/409/412/429/5xx) where applicable\n- Use OpenAPI `default` **only** for truly unexpected server errors; do not hide expected errors behind `default`.\n\n## 2) Use Problem Details for errors\n\nError responses MUST use **Problem Details** (RFC 9457; obsoletes RFC 7807) with media type:\n\n- `Content-Type: application/problem+json`\n\n**Required fields**:\n\n- `type`, `title`, `status`, `detail`, `instance`\n\n## 2.1) Stable application-specific error codes (optional but recommended)\n\nProblem Details **extension members** are allowed but MUST be documented and stable. Recommended extensions:\n\n- `errors[]` for field-level validation\n- `code` (or `detailCode`) for stable application-specific error identifiers\n- `correlationId` for support/debugging\n\nIf you define error codes:\n\n- Codes MUST be documented (meaning, when emitted, and whether retry is safe).\n- Codes MUST be stable across versions and MUST NOT encode internal implementation details.\n- Codes MUST NOT replace HTTP status codes; they are additional detail.\n\n## 3) Standardize error shape across APIs\n\n- All SailPoint APIs MUST use a **single standardized error schema** so clients can share error handling.\n- Define and reuse a shared OpenAPI component (e.g., `ProblemDetails`) across services.\n\n## 4) Provide accurate examples\n\n- Include at least one error example per operation.\n- Never include secrets or real customer data.\n\n## Examples\n\n### Validation error (400)\n\n```json\n{\n  \"type\": \"https://developer.sailpoint.com/problems/validation-error\",\n  \"title\": \"Validation error\",\n  \"status\": 400,\n  \"detail\": \"One or more fields are invalid.\",\n  \"instance\": \"/accounts\",\n  \"errors\": [\n    { \"field\": \"name\", \"message\": \"Must not be blank.\" }\n  ],\n  \"correlationId\": \"3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b\"\n}\n```\n\n### Optimistic locking failure (412)\n\n```json\n{\n  \"type\": \"https://developer.sailpoint.com/problems/precondition-failed\",\n  \"title\": \"Precondition failed\",\n  \"status\": 412,\n  \"detail\": \"ETag does not match current resource version.\",\n  \"instance\": \"/accounts/123\",\n  \"code\": \"ETAG_MISMATCH\"\n}\n```\n\n## Testability\n\n- OpenAPI includes `application/problem+json` schemas and examples for documented errors.\n- Error schemas reuse a shared component.\n- Reviewers can verify every operation has explicit `responses` entries for expected errors.\n",
+    "rationale": "If error contracts are incomplete or inconsistent, clients build brittle logic and SDK generation becomes unreliable. A single, explicit standard (Problem Details) makes error handling predictable across the entire API surface.",
+    "compatNotes": "Standardizing error envelopes may require migration for legacy APIs. Prefer adding the standard envelope first (while still supporting legacy shapes if necessary) and documenting deprecation timelines."
+  },
+  "reviewNotes": [
+    "Merged #151 with Problem Details (#176) and standardized error schema (#326) into one consolidated error-contract rule with examples."
+  ]
+}

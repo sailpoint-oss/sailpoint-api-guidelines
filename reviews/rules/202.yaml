@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "202",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#202",
+    "url": "/docs/rules/lifecycle-and-compatibility#202"
+  },
+  "currentTitle": "MUST prepare clients for compatible extensions",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: ensure clients remain resilient as the API evolves.\n\nClients MUST be prepared for compatible server extensions.\n\n**Client requirements**:\n\n- Ignore unknown fields in responses.\n- Tolerate new enum values (use an \"unknown\" fallback behavior).\n- Handle HTTP status codes that are not explicitly documented for an endpoint.\n\n**Examples**:\n\n- **Unknown field**:\n  - If the server adds `newField`, clients should continue parsing existing fields and ignore `newField`.\n\n- **Unknown enum value**:\n  - If a client expects `status` in `{ \"ACTIVE\", \"INACTIVE\" }` and receives `\"PENDING\"`, it must not crash; it should map to `UNKNOWN` or treat it as a safe default.\n\n- **Unexpected status code**:\n  - If a client receives `429` or `503`, it should follow documented retry/backoff guidance rather than failing with an unhandled exception.\n\n**SDK guidance**:\n\n- Avoid generated enums that throw on unknown values; prefer string unions or safe mapping with an `UNKNOWN` case.\n\n**Testability**:\n\n- Client tests cover unknown response fields and unknown enum values.\n- Error handling includes a generic fallback path for unexpected status codes.\n",
+    "rationale": "Server-side additive changes are only safe if clients parse defensively; otherwise \"compatible\" changes become outages for consumers.",
+    "compatNotes": "Doc-only change; adds concrete examples and SDK guidance for safe parsing."
+  },
+  "reviewNotes": [
+    "Rewrite with concrete examples for unknown fields/enums/status codes and add SDK guidance to avoid throwing on unknown enums.",
+    "Accepted for Phase A implementation."
+  ]
+}

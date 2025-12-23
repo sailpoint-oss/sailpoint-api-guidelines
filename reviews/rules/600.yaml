@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "600",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#600",
+    "url": "/docs/rules/requests-and-querying#600"
+  },
+  "currentTitle": "MUST stick to conventional query parameters",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST stick to conventional query parameters (pagination, filtering, sorting)",
+    "proposedText": "**Intent**: keep APIs predictable and make shared tooling/SDKs reusable.\n\nUse consistent, conventional query parameter names and semantics across APIs.\n\n**Pagination (offset-based)**:\n\n- Use `limit` and `offset` (see [Pagination](/docs/rules/pagination)).\n- Document defaults and maximums.\n\n**Filtering / sorting**:\n\n- Use `filters` for filter expressions and `sorters` for ordering.\n- Use the prescribed documentation templates (see [API Design & Documentation](/docs/rules/api-design-and-documentation)).\n- Document the allowed fields (whitelist) for filtering and sorting per endpoint.\n\n**Counting**:\n\n- Use `count` (boolean) only when supported; document performance impact.\n\n**Examples**:\n\n```http\nGET /accounts?limit=50&offset=0&filters=status eq \"ACTIVE\"&sorters=name:asc\n```\n\n**Standards guidance**:\n\n- Avoid inventing per-endpoint bespoke query DSLs.\n- Prefer OpenAPI-defined encoding for arrays/objects (`style`/`explode`) when parameters are multi-valued (see [#601]).\n\n**Testability**:\n\n- Reviewers can verify endpoints use conventional names and document field whitelists.\n",
+    "rationale": "Most consumer pain comes from inconsistency: every API choosing different names for the same concepts. Conventions enable shared clients, docs, and review checklists.",
+    "compatNotes": "Changing query parameter names or semantics is breaking for clients. Standardize early and keep conventions stable."
+  },
+  "reviewNotes": [
+    "Expand with explicit emphasis on standards-driven conventions and link to existing templates and pagination guidance."
+  ]
+}

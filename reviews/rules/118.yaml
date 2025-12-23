@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "118",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#118",
+    "url": "/docs/rules/api-contract-and-documentation#118"
+  },
+  "currentTitle": "MUST use ASCII camelCase property names",
+  "status": "accepted",
+  "decision": {
+    "changeType": "split",
+    "proposedTitle": "MUST use camelCase for JSON property names",
+    "proposedText": "**Intent**: keep JSON payloads consistent and predictable across teams and SDKs.\n\nJSON property names MUST use **camelCase**.\n\n**Scope**:\n\n- Applies to JSON request/response bodies.\n- For query parameters and path parameters, use the rules in [#108] and [#107].\n- ASCII-only identifier requirements are defined in [#119].\n\n**Examples**:\n\n- ✅ `createdAt`, `identityProfileId`, `lastLogin`\n- ❌ `created_at` (snake_case)\n- ❌ `CreatedAt` (PascalCase)\n- ❌ `created-at` (kebab-case)\n\n**Acronyms**:\n\n- Prefer `oauthClientId` over `OAuthClientID`.\n- Be consistent across the entire API surface.\n\n**Testability**:\n\n- OpenAPI schemas use camelCase property names consistently.\n",
+    "rationale": "camelCase is widely supported across modern JSON tooling and aligns with common JavaScript/TypeScript conventions used in many client SDKs.",
+    "compatNotes": "Renaming fields is breaking. Apply this rule to new APIs/fields; migrate legacy names via new versions or additive aliases only if explicitly supported."
+  },
+  "reviewNotes": [
+    "Split #118 into two: new #119 for ASCII-only identifiers, and keep #118 focused on camelCase JSON properties with clear scope."
+  ]
+}

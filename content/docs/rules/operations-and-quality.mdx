@@ -1,0 +1,106 @@
+---
+title: "Operations & Quality"
+description: Rules for operational quality, performance patterns, and observability expectations.
+---
+
+These rules cover operational concerns like performance-oriented patterns, documentation quality, and
+publishability expectations.
+
+**Related guides**:
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+
+**Related reference**:
+- [Review checklist](/docs/appendices/review-checklist)
+
+## Performance & Optimization
+<RuleHeader id="900" level="SHOULD" title="Support partial responses (fields)" />
+### #900 - Support Partial Responses (Fields)
+
+**Intent**: reduce payload size and improve performance without creating many bespoke endpoints.
+
+Support a `fields` query parameter to allow clients to request only specific fields in the response.
+
+**Rules**:
+
+- Field filtering MUST NOT apply by default.
+- `fields` MUST be explicitly documented (allowed values and syntax).
+- Prefer a simple, consistent syntax, e.g. `fields=(id,name,status)`.
+
+**Examples**:
+
+- ✅ `GET /accounts/{id}?fields=(id,name,status)`
+- ✅ `GET /accounts?fields=(id,name)&limit=50&offset=0`
+
+**Notes**:
+
+- Treat `fields` as part of the cache key for GET requests.
+- If nested selection is supported, document limits and behavior.
+
+<RuleHeader id="901" level="SHOULD" title="Allow optional embedding" />
+### #901 - Allow Optional Embedding
+
+**Intent**: reduce round trips for common UI/workflow use cases while keeping default responses lean.
+
+Support an `embed` query parameter to optionally include related sub-resources.
+
+**Rules**:
+
+- Embedding MUST be opt-in (not default).
+- Define an allowlist of embeddable relationships per endpoint.
+- Limit embedding depth (recommend depth = 1).
+- Document performance considerations and any maximums.
+
+**Examples**:
+
+- ✅ `GET /accounts/{id}?embed=(ownerRef,sourceRef)`
+- ✅ `GET /accounts?embed=(ownerRef)&limit=50&offset=0`
+
+**Anti-examples**:
+
+- ❌ unlimited recursive embedding
+- ❌ `embed=*` without documented limits
+
+---
+
+---
+
+## API Operation & Monitoring
+<RuleHeader id="902" level="MUST" title="Publish OpenAPI specification (meet doc quality levels)" />
+### #902 - Publish OpenAPI Specification (Meet Doc Quality Levels)
+
+**Intent**: make the API contract discoverable, reviewable, and usable by humans and tooling.
+
+All APIs MUST publish an OpenAPI specification (OAS) in an accessible location, and that specification MUST be treated as the canonical contract.
+
+**Publication requirements**:
+
+- The OpenAPI document is accessible to intended consumers (public docs for public APIs; authenticated/internal portal for internal-only).
+- The published spec is versioned and aligned with the documented API version (see [#208]).
+- The spec is the source for generated docs, SDKs, and contract validation where feasible.
+
+**Documentation quality levels** (minimum bar):
+
+- **Level 0 (non-compliant)**: paths exist but missing schemas, responses, and security details.
+- **Level 1 (minimum acceptable)**:
+  - Every operation has `summary` + `description`.
+  - Every operation defines success responses *and* expected error responses (see [#404]).
+  - Request/response schemas are defined (no `any`/untyped objects).
+  - `security` is declared with required scopes (see [#300], [#206]).
+  - At least one realistic example is provided for success and for errors.
+- **Level 2 (required for external APIs; strongly recommended for internal)**:
+  - Consistent tagging and `operationId` conventions.
+  - Pagination/filtering/sorting parameters are documented (where applicable) including supported field lists (see [#600]).
+  - Deprecations are marked with `deprecated: true` and migration guidance (see [#209]).
+  - Changelog/revision info is maintained for contract changes (see [#208]).
+
+**Enforcement**:
+
+- Teams MUST have a quality guide/checklist and review gates so new/changed endpoints meet the required level.
+- If an endpoint cannot meet the required level (exceptional cases), document the gap explicitly and track it as a remediation item.
+
+**Testability**:
+
+- A published OpenAPI spec exists and is reachable by intended consumers.
+- Spot-checking an endpoint shows Level 1 requirements are present (schemas, responses, security, examples).
+
+---

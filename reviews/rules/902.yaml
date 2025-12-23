@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "902",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#902",
+    "url": "/docs/rules/operations-and-quality#902"
+  },
+  "currentTitle": "MUST publish OpenAPI specification",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST publish OpenAPI specification (and meet documentation quality levels)",
+    "proposedText": "**Intent**: make the API contract discoverable, reviewable, and usable by humans and tooling.\n\nAll APIs MUST publish an OpenAPI specification (OAS) in an accessible location, and that specification MUST be treated as the canonical contract.\n\n**Publication requirements**:\n\n- The OpenAPI document is accessible to intended consumers (public docs for public APIs; authenticated/internal portal for internal-only).\n- The published spec is versioned and aligned with the documented API version (see [#116]).\n- The spec is the source for generated docs, SDKs, and contract validation where feasible.\n\n**Documentation quality levels** (minimum bar):\n\n- **Level 0 (non-compliant)**: paths exist but missing schemas, responses, and security details.\n- **Level 1 (minimum acceptable)**:\n  - Every operation has `summary` + `description`.\n  - Every operation defines success responses *and* expected error responses (see [#404]).\n  - Request/response schemas are defined (no `any`/untyped objects).\n  - `security` is declared with required scopes (see [#104], [#105]).\n  - At least one realistic example is provided for success and for errors.\n- **Level 2 (required for external APIs; strongly recommended for internal)**:\n  - Consistent tagging and `operationId` conventions.\n  - Pagination/filtering/sorting parameters are documented (where applicable) including supported field lists (see [#600]).\n  - Deprecations are marked with `deprecated: true` and migration guidance (see [#209]).\n  - Changelog/revision info is maintained for contract changes (see [#116]).\n\n**Enforcement**:\n\n- Teams MUST have a quality guide/checklist and review gates so new/changed endpoints meet the required level.\n- If an endpoint cannot meet the required level (exceptional cases), document the gap explicitly and track it as a remediation item.\n",
+    "rationale": "Simply having an OpenAPI file isn't enough; the spec must be detailed and consistent enough to drive client success, validation, and review workflows.",
+    "compatNotes": "Documentation/process change. Existing APIs can be brought up to Level 1/2 iteratively; do not block critical fixes, but do block adding new endpoints below the minimum bar."
+  },
+  "reviewNotes": []
+}

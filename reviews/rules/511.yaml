@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "511",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#511",
+    "url": "/docs/rules/resource-modeling-and-urls#511"
+  },
+  "currentTitle": "MUST target REST maturity level 2",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "MUST target REST maturity level 2 (practical HTTP semantics)",
+    "proposedText": "**Intent**: make APIs predictable by using HTTP as designed.\n\nAPIs MUST target at least REST Maturity Model (RMM) **Level 2**: resource-oriented URLs + correct HTTP methods + correct status codes.\n\n**What this means in practice**:\n\n- Use resource URLs (nouns), not action/RPC endpoints.\n- Use HTTP methods correctly (see [#401]) and respect method properties (see [#402]).\n- Use standard, semantically correct status codes (see [#403]).\n- Use standard content negotiation and media types (see [#705]).\n- Use a standardized error contract (Problem Details) (see [#404]).\n\n**Not required**:\n\n- Hypermedia controls (RMM Level 3) are not required; do not mandate HAL/JSON:API link schemas.\n\n**Testability**:\n\n- Reviewers can verify endpoints are noun-based and use correct HTTP methods/status codes.\n- OpenAPI documents success + error responses and media types per operation.\n",
+    "rationale": "RMM L2 is the pragmatic baseline for interoperability: caches, retries, gateways, SDKs, and clients all assume standard HTTP semantics.",
+    "compatNotes": "Documentation clarification. Existing non-conforming endpoints should be migrated gradually; avoid breaking existing clients without a plan."
+  },
+  "reviewNotes": []
+}

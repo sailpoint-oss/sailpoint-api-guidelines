@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "119",
+  "source": {
+    "doc": "content/docs/rules/api-contract-and-documentation.mdx",
+    "anchor": "#119",
+    "url": "/docs/rules/api-contract-and-documentation#119"
+  },
+  "currentTitle": "MUST use ASCII for API identifiers",
+  "status": "accepted",
+  "decision": {
+    "changeType": "split",
+    "proposedTitle": "MUST use ASCII for API identifiers",
+    "proposedText": "**Intent**: maximize interoperability across languages, tooling, URLs, and SDK generation.\n\nAll API **identifiers** MUST use ASCII characters only.\n\n**Applies to**:\n\n- URL path segments (resource names)\n- Path parameter names (`{identityId}`)\n- Query parameter names (`?sortOrder=asc`)\n- JSON property names (`createdAt`)\n- Enum tokens when they represent identifiers (`\"PENDING_APPROVAL\"`)\n- Header names in documentation/examples (even though headers are case-insensitive)\n\n**Does not apply to**:\n\n- Free-form human text fields (e.g., `displayName`, `description`) where UTF-8 is expected and documented.\n\n**Examples**:\n\n- ✅ `identityProfileId`\n- ✅ `createdAt`\n- ❌ `créatedAt`\n- ❌ `名前`\n\n**Testability**:\n\n- Specs and examples do not introduce non-ASCII identifier names.\n",
+    "rationale": "Non-ASCII identifiers create avoidable friction in SDKs, code generators, URLs, and client codebases. Restricting identifiers to ASCII prevents hard-to-debug encoding and tooling issues.",
+    "compatNotes": "Renaming identifiers is breaking. Apply this rule for new APIs and new identifiers; migrate legacy names only via versioning or additive aliases if supported."
+  },
+  "reviewNotes": [
+    "Split out from old #118 to make ASCII policy explicit and document-wide."
+  ]
+}
