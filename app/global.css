@@ -155,8 +155,7 @@
     @apply bg-background text-foreground;
     /* SailPoint “aurora” background (light) */
     background-color: var(--background);
-    background-image:
-      radial-gradient(
+    background-image: radial-gradient(
         circle at 19% 4%,
         oklch(from var(--ring) l c h / 0.22) 0px,
         transparent 55%
@@ -179,10 +178,9 @@
 .dark body {
   /* SailPoint “aurora” background (dark) */
   background-color: var(--background);
-  background-image:
-    radial-gradient(
+  background-image: radial-gradient(
       circle at 19% 4%,
-      oklch(from var(--ring) l c h / 0.20) 0px,
+      oklch(from var(--ring) l c h / 0.2) 0px,
       transparent 60%
     ),
     radial-gradient(
@@ -195,13 +193,4 @@
       oklch(from var(--primary) l c h / 0.18) 0px,
       transparent 60%
     );
-}
-
-/* Collapse per-rule markdown headings that exist for TOC/anchors only.
-   We keep the heading in the flow so TOC links still scroll correctly. */
-.prose h3:has(+ section[data-rule]) {
-  margin: 0;
-  padding: 0;
-  line-height: 0;
-  font-size: 0;
 }
