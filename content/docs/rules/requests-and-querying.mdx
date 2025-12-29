@@ -3,8 +3,7 @@ title: "Requests & Querying"
 description: Rules for query parameters, filtering, sorting, pagination, and request patterns.
 ---
 
-These rules define request/query conventions (filtering, sorting, pagination) so list/search endpoints
-are consistent across APIs.
+These rules define request/query conventions (filtering, sorting, pagination) so list/search endpoints are consistent across APIs.
 
 **Related guides**:
 - [Pagination & filtering](/docs/guides/pagination-and-filtering)
@@ -15,8 +14,8 @@ are consistent across APIs.
 - [Review checklist](/docs/appendices/review-checklist)
 
 ## Query Parameters & Filtering
-<RuleHeader id="600" level="MUST" title="Use conventional query parameters" />
 ### #600 - Use Conventional Query Parameters
+<RuleHeader id="600" level="MUST" title="Use Conventional Query Parameters" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
 **Intent**: keep APIs predictable and make client libraries reusable.
 
@@ -44,10 +43,10 @@ GET /accounts?limit=50&offset=0&filters=status eq \"ACTIVE\"&sorters=name:asc
 
 - Reviewers can verify each endpoint uses conventional parameter names and documents the supported field lists.
 
-<RuleHeader id="601" level="MUST" title="Define collection formats for header/query params" />
-### #601 - Define Collection Formats for Header/query Params
+### #601 - Define Collection Formats for Header and Query Parameters
+<RuleHeader id="601" level="MUST" title="Define Collection Formats for Header and Query Parameters" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: ensure clients can reliably generate requests and servers can parse them.
+**Intent**: ensure clients can reliably build requests and servers can parse them.
 
 **Recommendation**:
 
@@ -97,8 +96,8 @@ parameters:
 
 - Ensure the OpenAPI parameter definition includes `style` and `explode` (or an explicit description of the encoding).
 
-<RuleHeader id="603" level="MUST" title="Document implicit filters and default sorting" />
 ### #603 - Document Implicit Filters and Default Sorting
+<RuleHeader id="603" level="MUST" title="Document Implicit Filters and Default Sorting" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
 **Intent**: prevent “missing data” surprises and make list results reproducible.
 
@@ -141,10 +140,10 @@ For every collection/list endpoint (including POST-based search endpoints), if t
 
 ---
 
-<RuleHeader id="604" level="MUST" title="Use one query format across the API" />
 ### #604 - Use One Query Format Across the API
+<RuleHeader id="604" level="MUST" title="Use One Query Format Across the API" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
-**Intent**: make querying consistent so documentation, parsing, and shared client/server logic can be reused.
+**Intent**: make querying consistent so docs, parsing, and shared logic can be reused.
 
 APIs MUST align on a single, consistent query format across endpoints so all query experiences share the same documentation patterns and parsing logic.
 
@@ -206,10 +205,10 @@ Content-Type: application/json
 ---
 
 ## Pagination
-<RuleHeader id="602" level="MUST" title="Support offset pagination for list endpoints" />
 ### #602 - Support Offset Pagination for List Endpoints
+<RuleHeader id="602" level="MUST" title="Support Offset Pagination for List Endpoints" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }, { href: "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api", label: "GitHub REST API Pagination" }]} />
 
-**Intent**: protect services and clients from unbounded responses, and provide consistent navigation.
+**Intent**: protect services and clients from unbounded responses and provide consistent navigation.
 
 List endpoints MUST support **offset-based pagination** using `limit` and `offset`.
 

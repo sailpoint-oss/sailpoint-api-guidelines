@@ -3,9 +3,8 @@ title: "API Contract & Documentation"
 description: Rules for API-first design, OpenAPI quality, and publishable documentation.
 ---
 
-These rules define how APIs should be specified, documented, and published. They emphasize
-spec-first workflows, high-quality OpenAPI, and documentation that is usable by customers and
-partners.
+These rules explain how to specify, document, and publish APIs. The goal is clear, consistent
+contracts and docs that customers and partners can actually use.
 
 {/* **Related guides**:
 - [Design & review workflow](/docs/guides/design-and-review-workflow)
@@ -18,10 +17,10 @@ partners.
 
 ## API Design & Documentation
 
-### #100 - Follow API-first
-<RuleHeader id="100" level="SHOULD" title="Follow API-first" externalDocs={[{ href: "/docs/guides/api-first", label: "API-first" }]} implementation={[{ href: "/docs/guides/api-first", label: "API-first" }]} />
+### #100 - Follow API-First
+<RuleHeader id="100" level="SHOULD" title="Follow API-First" externalDocs={[{ href: "https://www.postman.com/api-first/", label: "Postman API-first" }, { href: "https://swagger.io/resources/articles/best-practices/api-design-first/", label: "Swagger: API Design-First" }]} />
 
-**Intent**: design the contract first so implementation and client integrations converge on a stable, reviewable API.
+**Intent**: start with the contract so everyone builds against the same, reviewable API.
 
 Define and review the API specification **before** implementation hardens.
 
@@ -44,10 +43,10 @@ Define and review the API specification **before** implementation hardens.
 - CI runs OpenAPI validation and fails on invalid specs.
 - Breaking changes are detected in review (diffs + compatibility checks) before release.
 
-<RuleHeader id="101" level="MUST" title="Provide OpenAPI specification" />
-### #101 - Provide OpenAPI Specification
+### #101 - Provide an OpenAPI Specification
+<RuleHeader id="101" level="MUST" title="Provide an OpenAPI Specification" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make the API contract discoverable, reviewable, and suitable for tooling/SDK generation.
+**Intent**: make the contract easy to find, review, and use for tools/SDKs.
 
 Provide an OpenAPI Specification (OAS) for every API and keep it current.
 
@@ -67,10 +66,10 @@ Provide an OpenAPI Specification (OAS) for every API and keep it current.
 - CI fails on invalid OpenAPI syntax.
 - CI or review checks enforce required per-operation metadata (tags, `operationId`, security, responses).
 
-<RuleHeader id="102" level="SHOULD" title="Provide API user manual" />
-### #102 - Provide API User Manual
+### #102 - Provide an API User Manual
+<RuleHeader id="102" level="SHOULD" title="Provide an API User Manual" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: make APIs usable without tribal knowledge by documenting real workflows, edge cases, and operational expectations.
+**Intent**: make the API usable without insider knowledge.
 
 Provide an API user manual that complements OpenAPI.
 
@@ -91,10 +90,10 @@ Provide an API user manual that complements OpenAPI.
 - Documentation exists and is reachable from the published OpenAPI (via `externalDocs`).
 - At least one end-to-end example per primary workflow is present and matches schemas.
 
-<RuleHeader id="113" level="MUST" title="Follow SailPoint API guidelines" />
 ### #113 - Follow SailPoint API Guidelines
+<RuleHeader id="113" level="MUST" title="Follow SailPoint API Guidelines" externalDocs={[{ href: "https://opensource.zalando.com/restful-api-guidelines/", label: "Zalando RESTful API Guidelines" }]} />
 
-**Intent**: enforce a consistent API experience across products and teams.
+**Intent**: keep the API experience consistent across teams and products.
 
 APIs MUST follow these guidelines.
 
@@ -111,10 +110,10 @@ APIs MUST follow these guidelines.
 
 - Use the Rules JSON (`/rules.json`) for deep links and tooling references.
 
-<RuleHeader id="114" level="MUST" title="Provide detailed API description" />
-### #114 - Provide Detailed API Description
+### #114 - Provide a Detailed API Description
+<RuleHeader id="114" level="MUST" title="Provide a Detailed API Description" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make an API usable without tribal knowledge.
+**Intent**: make the API understandable without insider context.
 
 APIs MUST provide a detailed description that covers what the API does and how consumers should use it.
 
@@ -140,10 +139,10 @@ APIs MUST provide a detailed description that covers what the API does and how c
 
 - A reviewer can answer: what is this API for, who can use it, and how do I perform the primary workflows?
 
-<RuleHeader id="115" level="MUST" title="Describe every parameter and property" />
 ### #115 - Describe Every Parameter and Property
+<RuleHeader id="115" level="MUST" title="Describe Every Parameter and Property" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: remove ambiguity so clients can implement correctly without guesswork.
+**Intent**: remove ambiguity so clients can implement without guesswork.
 
 Every query parameter, path parameter, request property, and response property MUST have a clear description.
 
@@ -151,8 +150,8 @@ Every query parameter, path parameter, request property, and response property M
 
 - Meaning/semantics (what it represents, not just its data type).
 - Constraints: allowed values, ranges, patterns, maximum lengths.
-- Default behavior when omitted (see [#709], [#707]).
-- Null/omission behavior where relevant (see [#701], [#711]).
+- Default behavior when omitted (see [#709]).
+- Null/omission behavior where relevant (see [#700]).
 - Any security/privacy implications (e.g., whether values are tenant-scoped, PII).
 
 **Anti-patterns**:
@@ -164,10 +163,10 @@ Every query parameter, path parameter, request property, and response property M
 
 - Reviewers can read the spec and understand how to populate requests and interpret responses without external tribal knowledge.
 
-<RuleHeader id="116" level="MUST" title="Provide examples for every parameter and property" />
 ### #116 - Provide Examples for Every Parameter and Property
+<RuleHeader id="116" level="MUST" title="Provide Examples for Every Parameter and Property" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make docs executable and reduce interpretation errors.
+**Intent**: make docs copy/pasteable and reduce mistakes.
 
 Every query parameter, path parameter, request property, and response property MUST include at least one accurate example.
 
@@ -182,10 +181,10 @@ Every query parameter, path parameter, request property, and response property M
 
 - Examples are validated during review (or via automated checks) to match schemas.
 
-<RuleHeader id="117" level="SHOULD" title="Keep operation summaries ≤5 words" />
-### #117 - Keep Operation Summaries ≤5 Words
+### #117 - Keep Operation Summaries to 5 Words or Fewer
+<RuleHeader id="117" level="SHOULD" title="Keep Operation Summaries to 5 Words or Fewer" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: keep generated docs scannable.
+**Intent**: keep generated docs easy to scan.
 
 Operation `summary` fields SHOULD be concise (prefer five words or fewer).
 
@@ -204,12 +203,12 @@ Operation `summary` fields SHOULD be concise (prefer five words or fewer).
 
 - Reviewers can spot-check that summaries are short and that details live in `description`.
 
-<RuleHeader id="120" level="MUST" title="Describe filters parameter (standard format)" />
-### #120 - Describe Filters Parameter (Standard Format)
+### #120 - Describe the Filters Parameter (Standard Format)
+<RuleHeader id="120" level="MUST" title="Describe the Filters Parameter (Standard Format)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
-**Intent**: keep filter documentation consistent so consumers can reuse knowledge across endpoints.
+**Intent**: keep filter docs consistent so users can reuse knowledge across endpoints.
 
-When an endpoint supports the `filters` parameter, APIs MUST use the prescribed description template (and customize the supported-field list per endpoint).
+When an endpoint supports the `filters` parameter, APIs MUST use the prescribed description template below. Customize the supported-field list per endpoint.
 
 **Template (copy/paste into OpenAPI description)**:
 
@@ -242,12 +241,12 @@ Examples:
 
 **Related**: shared query story in [#604] and implicit/default behavior guidance in [#603].
 
-<RuleHeader id="121" level="MUST" title="Describe sorters parameter (standard format)" />
-### #121 - Describe Sorters Parameter (Standard Format)
+### #121 - Describe the Sorters Parameter (Standard Format)
+<RuleHeader id="121" level="MUST" title="Describe the Sorters Parameter (Standard Format)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
-**Intent**: keep sorting documentation consistent so consumers can reuse knowledge across endpoints.
+**Intent**: keep sorting docs consistent so users can reuse knowledge across endpoints.
 
-When an endpoint supports the `sorters` parameter, APIs MUST use the prescribed description template (and customize the supported-field list per endpoint).
+When an endpoint supports the `sorters` parameter, APIs MUST use the prescribed description template below. Customize the supported-field list per endpoint.
 
 **Template (copy/paste into OpenAPI description)**:
 
@@ -281,10 +280,10 @@ Examples:
 
 ---
 
-<RuleHeader id="122" level="MUST" title="Provide camelCase operationId for every operation" />
-### #122 - Provide camelCase operationId for Every Operation
+### #122 - Provide a camelCase operationId for Every Operation
+<RuleHeader id="122" level="MUST" title="Provide a camelCase operationId for Every Operation" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: enable stable SDK generation and tooling references.
+**Intent**: support stable SDKs and tooling.
 
 Every operation MUST define a unique `operationId` in **camelCase**.
 
@@ -331,10 +330,10 @@ Every operation MUST define a unique `operationId` in **camelCase**.
 
 - Spec validation ensures every operation has a unique, camelCase `operationId`.
 
-<RuleHeader id="123" level="MUST" title="Provide tag for every operation" />
-### #123 - Provide Tag for Every Operation
+### #123 - Provide a Tag for Every Operation
+<RuleHeader id="123" level="MUST" title="Provide a Tag for Every Operation" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: keep docs organized and make APIs navigable.
+**Intent**: keep docs organized and easy to navigate.
 
 Each operation MUST be assigned exactly one tag that exists in the root spec’s `tags` array to enable proper organization and documentation generation.
 
@@ -348,10 +347,10 @@ Each operation MUST be assigned exactly one tag that exists in the root spec’s
 
 - Spec validation checks tags exist and operations are tagged consistently.
 
-<RuleHeader id="124" level="MUST" title="Provide x-sailpoint-resource-operation-id for path parameters" />
-### #124 - Provide X-sailpoint-resource-operation-id for Path Parameters
+### #124 - Provide x-sailpoint-resource-operation-id for Path Parameters
+<RuleHeader id="124" level="MUST" title="Provide x-sailpoint-resource-operation-id for Path Parameters" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: enable SailPoint tooling to map path parameters to the owning resource operation consistently.
+**Intent**: let SailPoint tooling map path parameters to the correct operation.
 
 For path parameters (except enums and user-defined values), APIs MUST provide a camelCase operation identifier under `x-sailpoint-resource-operation-id`.
 
@@ -388,10 +387,10 @@ paths:
 ---
 
 ## Text Formatting & Naming Conventions
-<RuleHeader id="103" level="MUST" title="Write in U.S. English" />
-### #103 - Write in U.s. English
+### #103 - Write in U.S. English
+<RuleHeader id="103" level="MUST" title="Write in U.S. English" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: make APIs consistent and predictable for a global audience by using a single English variant.
+**Intent**: keep wording consistent by using one English variant.
 
 Use **U.S. English** spelling and conventions across the API surface and documentation.
 
@@ -416,8 +415,8 @@ Use **U.S. English** spelling and conventions across the API surface and documen
 
 - Reviewers spot-check new/changed endpoints and descriptions for consistent spelling/terminology.
 
-<RuleHeader id="104" level="MUST" title="Use camelCase for JSON properties" />
 ### #104 - Use camelCase for JSON Properties
+<RuleHeader id="104" level="MUST" title="Use camelCase for JSON Properties" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: keep JSON payloads consistent and predictable across teams and SDKs.
 
@@ -441,10 +440,10 @@ JSON property names MUST use **camelCase**.
 - Prefer `oauthClientId` over `OAuthClientID`.
 - Be consistent across the entire API surface.
 
-<RuleHeader id="105" level="MUST" title="Use ASCII for API identifiers" />
 ### #105 - Use ASCII for API Identifiers
+<RuleHeader id="105" level="MUST" title="Use ASCII for API Identifiers" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: maximize interoperability across languages, tooling, URLs, and SDK generation.
+**Intent**: maximize interoperability across languages, tooling, URLs, and SDKs.
 
 All API **identifiers** MUST use ASCII characters only.
 
@@ -468,10 +467,10 @@ All API **identifiers** MUST use ASCII characters only.
 - ❌ `créatedAt`
 - ❌ `名前`
 
-<RuleHeader id="106" level="SHOULD" title="pluralize array property names" />
 ### #106 - Pluralize Array Property Names
+<RuleHeader id="106" level="SHOULD" title="Pluralize Array Property Names" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: reduce ambiguity and make payloads self-explanatory.
+**Intent**: reduce ambiguity so payloads explain themselves.
 
 Array properties SHOULD use plural names to signal multiple values.
 
@@ -488,8 +487,8 @@ Array properties SHOULD use plural names to signal multiple values.
 - If a plural name is awkward or ambiguous, choose a clear collective noun and document it.
 - Be consistent across endpoints (don’t call it `items` in one response and `results` in another unless there’s a meaning difference).
 
-<RuleHeader id="107" level="MUST" title="Use lowercase hyphenated path segments; camelCase path params" />
-### #107 - Use Lowercase Hyphenated Path Segments; camelCase Path Params
+### #107 - Use Lowercase Hyphenated Path Segments and camelCase Path Parameters
+<RuleHeader id="107" level="MUST" title="Use Lowercase Hyphenated Path Segments and camelCase Path Parameters" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: make URLs predictable, readable, and consistent across APIs.
 Use lowercase with hyphens for URL path segments (e.g., `/user-profiles`) and camelCase for path parameters (e.g., `{userId}`).
@@ -505,8 +504,8 @@ Use lowercase with hyphens for URL path segments (e.g., `/user-profiles`) and ca
 
 - Reviewers can spot-check paths and parameter names for casing consistency.
 
-<RuleHeader id="108" level="MUST" title="Use camelCase for query parameters" />
 ### #108 - Use camelCase for Query Parameters
+<RuleHeader id="108" level="MUST" title="Use camelCase for Query Parameters" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: keep the request surface consistent with JSON conventions and reduce cognitive load.
 
@@ -529,8 +528,8 @@ Query parameter names MUST use **camelCase**.
 - Prefer conventional query parameter names for pagination/filtering/sorting (see [#600]).
 - Be consistent across endpoints (don’t use `pageSize` in one API and `limit` in another).
 
-<RuleHeader id="109" level="SHOULD" title="Use Upper-Case Words with hyphens" />
 ### #109 - Use Upper-Case Words with Hyphens
+<RuleHeader id="109" level="SHOULD" title="Use Upper-Case Words with Hyphens" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: improve documentation consistency and readability.
 
@@ -548,10 +547,10 @@ When documenting HTTP header names (including custom headers), prefer the conven
 - HTTP header field names are case-insensitive at runtime; this is a documentation/style rule.
 - Prefer standardized headers over custom ones where possible (see [#400]).
 
-<RuleHeader id="110" level="MUST" title="pluralize collection resource names" />
 ### #110 - Pluralize Collection Resource Names
+<RuleHeader id="110" level="MUST" title="Pluralize Collection Resource Names" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: make endpoints predictable and self-describing.
+**Intent**: make endpoints predictable and self-explanatory.
 
 Collection endpoints MUST use plural resource names.
 
@@ -571,10 +570,10 @@ Collection endpoints MUST use plural resource names.
 - Use domain language and stable nouns (see [#506]).
 - If a term is uncountable (rare), pick a consistent convention and document it.
 
-<RuleHeader id="111" level="MUST" title="follow naming convention for permissions (scopes)" />
 ### #111 - Follow Naming Convention for Permissions (Scopes)
+<RuleHeader id="111" level="MUST" title="Follow Naming Convention for Permissions (Scopes)" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
 
-**Intent**: make scopes predictable, discoverable, and reusable across APIs and tooling.
+**Intent**: make scopes predictable, discoverable, and reusable.
 
 Scopes MUST follow a consistent naming convention so clients can understand and request permissions without per-service guesswork.
 
@@ -623,10 +622,10 @@ If you need additional verbs, they MUST be standardized for the domain and docum
 
 ---
 
-<RuleHeader id="112" level="MUST" title="declare enum values in UPPER_SNAKE_CASE strings" />
 ### #112 - Declare Enum Values in UPPER_SNAKE_CASE Strings
+<RuleHeader id="112" level="MUST" title="Declare Enum Values in UPPER_SNAKE_CASE Strings" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: make enum tokens stable, readable API identifiers.
+**Intent**: make enum tokens stable and readable.
 
 Enum values MUST be expressed as **UPPER_SNAKE_CASE strings**.
 
@@ -650,10 +649,10 @@ status:
   enum: [ACTIVE, PENDING_APPROVAL, DISABLED]
 ```
 
-<RuleHeader id="118" level="SHOULD" title="avoid qualifying verbs" />
 ### #118 - Avoid Qualifying Verbs
+<RuleHeader id="118" level="SHOULD" title="Avoid Qualifying Verbs" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: keep property names concise and reduce naming churn.
+**Intent**: keep property names concise and stable.
 
 Boolean fields and other descriptive properties SHOULD avoid qualifying verbs like `is`, `has`, `can` when the adjective alone is clear.
 
@@ -670,8 +669,8 @@ Boolean fields and other descriptive properties SHOULD avoid qualifying verbs li
 
 - Naming is consistent within a resource and avoids mixed patterns.
 
-<RuleHeader id="119" level="SHOULD" title="Use positive semantics for boolean fields" />
 ### #119 - Use Positive Semantics for Boolean Fields
+<RuleHeader id="119" level="SHOULD" title="Use Positive Semantics for Boolean Fields" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: reduce double-negative confusion in client code.
 

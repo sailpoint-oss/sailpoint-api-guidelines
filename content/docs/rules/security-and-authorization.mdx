@@ -3,8 +3,7 @@ title: "Security & Authorization"
 description: Rules for OAuth, scopes, licensing/entitlements, and secure-by-default API behavior.
 ---
 
-These rules define baseline authentication/authorization expectations and how to document them for
-consumers.
+These rules define baseline authentication and authorization expectations and how to document them for consumers.
 
 **Related guides**:
 - [Authentication, authorization, & scopes](/docs/guides/authn-authz-and-scopes)
@@ -13,10 +12,10 @@ consumers.
 **Related reference**:
 - [Review checklist](/docs/appendices/review-checklist)
 
-<RuleHeader id="300" level="MUST" title="Secure endpoints with OAuth 2.0" />
 ### #300 - Secure Endpoints with OAuth 2.0
+<RuleHeader id="300" level="MUST" title="Secure Endpoints with OAuth 2.0" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
 
-**Intent**: ensure every operation has explicit authentication + authorization requirements.
+**Intent**: make sure every operation has explicit auth requirements.
 
 Secure all API endpoints using OAuth 2.0.
 
@@ -37,10 +36,10 @@ Secure all API endpoints using OAuth 2.0.
 - Every operation has a non-empty `security` requirement with the documented scopes.
 - Docs state the execution context (user vs service) and any additional authorization gates.
 
-<RuleHeader id="301" level="MUST" title="Define and assign scopes" />
 ### #301 - Define and Assign Scopes
+<RuleHeader id="301" level="MUST" title="Define and Assign Scopes" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
 
-**Intent**: make authorization predictable by defining stable scopes and assigning them consistently per operation.
+**Intent**: make authorization predictable by using stable scopes and assigning them consistently.
 
 Define OAuth scopes for your API and assign required scopes per endpoint.
 
@@ -59,12 +58,34 @@ Define OAuth scopes for your API and assign required scopes per endpoint.
 **Testability**:
 
 - OpenAPI `security` requirements match the documented expectations for AND vs OR.
-- For each operation, a reviewer can answer: “Which single token/scopes are required to call this?”
+- For each operation, a reviewer can answer: "Which single token/scopes are required to call this?"
 
-<RuleHeader id="302" level="MUST" title="Document required licenses for API collections" />
+### #303 - Define User Capabilities for userAuth Endpoints
+<RuleHeader id="303" level="MUST" title="Define User Capabilities for userAuth Endpoints" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
+
+**Intent**: make authorization requirements explicit beyond OAuth scopes.
+
+For endpoints that use `userAuth`, APIs MUST document the required user capability levels/roles in addition to OAuth scopes.
+
+**Requirements**:
+
+- State the required user level/role(s) for the operation.
+- If authorization differs by operation mode (read vs write), document the differences.
+- If the requirement is conditional (feature flags, tenant config), document the condition.
+
+**Where to document**:
+
+- In the OpenAPI operation description.
+- Prefer a consistent vendor extension if tooling consumes it (if available in your platform).
+
+**Testability**:
+
+- A reviewer can answer: "Which scopes are required?" and "Which user roles/capabilities are required?" from the OpenAPI + docs.
+
 ### #302 - Document Required Licenses for API Collections
+<RuleHeader id="302" level="MUST" title="Document Required Licenses for API Collections" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: prevent failed integrations caused by undiscoverable licensing/entitlement prerequisites.
+**Intent**: prevent failed integrations caused by hidden licensing requirements.
 
 If any API collection (tag/group) or operation requires a specific license add-on, entitlement, or feature flag, teams MUST document that requirement.
 
@@ -107,38 +128,17 @@ paths:
 
 - Reviewers can determine licensing prerequisites from the published OpenAPI and docs.
 
-### MUST enforce HTTPS/TLS for all endpoints
+### #304 - Require HTTPS/TLS for All Endpoints
+<RuleHeader id="304" level="MUST" title="Require HTTPS/TLS for All Endpoints" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://www.rfc-editor.org/rfc/rfc8446", label: "RFC 8446 — TLS 1.3" }]} />
 
-All API endpoints must be accessible only via HTTPS with proper TLS encryption to protect data in transit and prevent man-in-the-middle attacks.
+All API endpoints MUST be accessible only via HTTPS with proper TLS encryption to protect data in transit and prevent man-in-the-middle attacks.
 
-### MUST not place secrets or credentials in URLs
+### #305 - Never Put Secrets or Credentials in URLs
+<RuleHeader id="305" level="MUST" title="Never Put Secrets or Credentials in URLs" externalDocs={[{ href: "https://owasp.org/www-community/vulnerabilities/Information_exposure_through_query_strings_in_url", label: "OWASP: Information Exposure via Query Strings" }]} />
 
-Never include sensitive information such as secrets, credentials, API keys, or tokens in URL paths or query parameters. Always use HTTP headers or request body for sensitive data.
+Never include sensitive information such as secrets, credentials, API keys, or tokens in URL paths or query parameters. Always use HTTP headers or the request body for sensitive data.
 
-### MUST authenticate and authorize requests before processing payloads
+### #306 - Authenticate and Authorize Before Processing Payloads
+<RuleHeader id="306" level="MUST" title="Authenticate and Authorize Before Processing Payloads" externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]} />
 
-Validate authentication and authorization before parsing or processing request payloads to prevent potential security vulnerabilities from malicious payload data.
-
----
-
-<RuleHeader id="303" level="MUST" title="Define user capabilities for userAuth endpoints" />
-### #303 - Define User Capabilities for userAuth Endpoints
-
-**Intent**: make authorization requirements explicit beyond OAuth scopes.
-
-For endpoints that use `userAuth`, APIs MUST document the required user capability levels/roles in addition to OAuth scopes.
-
-**Requirements**:
-
-- State the required user level/role(s) for the operation.
-- If authorization differs by operation mode (read vs write), document the differences.
-- If the requirement is conditional (feature flags, tenant config), document the condition.
-
-**Where to document**:
-
-- In the OpenAPI operation description.
-- Prefer a consistent vendor extension if tooling consumes it (if available in your platform).
-
-**Testability**:
-
-- A reviewer can answer: “Which scopes are required?” and “Which user roles/capabilities are required?” from the OpenAPI + docs.
+Validate authentication and authorization before parsing or processing request payloads to reduce risk from malicious payloads.

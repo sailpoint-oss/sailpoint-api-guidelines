@@ -3,8 +3,7 @@ title: "Operations & Quality"
 description: Rules for operational quality, performance patterns, and observability expectations.
 ---
 
-These rules cover operational concerns like performance-oriented patterns, documentation quality, and
-publishability expectations.
+These rules cover operational concerns like performance patterns, documentation quality, and publishing expectations.
 
 **Related guides**:
 - [OpenAPI authoring](/docs/guides/openapi-authoring)
@@ -13,8 +12,8 @@ publishability expectations.
 - [Review checklist](/docs/appendices/review-checklist)
 
 ## Performance & Optimization
-<RuleHeader id="900" level="SHOULD" title="Support partial responses (fields)" />
 ### #900 - Support Partial Responses (Fields)
+<RuleHeader id="900" level="SHOULD" title="Support Partial Responses (fields)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
 **Intent**: reduce payload size and improve performance without creating many bespoke endpoints.
 
@@ -36,10 +35,10 @@ Support a `fields` query parameter to allow clients to request only specific fie
 - Treat `fields` as part of the cache key for GET requests.
 - If nested selection is supported, document limits and behavior.
 
-<RuleHeader id="901" level="SHOULD" title="Allow optional embedding" />
 ### #901 - Allow Optional Embedding
+<RuleHeader id="901" level="SHOULD" title="Allow Optional Embedding" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: reduce round trips for common UI/workflow use cases while keeping default responses lean.
+**Intent**: reduce round trips for common use cases while keeping default responses lean.
 
 Support an `embed` query parameter to optionally include related sub-resources.
 
@@ -65,8 +64,8 @@ Support an `embed` query parameter to optionally include related sub-resources.
 ---
 
 ## API Operation & Monitoring
-<RuleHeader id="902" level="MUST" title="Publish OpenAPI specification (meet doc quality levels)" />
-### #902 - Publish OpenAPI Specification (Meet Doc Quality Levels)
+### #902 - Publish an OpenAPI Specification (Meet Doc Quality Levels)
+<RuleHeader id="902" level="MUST" title="Publish an OpenAPI Specification (Meet Doc Quality Levels)" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
 **Intent**: make the API contract discoverable, reviewable, and usable by humans and tooling.
 

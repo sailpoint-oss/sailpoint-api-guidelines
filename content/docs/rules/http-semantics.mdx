@@ -3,8 +3,7 @@ title: "HTTP Semantics"
 description: Rules for HTTP method correctness, status codes, headers, retries, and safe semantics.
 ---
 
-These rules standardize HTTP behavior so APIs are interoperable, predictable, and safe to integrate
-with.
+These rules standardize HTTP behavior so APIs are interoperable, predictable, and safe to integrate with.
 
 **Related guides**:
 - [Idempotency & retries](/docs/guides/idempotency-and-retries)
@@ -15,10 +14,10 @@ with.
 - [Review checklist](/docs/appendices/review-checklist)
 
 ## HTTP Methods & Operations
-<RuleHeader id="401" level="MUST" title="Use HTTP methods correctly" externalDocs={[{ label: "RFC 9110 — HTTP Semantics", href: "https://www.rfc-editor.org/rfc/rfc9110" }, { label: "RFC 7231 — HTTP/1.1 Semantics and Content (historic)", href: "https://www.rfc-editor.org/rfc/rfc7231" }]} />
 ### #401 - Use HTTP Methods Correctly
+<RuleHeader id="401" level="MUST" title="Use HTTP methods correctly" externalDocs={[{ label: "RFC 9110 — HTTP Semantics", href: "https://www.rfc-editor.org/rfc/rfc9110" }, { label: "RFC 7231 — HTTP/1.1 Semantics and Content (historic)", href: "https://www.rfc-editor.org/rfc/rfc7231" }]} />
 
-**Intent**: preserve interoperability and make APIs intuitive for every client.
+**Intent**: preserve interoperability and make APIs intuitive for clients.
 
 Use HTTP methods according to their standard semantics (RFC 9110 / RFC 7231 lineage). Misusing methods is one of the fastest ways to break caching, retries, SDKs, and client expectations.
 
@@ -102,75 +101,16 @@ DELETE removes a resource (or performs a documented soft-delete).
 - ✅ `DELETE /accounts/{accountId}` → `204 No Content`
 - ❌ `GET /accounts/{accountId}/delete`
 
-## Review checklist (enforcement)
+**Review checklist**:
 
 - GET endpoints are demonstrably safe (no writes, no job triggers).
 - PUT is full replacement; PATCH is partial update.
 - Search-with-body uses POST and is documented as GET-like semantics.
 - Paths are noun-based and align with method semantics.
+- Consider optimistic locking with ETag/If-Match for updates (see [Optimistic locking](/docs/appendices/optimistic-locking)).
 
-### Creating Resources with POST
-
-POST to collection endpoints to create new resources. The server should generate resource IDs and return `201 Created` with a `Location` header pointing to the new resource (or `200`/`202`/`204` when appropriate for the use case).
-
-**Example**:
-
-```http
-POST /accounts
-Content-Type: application/json
-
-{ "name": "Example" }
-```
-
-```http
-HTTP/1.1 201 Created
-Location: /accounts/123
-Content-Type: application/json
-
-{ "id": "123", "name": "Example" }
-```
-
-### Reading Single Resources with GET
-
-Use GET `/{id}` to retrieve individual resources. Return `200 OK` with the resource or `404 Not Found` if it doesn't exist. GET operations must be side-effect free.
-
-### Reading Collections with GET
-
-Use GET `/resources` to retrieve collections. Return an array (v3) or object wrapper containing results and count fields (v4 proposal). Support filtering and sorting via query parameters. Avoid implicit user scoping unless clearly documented. GET operations must be side-effect free.
-
-### GET Requests with Body
-
-Prefer URL-encoded query parameters for GET requests. If body payload is necessary for complex queries, use POST instead and clearly describe the GET-like semantics in the operation documentation.
-
-### Replacing Resources with PUT
-
-PUT replaces the entire resource representation. Return `200 OK` or `204 No Content` for updates, or `201 Created` if the resource was created. Consider implementing optimistic locking with ETag/If-Match headers.
-
-**Guidance**:
-
-- PUT should be a full replacement; do not interpret missing fields as “leave unchanged”.
-- If you need patch semantics, use PATCH instead.
- - Prefer conditional updates for concurrency safety (ETag + `If-Match`; see [Optimistic locking](/docs/appendices/optimistic-locking)).
-
-### Updating Resources with PATCH
-
-PATCH modifies parts of a resource. Return `200 OK` or `204 No Content` on success. Return `400 Bad Request` if the patch cannot be applied, or `404 Not Found` if the resource doesn't exist.
-
-**Patch format**:
-
-- Prefer a well-defined patch schema per resource, or document JSON Merge Patch / JSON Patch explicitly.
-- Be explicit about whether `null` clears fields (and how that interacts with [#701] / [#711]).
-
-### Deleting Resources with DELETE
-
-DELETE removes resources. Return `200 OK` or `204 No Content` on successful deletion. Return `404 Not Found` or `410 Gone` if the resource is absent or already deleted. Query parameter-based bulk deletes are allowed with clearly documented behavior. Avoid DELETE with request body; prefer POST with a semantic hint.
-
-### Optional HEAD and OPTIONS Methods
-
-HEAD requests are optional and return only headers (no body). OPTIONS requests are optional and allow clients to discover supported operations for a resource.
-
-<RuleHeader id="402" level="MUST" title="Honor method properties" />
 ### #402 - Honor Method Properties
+<RuleHeader id="402" level="MUST" title="Honor Method Properties" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]} />
 
 **Intent**: enable safe retries, correct caching, and predictable client behavior.
 
@@ -199,10 +139,10 @@ HTTP methods MUST follow their defined properties:
 - If clients might retry, design operations to be idempotent where feasible (see [#409], [#410]).
 - If an operation is not idempotent, document retry behavior and recommended client handling.
 
-<RuleHeader id="409" level="SHOULD" title="Prefer idempotent POST/PATCH where possible" />
 ### #409 - Prefer Idempotent POST/PATCH Where Possible
+<RuleHeader id="409" level="SHOULD" title="Prefer Idempotent POST/PATCH Where Possible" externalDocs={[{ href: "https://stripe.com/docs/idempotency", label: "Stripe API: Idempotency" }]} />
 
-**Intent**: make client retries safe and reduce duplicate side effects.
+**Intent**: make retries safe and reduce duplicate side effects.
 
 For operations that clients are likely to retry (network timeouts, 5xx, gateway errors), APIs SHOULD provide an idempotency mechanism for POST/PATCH where practical.
 
@@ -227,10 +167,10 @@ For operations that clients are likely to retry (network timeouts, 5xx, gateway 
 
 - Idempotency is not required for every endpoint, but the API MUST document retry safety semantics either way.
 
-<RuleHeader id="411" level="MAY" title="Use secondary keys for idempotent POST" />
 ### #411 - Use Secondary Keys for Idempotent POST
+<RuleHeader id="411" level="MAY" title="Use Secondary Keys for Idempotent POST" externalDocs={[{ href: "https://stripe.com/docs/idempotency", label: "Stripe API: Idempotency" }]} />
 
-**Intent**: make create operations idempotent without relying on temporary idempotency-key storage.
+**Intent**: make create operations idempotent without temporary idempotency-key storage.
 
 When creating resources with `POST /collection`, APIs MAY accept a client-provided **secondary key** (also called `externalId`, `alternateId`, or `clientToken`) that is unique within the relevant scope.
 
@@ -261,8 +201,8 @@ Content-Type: application/json
 ---
 
 ## HTTP Status Codes & Error Handling
-<RuleHeader id="403" level="MUST" title="Use standard HTTP status codes" />
 ### #403 - Use Standard HTTP Status Codes
+<RuleHeader id="403" level="MUST" title="Use Standard HTTP Status Codes" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml", label: "IANA HTTP Status Code Registry" }]} />
 
 **Intent**: preserve interoperability and predictable client behavior.
 
@@ -288,10 +228,10 @@ Use only standard HTTP status codes defined in RFCs and/or the IANA HTTP Status 
 - If you choose a less common but standard code (e.g., `422 Unprocessable Content`), document when it occurs and why.
 - Be consistent: do not return different codes for the same condition across endpoints.
 
-<RuleHeader id="404" level="MUST" title="Define a standard error contract in OpenAPI (Problem Details)" externalDocs={[{ label: "RFC 9457 — Problem Details for HTTP APIs", href: "https://www.rfc-editor.org/rfc/rfc9457" }, { label: "OpenAPI Specification", href: "https://spec.openapis.org/oas/latest.html" }]} />
 ### #404 - Define a Standard Error Contract in OpenAPI (Problem Details)
+<RuleHeader id="404" level="MUST" title="Define a Standard Error Contract in OpenAPI (Problem Details)" externalDocs={[{ label: "RFC 9457 — Problem Details for HTTP APIs", href: "https://www.rfc-editor.org/rfc/rfc9457" }, { label: "OpenAPI Specification", href: "https://spec.openapis.org/oas/latest.html" }]} />
 
-**Intent**: ensure clients can reliably parse errors, retry safely, and generate SDKs from specs.
+**Intent**: ensure clients can parse errors, retry safely, and generate SDKs from specs.
 
 Every operation MUST define:
 
@@ -378,8 +318,8 @@ If you define error codes:
 - Error schemas reuse a shared component.
 - Reviewers can verify every operation has explicit `responses` entries for expected errors.
 
-<RuleHeader id="405" level="SHOULD" title="Use 207 (or 200) for per-item batch results" />
-### #405 - Use 207 (or 200) for Per-item Batch Results
+### #405 - Use 207 (or 200) for Per-Item Batch Results
+<RuleHeader id="405" level="SHOULD" title="Use 207 (or 200) for Per-Item Batch Results" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc4918", label: "RFC 4918 — WebDAV (207 Multi-Status)" }]} />
 
 **Intent**: represent partial success for multi-item operations.
 
@@ -400,8 +340,8 @@ For batch or bulk operations that process multiple items:
 }
 ```
 
-<RuleHeader id="406" level="MUST" title="Use 429 with rate-limit headers" />
-### #406 - Use 429 with Rate-limit Headers
+### #406 - Use 429 with Rate-Limit Headers
+<RuleHeader id="406" level="MUST" title="Use 429 with Rate-Limit Headers" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6585", label: "RFC 6585 — Additional HTTP Status Codes" }, { href: "https://www.rfc-editor.org/rfc/rfc9235", label: "RFC 9235 — RateLimit Fields" }]} />
 
 **Intent**: support safe retry behavior.
 
@@ -418,19 +358,8 @@ Retry-After: 10
 Content-Type: application/problem+json
 ```
 
-<RuleHeader id="407" level="MUST" title="Merged into #404 (Problem Details)" />
-### MERGED into [#404] (Problem Details)
-
-**Intent**: keep legacy rule links stable while consolidating the canonical guidance.
-
-This rule has been merged into [#404], which now defines the Problem Details (RFC 9457) requirements as part of the canonical error contract.
-
-**Testability**:
-
-- References should point to [#404] for the canonical error contract.
-
-<RuleHeader id="408" level="MUST" title="Never expose stack traces or internal details" />
 ### #408 - Never Expose Stack Traces or Internal Details
+<RuleHeader id="408" level="MUST" title="Never Expose Stack Traces or Internal Details" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9457", label: "RFC 9457 — Problem Details" }]} />
 
 Never include stack traces, internal error details, or system information in API error responses.
 
@@ -463,10 +392,10 @@ Never include stack traces, internal error details, or system information in API
 
 ---
 
-<RuleHeader id="412" level="MUST" title="Provide accurate response examples" externalDocs={[{ label: "OpenAPI: Example Object", href: "https://spec.openapis.org/oas/latest.html#example-object" }]} />
 ### #412 - Provide Accurate Response Examples
+<RuleHeader id="412" level="MUST" title="Provide Accurate Response Examples" externalDocs={[{ label: "OpenAPI: Example Object", href: "https://spec.openapis.org/oas/latest.html#example-object" }]} />
 
-**Intent**: examples are what consumers copy/paste—make them correct, safe, and endpoint-specific.
+**Intent**: examples are what people copy/paste—make them correct, safe, and specific.
 
 Every operation MUST include realistic, accurate examples for both success and error responses.
 
@@ -539,24 +468,13 @@ GET /accounts?limit=2&offset=0
 - A reviewer can match each example to the schema and confirm it would validate.
 - Each endpoint’s examples demonstrate its actual edge cases (not generic placeholders).
 
-<RuleHeader id="413" level="MUST" title="Merged into #404 (standard error schema)" />
-### MERGED into [#404] (standardized error schema)
-
-**Intent**: keep legacy rule links stable while consolidating the canonical guidance.
-
-This rule has been merged into [#404], which now defines the standardized error schema requirement as part of the canonical error contract.
-
-**Testability**:
-
-- References should point to [#404] for the canonical error contract.
-
 ---
 
 ## HTTP Headers
-<RuleHeader id="400" level="MUST" title="Use standard HTTP headers" />
 ### #400 - Use Standard HTTP Headers
+<RuleHeader id="400" level="MUST" title="Use Standard HTTP Headers" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]} />
 
-**Intent**: leverage widely-understood HTTP semantics and improve interoperability.
+**Intent**: use standard HTTP semantics and improve interoperability.
 
 When your API implements behaviors with standard HTTP representations, you MUST use the corresponding standardized HTTP headers (and document them).
 
@@ -582,8 +500,8 @@ When your API implements behaviors with standard HTTP representations, you MUST 
 - OpenAPI documents supported headers per operation (parameters/headers and response headers).
 - Examples include the headers in realistic requests/responses.
 
-<RuleHeader id="410" level="MAY" title="Support Idempotency-Key" />
 ### #410 - Support Idempotency-Key
+<RuleHeader id="410" level="MAY" title="Support Idempotency-Key" externalDocs={[{ href: "https://stripe.com/docs/idempotency", label: "Stripe API: Idempotency" }]} />
 
 **Intent**: enable safe retries for non-idempotent operations.
 

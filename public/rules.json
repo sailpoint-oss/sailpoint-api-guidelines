@@ -276,11 +276,6 @@
       "url": "/docs/rules/http-semantics#406"
     },
     {
-      "id": "407",
-      "title": "MERGED into [#404] (Problem Details)",
-      "url": "/docs/rules/http-semantics#407"
-    },
-    {
       "id": "408",
       "title": "not expose stack traces or internal details",
       "url": "/docs/rules/http-semantics#408"
@@ -304,11 +299,6 @@
       "id": "412",
       "title": "use accurate response examples per endpoint",
       "url": "/docs/rules/http-semantics#412"
-    },
-    {
-      "id": "413",
-      "title": "MERGED into [#404] (standardized error schema)",
-      "url": "/docs/rules/http-semantics#413"
     },
     {
       "id": "500",
@@ -412,23 +402,8 @@
     },
     {
       "id": "700",
-      "title": "not use null for boolean properties",
+      "title": "handle null values correctly",
       "url": "/docs/rules/payload-conventions#700"
-    },
-    {
-      "id": "701",
-      "title": "use same semantics for null vs. absent properties",
-      "url": "/docs/rules/payload-conventions#701"
-    },
-    {
-      "id": "702",
-      "title": "not use null for empty arrays",
-      "url": "/docs/rules/payload-conventions#702"
-    },
-    {
-      "id": "703",
-      "title": "use JSON for payloads with objects as top-level",
-      "url": "/docs/rules/payload-conventions#703"
     },
     {
       "id": "704",
@@ -446,11 +421,6 @@
       "url": "/docs/rules/payload-conventions#706"
     },
     {
-      "id": "707",
-      "title": "define defaults for optional boolean properties",
-      "url": "/docs/rules/payload-conventions#707"
-    },
-    {
       "id": "708",
       "title": "avoid nested objects",
       "url": "/docs/rules/payload-conventions#708"
@@ -464,16 +434,6 @@
       "id": "710",
       "title": "define &quot;required&quot; for objects/params per OpenAPI",
       "url": "/docs/rules/payload-conventions#710"
-    },
-    {
-      "id": "711",
-      "title": "mark nullable: true when null is possible",
-      "url": "/docs/rules/payload-conventions#711"
-    },
-    {
-      "id": "800",
-      "title": "use RFC 3339 date/time values; store UTC",
-      "url": "/docs/rules/data-types-and-common-objects#800"
     },
     {
       "id": "801",

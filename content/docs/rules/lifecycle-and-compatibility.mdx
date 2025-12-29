@@ -3,8 +3,7 @@ title: "Lifecycle & Compatibility"
 description: Rules for versioning, deprecation, and safe evolution without breaking clients.
 ---
 
-These rules cover versioning and compatibility decisions that keep client integrations stable over
-time.
+These rules cover versioning and compatibility decisions that keep client integrations stable over time.
 
 **Related guides**:
 - [Design & review workflow](/docs/guides/design-and-review-workflow)
@@ -14,10 +13,10 @@ time.
 - [Review checklist](/docs/appendices/review-checklist)
 
 ## Versioning & Metadata
-<RuleHeader id="206" level="SHOULD" title="Avoid breaking changes as a strategy" />
-### #206 - Avoid Breaking Changes as a Strategy
+### #206 - Avoid Breaking Changes as the Default Strategy
+<RuleHeader id="206" level="SHOULD" title="Avoid Breaking Changes as the Default Strategy" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }, { href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep clients stable and reduce long-term operational burden.
+**Intent**: keep clients stable and reduce long-term maintenance cost.
 
 Prefer **compatible evolution** over breaking changes. Do not treat “we can bump the version” as the default approach to making changes.
 
@@ -34,10 +33,10 @@ Prefer **compatible evolution** over breaking changes. Do not treat “we can bu
 - Breaking an endpoint and \"fixing\" it by bumping the version, even though the change could have been additive.
 - Creating a new version without a deprecation timeline for the old one.
 
-<RuleHeader id="207" level="MUST" title="Use path versioning when versions coexist" />
 ### #207 - Use Path Versioning When Versions Coexist
+<RuleHeader id="207" level="MUST" title="Use Path Versioning When Versions Coexist" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make version routing explicit and predictable for clients, gateways, and documentation.
+**Intent**: make version routing explicit and predictable for clients, gateways, and docs.
 
 If multiple API versions must coexist, represent the version in the **URL path** (URI versioning), e.g. `/v2026/...` or `/v3/...`.
 
@@ -64,10 +63,10 @@ If multiple API versions must coexist, represent the version in the **URL path**
 - ❌ `/accounts?version=3`
 - ❌ `Accept: application/vnd.company.v3+json` (unless explicitly approved as an exception)
 
-<RuleHeader id="208" level="MUST" title="Use year-based API versioning (YYYY.revision)" />
-### #208 - Use Year-based API Versioning (YYYY.revision)
+### #208 - Use Year-Based API Versioning (YYYY.Revision)
+<RuleHeader id="208" level="MUST" title="Use Year-Based API Versioning (YYYY.Revision)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: provide a clear, human-friendly versioning system that matches how APIs actually evolve.
+**Intent**: provide a clear versioning system that matches how APIs evolve.
 
 APIs MUST use a year-based version identifier in the form:
 
@@ -88,10 +87,10 @@ APIs MUST use a year-based version identifier in the form:
 
 - Implementation-only changes that do not change the published contract.
 
-<RuleHeader id="214" level="MUST" title="Include API metadata" />
 ### #214 - Include API Metadata
+<RuleHeader id="214" level="MUST" title="Include API Metadata" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: ensure every API contract can be identified, categorized, and supported.
+**Intent**: ensure every API contract can be identified and supported.
 
 OpenAPI specifications MUST include complete API metadata under `info` and related top-level fields.
 
@@ -142,10 +141,10 @@ tags:
 - Reviewers can locate owner/support contact and version quickly.
 - All operations are tagged and the spec has at least one `servers` entry.
 
-<RuleHeader id="215" level="MUST" title="Specify API audience" />
 ### #215 - Specify API Audience
+<RuleHeader id="215" level="MUST" title="Specify API Audience" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make intended consumers and publication expectations explicit.
+**Intent**: make intended consumers and publishing expectations explicit.
 
 APIs MUST declare the intended audience in OpenAPI using `info.x-audience`.
 
@@ -170,8 +169,8 @@ info:
 
 - OpenAPI contains `info.x-audience` with an allowed value.
 
-<RuleHeader id="216" level="MUST" title="Follow version requirements" />
 ### #216 - Follow Version Requirements
+<RuleHeader id="216" level="MUST" title="Follow Version Requirements" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
 **Intent**: keep versioned APIs stable while allowing safe evolution.
 
@@ -192,10 +191,10 @@ For versioned APIs:
 - OpenAPI clearly identifies the version line and base path.
 - Deprecation/sunset plans exist for versions that will be retired.
 
-<RuleHeader id="217" level="MUST" title="Follow beta requirements when applicable" />
 ### #217 - Follow Beta Requirements When Applicable
+<RuleHeader id="217" level="MUST" title="Follow Beta Requirements When Applicable" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: make beta APIs usable while setting correct expectations about stability and support.
+**Intent**: make beta APIs usable while setting clear expectations about stability and support.
 
 If an API (or endpoint/field) is **beta/preview**, it MUST follow these requirements.
 
@@ -243,10 +242,10 @@ info:
 ---
 
 ## Backward Compatibility
-<RuleHeader id="200" level="MUST" title="Avoid breaking compatibility" />
-### #200 - Avoid Breaking Compatibility
+### #200 - Do Not Break Compatibility
+<RuleHeader id="200" level="MUST" title="Do Not Break Compatibility" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
-**Intent**: allow clients to upgrade safely without urgent rewrites.
+**Intent**: let clients upgrade safely without urgent rewrites.
 
 Within the same major version, changes MUST remain backward compatible.
 
@@ -272,10 +271,10 @@ Within the same major version, changes MUST remain backward compatible.
 - Spec diffs are reviewed for compatibility impacts.
 - Clients/SDKs tolerate unknown response fields and unknown enum values.
 
-<RuleHeader id="201" level="SHOULD" title="Prefer compatible extensions" />
 ### #201 - Prefer Compatible Extensions
+<RuleHeader id="201" level="SHOULD" title="Prefer Compatible Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
-**Intent**: evolve APIs by adding capabilities rather than mutating existing behavior.
+**Intent**: evolve APIs by adding capabilities instead of changing existing behavior.
 
 When evolving an API, prefer **compatible extensions** over breaking changes.
 
@@ -300,10 +299,10 @@ When evolving an API, prefer **compatible extensions** over breaking changes.
 
 - Proposed changes include a compatibility assessment (what clients might break and why).
 
-<RuleHeader id="202" level="MUST" title="Prepare clients for extensions" />
 ### #202 - Prepare Clients for Extensions
+<RuleHeader id="202" level="MUST" title="Prepare Clients for Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
-**Intent**: ensure clients remain resilient as the API evolves.
+**Intent**: help clients stay resilient as the API evolves.
 
 Clients MUST be prepared for compatible server extensions.
 
@@ -333,10 +332,10 @@ Clients MUST be prepared for compatible server extensions.
 - Client tests cover unknown response fields and unknown enum values.
 - Error handling includes a generic fallback path for unexpected status codes.
 
-<RuleHeader id="203" level="SHOULD" title="Be conservative with inputs" />
 ### #203 - Be Conservative with Inputs
+<RuleHeader id="203" level="SHOULD" title="Be Conservative with Inputs" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
-**Intent**: avoid accepting ambiguous inputs that create long-term compatibility traps.
+**Intent**: avoid ambiguous inputs that create long-term compatibility traps.
 
 Design request inputs conservatively and document constraints early.
 
@@ -363,26 +362,47 @@ Design request inputs conservatively and document constraints early.
 - OpenAPI documents constraints (e.g., `minLength`, `maxLength`, `format`, `pattern`, `minimum`/`maximum`).
 - Validation behavior is consistent across endpoints and changes are reviewed for compatibility impact.
 
-<RuleHeader id="204" level="MUST" title="Return top-level JSON objects" />
-### #204 - Return Top-level JSON Objects
+### #204 - Return Top-Level JSON Objects
+<RuleHeader id="204" level="MUST" title="Return Top-Level JSON Objects" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc8259", label: "RFC 8259 — The JSON Data Interchange Format" }]} />
 
 **Intent**: preserve evolvability and enable consistent metadata without breaking clients.
 
-Responses MUST use a JSON **object** as the top-level structure (not a bare array). This keeps the door open to add metadata (counts, links, warnings, paging cursors) without changing the response type.
+Use JSON as the default payload format for requests and responses. Responses MUST use a JSON **object** as the top-level structure (not a bare array). This keeps the door open to add metadata (counts, links, warnings, paging cursors) without changing the response type.
 
-**Example**:
+**Why**:
+
+- A top-level object allows adding metadata (pagination, links, counts) without changing the shape clients parse.
+
+**Recommended response envelope**:
+
+```json
+{
+  "items": [{ "id": "A" }, { "id": "B" }],
+  "count": 123,
+  "limit": 2,
+  "offset": 0
+}
+```
+
+**Examples**:
 
 - ✅ list envelope: `{ "items": [ ... ], "count": 123 }`
 - ✅ later add metadata (non-breaking): `{ "items": [ ... ], "count": 123, "links": { "self": "..." } }`
-- ❌ top-level array: `[ ... ]`
+- ❌ top-level array: `[ { "id": "A" }, { "id": "B" } ]` (prevents adding metadata compatibly)
 
-**Notes**:
+**Patterns**:
+
+- Collection responses: wrap in an envelope like `{ items, count, limit, offset }`.
+- Single-resource responses: return the resource object.
+- Errors: use Problem Details (`application/problem+json`) (see [#404]).
+
+**Exceptions**:
 
 - `204 No Content` is still valid for operations that intentionally return no body.
-- For error responses, use the standard error envelope (see [#404]).
+- Non-JSON success responses are allowed for downloads/uploads when appropriate (see [#704]), but error responses should remain JSON (Problem Details).
 
-<RuleHeader id="205" level="MUST" title="Treat OpenAPI objects as extensible" />
 ### #205 - Treat OpenAPI Objects as Extensible
+<RuleHeader id="205" level="MUST" title="Treat OpenAPI Objects as Extensible" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
 **Intent**: enable additive evolution without breaking existing clients.
 
@@ -424,10 +444,10 @@ Object schemas in responses MUST be treated as **open for extension** by default
 ---
 
 ## Deprecation
-<RuleHeader id="209" level="MUST" title="Reflect deprecation in OpenAPI" />
 ### #209 - Reflect Deprecation in OpenAPI
+<RuleHeader id="209" level="MUST" title="Reflect Deprecation in OpenAPI" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: make deprecations visible, machine-readable, and actionable for clients.
+**Intent**: make deprecations visible, machine-readable, and actionable.
 
 When deprecating any API element (operation, parameter, schema, field):
 
@@ -463,8 +483,8 @@ paths:
 - OpenAPI contains `deprecated: true` and migration guidance for deprecated elements.
 - A documented sunset date exists and is communicated consistently.
 
-<RuleHeader id="210" level="MUST" title="Monitor deprecated API usage" />
 ### #210 - Monitor Deprecated API Usage
+<RuleHeader id="210" level="MUST" title="Monitor Deprecated API Usage" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
 **Intent**: enable safe retirement by knowing who still depends on deprecated behavior.
 
@@ -490,8 +510,8 @@ When an API element is deprecated (see [#209]), teams MUST monitor usage and pro
 - There is a queryable metric/log dimension for deprecated usage.
 - Ownership has a playbook for contacting consumers.
 
-<RuleHeader id="211" level="SHOULD" title="Add Deprecation and Sunset headers" />
 ### #211 - Add Deprecation and Sunset Headers
+<RuleHeader id="211" level="SHOULD" title="Add Deprecation and Sunset Headers" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
 **Intent**: provide machine-readable deprecation signals in live traffic.
 
@@ -518,8 +538,8 @@ Sunset: Tue, 30 Jun 2027 00:00:00 GMT
 
 - Deprecated endpoints consistently return the deprecation headers.
 
-<RuleHeader id="212" level="SHOULD" title="Have clients monitor Deprecation/Sunset headers" />
-### #212 - Have Clients Monitor Deprecation/Sunset Headers
+### #212 - Have Clients Monitor Deprecation and Sunset Headers
+<RuleHeader id="212" level="SHOULD" title="Have Clients Monitor Deprecation and Sunset Headers" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
 **Intent**: ensure clients learn about deprecations early and can plan migrations.
 
@@ -545,10 +565,10 @@ API clients SHOULD treat `Deprecation` and `Sunset` response headers as actionab
 - Presence/absence of headers MUST NOT be the only way clients learn about deprecation; specs and docs remain canonical (see [#209]).
 - Clients MUST NOT ignore server-side deprecation just because headers are missing.
 
-<RuleHeader id="213" level="MUST" title="Avoid new usage of deprecated APIs/features" />
-### #213 - Avoid New Usage of Deprecated APIs/features
+### #213 - Do Not Start New Usage of Deprecated APIs or Features
+<RuleHeader id="213" level="MUST" title="Do Not Start New Usage of Deprecated APIs or Features" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: stop the spread of deprecated dependencies so retirement is possible.
+**Intent**: stop new dependencies on deprecated features.
 
 Teams MUST NOT start new dependencies on APIs/features that are already marked deprecated.
 
@@ -575,8 +595,8 @@ For patterns and examples that support these rules, see:
 - [Guides](/docs/guides)
 - [Appendices](/docs/appendices)
 
-<RuleHeader id="218" level="SHOULD" title="Agree on deprecation timeframes with clients" />
 ### #218 - Agree on Deprecation Timeframes with Clients
+<RuleHeader id="218" level="SHOULD" title="Agree on Deprecation Timeframes with Clients" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
 **Intent**: choose deprecation windows that are realistic for consumers.
 

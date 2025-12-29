@@ -3,35 +3,15 @@ title: "Data Types & Common Objects"
 description: Rules for consistent data formats (dates, durations, identifiers) and reusable common objects.
 ---
 
-These rules standardize common data types and formats so APIs are consistent across languages,
-timezones, and tooling.
+These rules standardize common data types and formats so APIs stay consistent across languages, timezones, and tooling.
 
 **Related reference**:
 - [Glossary](/docs/appendices/glossary)
 - [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
 
 ## Data Types & Formats
-<RuleHeader id="800" level="SHOULD" title="Use RFC 3339 timestamps; store UTC" />
-### #800 - Use RFC 3339 Timestamps; Store UTC
-
-**Intent**: prevent timezone ambiguity and simplify client handling.
-
-Timestamps SHOULD use RFC 3339 format and SHOULD be stored/transmitted in UTC (`Z`) whenever possible.
-
-**Examples**:
-
-- ✅ `2025-10-15T14:30:00Z`
-- ✅ `2025-10-15T14:30:00.123Z` (fractional seconds)
-- ⚠ `2025-10-15T14:30:00-05:00` (allowed by RFC 3339, but prefer UTC)
-- ❌ `10/15/2025 2:30pm`
-
-**Precision guidance**:
-
-- Be consistent about fractional-second precision across endpoints.
-- If you emit milliseconds, always emit milliseconds (don’t sometimes emit `.1` and sometimes omit it).
-
-<RuleHeader id="801" level="SHOULD" title="Use ISO 8601 durations and intervals" />
 ### #801 - Use ISO 8601 Durations and Intervals
+<RuleHeader id="801" level="SHOULD" title="Use ISO 8601 Durations and Intervals" externalDocs={[{ href: "https://www.iso.org/iso-8601-date-and-time-format.html", label: "ISO 8601" }]} />
 
 **Intent**: make durations unambiguous and interoperable across languages and SDKs.
 
@@ -52,15 +32,16 @@ Represent durations and time intervals using ISO 8601 format (e.g., `"P3Y6M4DT12
 
 - OpenAPI schemas and examples use ISO 8601 duration strings consistently for duration-like fields.
 
-<RuleHeader id="802" level="MUST" title="Use standard date/time formats" />
-### #802 - Use Standard Date/time Formats
+### #802 - Use Standard Date/Time Formats
+<RuleHeader id="802" level="MUST" title="Use Standard Date/Time Formats" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc3339", label: "RFC 3339 — Date and Time on the Internet" }, { href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]} />
 
 **Intent**: prevent ambiguity and ensure consistent parsing across clients.
 
 **JSON payloads**:
 
 - Date-time values MUST use RFC 3339 / ISO 8601 date-time strings (OpenAPI `format: date-time`).
-  - Prefer UTC `Z` (see [#800]).
+  - **Prefer UTC `Z`**: Timestamps SHOULD be stored/transmitted in UTC (`Z`) whenever possible to prevent timezone ambiguity and simplify client handling.
+  - ⚠ `2025-10-15T14:30:00-05:00` (allowed by RFC 3339, but prefer UTC)
 - Date-only values (no time) MUST use ISO 8601 full-date `YYYY-MM-DD` (OpenAPI `format: date`).
 
 **HTTP headers**:
@@ -70,7 +51,8 @@ Represent durations and time intervals using ISO 8601 format (e.g., `"P3Y6M4DT12
 **Examples (JSON date-time)**:
 
 - ✅ `2026-01-15T14:30:00Z`
-- ✅ `2026-01-15T14:30:00.123Z`
+- ✅ `2026-01-15T14:30:00.123Z` (fractional seconds)
+- ⚠ `2025-10-15T14:30:00-05:00` (allowed by RFC 3339, but prefer UTC)
 - ❌ `01/15/2026 2:30pm`
 
 **Examples (JSON date-only)**:
@@ -84,6 +66,11 @@ Represent durations and time intervals using ISO 8601 format (e.g., `"P3Y6M4DT12
 Last-Modified: Tue, 15 Jan 2026 14:30:00 GMT
 ```
 
+**Precision guidance**:
+
+- Be consistent about fractional-second precision across endpoints.
+- If you emit milliseconds, always emit milliseconds (don't sometimes emit `.1` and sometimes omit it).
+
 **OpenAPI example**:
 
 ```yaml
@@ -95,10 +82,10 @@ birthDate:
   format: date
 ```
 
-<RuleHeader id="803" level="MUST" title="Use standard country, language, and currency codes" />
 ### #803 - Use Standard Country, Language, and Currency Codes
+<RuleHeader id="803" level="MUST" title="Use Standard Country, Language, and Currency Codes" externalDocs={[{ href: "https://www.iso.org/iso-3166-country-codes.html", label: "ISO 3166-1 Country Codes" }, { href: "https://www.rfc-editor.org/rfc/bcp/bcp47.txt", label: "BCP 47 — Language Tags" }, { href: "https://www.iso.org/iso-4217-currency-codes.html", label: "ISO 4217 Currency Codes" }]} />
 
-**Intent**: ensure international interoperability and avoid ambiguous, product-specific code systems.
+**Intent**: ensure international interoperability and avoid product-specific code systems.
 
 Use the appropriate standards:
 
@@ -129,8 +116,8 @@ currency:
   example: USD
 ```
 
-<RuleHeader id="804" level="MUST" title="Define numeric formats" />
 ### #804 - Define Numeric Formats
+<RuleHeader id="804" level="MUST" title="Define Numeric Formats" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
 **Intent**: avoid precision loss and ambiguous integer ranges.
 
@@ -177,10 +164,10 @@ resourceId:
   format: uuid
 ```
 
-<RuleHeader id="806" level="MUST" title="Use standard property formats" externalDocs={[{ label: "RFC 3339 — Date and Time on the Internet", href: "https://www.rfc-editor.org/rfc/rfc3339" }, { label: "IANA Media Types Registry", href: "https://www.iana.org/assignments/media-types/media-types.xhtml" }]} />
 ### #806 - Use Standard Property Formats
+<RuleHeader id="806" level="MUST" title="Use Standard Property Formats" externalDocs={[{ label: "RFC 3339 — Date and Time on the Internet", href: "https://www.rfc-editor.org/rfc/rfc3339" }, { label: "IANA Media Types Registry", href: "https://www.iana.org/assignments/media-types/media-types.xhtml" }]} />
 
-**Intent**: make schemas self-describing and enable validation/codegen.
+**Intent**: make schemas self-describing and enable validation and codegen.
 
 For common string/number shapes, APIs MUST use standardized OpenAPI formats where they apply, and SHOULD validate them at runtime.
 
@@ -222,8 +209,8 @@ properties:
 - `format` is a hint in many toolchains; if a field must be constrained beyond what `format` provides, add explicit constraints (`minLength`, `maxLength`, `pattern`) and document them.
 - Do not misuse `format` for internal implementation types.
 
-<RuleHeader id="807" level="MUST" title="Encode embedded binary as base64url" />
 ### #807 - Encode Embedded Binary as base64url
+<RuleHeader id="807" level="MUST" title="Encode Embedded Binary as base64url" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc4648", label: "RFC 4648 — Base16, Base32, Base64 Data Encodings" }]} />
 
 **Intent**: ensure embedded binary is safe for JSON transport and URL contexts.
 
@@ -258,10 +245,10 @@ properties:
 ---
 
 ## Common Data Types & Objects
-<RuleHeader id="805" level="MUST" title="Use common field names" />
 ### #805 - Use Common Field Names
+<RuleHeader id="805" level="MUST" title="Use Common Field Names" externalDocs={[{ href: "https://cloud.google.com/apis/design/standard_fields", label: "Google API Standard Fields" }]} />
 
-**Intent**: reduce cognitive load and prevent “same concept, different name” drift across APIs.
+**Intent**: reduce cognitive load and avoid “same concept, different name” drift across APIs.
 
 APIs MUST reuse common field names and semantics for shared concepts.
 

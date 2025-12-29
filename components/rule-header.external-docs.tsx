@@ -2,18 +2,23 @@ import type { RuleLink } from "./rule-header";
 
 export function ExternalDocs({ externalDocs }: { externalDocs?: RuleLink[] }) {
   if (!externalDocs || externalDocs.length === 0) return null;
-  <div>
-    <div className="text-xs font-medium text-muted-foreground">
-      External docs
-    </div>
-    <ul className="mt-1 space-y-1">
-      {externalDocs.map((l) => (
-        <li key={`${l.href}-${l.label}`}>
-          <a className="text-sm underline underline-offset-4" href={l.href}>
+  return (
+    <div>
+      <div className="text-xs font-medium text-muted-foreground">
+        References
+      </div>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {externalDocs.map((l) => (
+          <a
+            key={`${l.href}-${l.label}`}
+            href={l.href}
+            target="_blank"
+            className="inline-flex items-center rounded-md border px-2 py-1 text-xs text-foreground hover:bg-muted"
+          >
             {l.label}
           </a>
-        </li>
-      ))}
-    </ul>
-  </div>;
+        ))}
+      </div>
+    </div>
+  );
 }

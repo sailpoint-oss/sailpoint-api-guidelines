@@ -3,8 +3,7 @@ title: "Resource Modeling & URLs"
 description: Rules for resource naming, URL structure, identifiers, and modeling API concepts cleanly.
 ---
 
-These rules cover how to model domain concepts as resources and expose them via stable, consistent
-URLs.
+These rules explain how to model domain concepts as resources and expose them with stable URLs.
 
 **Related guides**:
 - [Design & review workflow](/docs/guides/design-and-review-workflow)
@@ -14,12 +13,12 @@ URLs.
 - [Review checklist](/docs/appendices/review-checklist)
 
 ## Resource & URL Design
-<RuleHeader id="500" level="MUST" title="Avoid /api base path" />
-### #500 - Avoid /api Base Path
+### #500 - Do Not Use /api Base Path
+<RuleHeader id="500" level="MUST" title="Do Not Use /api Base Path" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: keep public URLs clean and avoid redundant, implementation-driven path segments.
+**Intent**: keep public URLs clean and avoid redundant path segments.
 
-Avoid redundant base path segments like `/api` in public-facing URL paths.
+APIs MUST NOT include redundant base path segments like `/api` in public-facing URL paths.
 
 - Prefer configuring environment-specific base URLs via OpenAPI `servers`.
 - Prefer meaningful, domain-driven resource paths (see [#506]).
@@ -33,8 +32,8 @@ Avoid redundant base path segments like `/api` in public-facing URL paths.
 
 - This guidance is part of overall URL hygiene; see [#501] for normalization and canonical path rules.
 
-<RuleHeader id="501" level="MUST" title="Define canonical URL forms" />
 ### #501 - Define Canonical URL Forms
+<RuleHeader id="501" level="MUST" title="Define Canonical URL Forms" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: avoid routing ambiguity, caching surprises, and inconsistent client behavior.
 
@@ -67,10 +66,10 @@ APIs MUST define and enforce a canonical URL form.
   - redirect to the canonical form (careful with auth/caching), or
   - reject with a clear `400` (rare; usually normalization is friendlier)
 
-<RuleHeader id="502" level="SHOULD" title="Model resources (avoid action endpoints)" />
 ### #502 - Model Resources (Avoid Action Endpoints)
+<RuleHeader id="502" level="SHOULD" title="Model Resources (Avoid Action Endpoints)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep APIs consistent, predictable, and aligned with HTTP semantics.
+**Intent**: keep APIs predictable and aligned with HTTP semantics.
 
 Prefer resource-oriented endpoints over RPC/action-style endpoints. Model operations as HTTP verbs applied to resources.
 
@@ -89,10 +88,10 @@ Prefer creating a noun-like **command/request resource** rather than embedding a
 - ✅ `POST /access-requests` (request resource)
 - ❌ `POST /accounts/{accountId}/disable`
 
-<RuleHeader id="503" level="SHOULD" title="Model business processes" />
 ### #503 - Model Business Processes
+<RuleHeader id="503" level="SHOULD" title="Model Business Processes" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: enable real customer workflows without forcing clients to stitch together fragile sequences.
+**Intent**: support real workflows without forcing clients to stitch together fragile sequences.
 
 APIs SHOULD model complete business processes and workflows—not just database tables.
 
@@ -118,10 +117,10 @@ APIs SHOULD model complete business processes and workflows—not just database 
 - ❌ Exposing only low-level CRUD and requiring clients to reverse-engineer process state machines.
 - ❌ Modeling workflows only as RPC verbs (e.g., `/startImport`, `/completeImport`) without durable resources.
 
-<RuleHeader id="504" level="SHOULD" title="Define useful resources" />
 ### #504 - Define Useful Resources
+<RuleHeader id="504" level="SHOULD" title="Define Useful Resources" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep APIs practical and efficient for the most common use cases.
+**Intent**: keep APIs practical and efficient for common use cases.
 
 Resources SHOULD be designed around the common workflows and support efficient retrieval without excessive round trips.
 
@@ -143,10 +142,10 @@ Resources SHOULD be designed around the common workflows and support efficient r
 - ❌ Exposing dozens of near-duplicate resources that only exist to support a single UI view.
 - ❌ Requiring clients to fetch N related resources with N additional calls for the common case.
 
-<RuleHeader id="505" level="SHOULD" title="Keep URLs verb-free" />
-### #505 - Keep URLs Verb-free
+### #505 - Keep URLs Verb-Free
+<RuleHeader id="505" level="SHOULD" title="Keep URLs Verb-Free" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep the URL space stable and expressive via HTTP methods.
+**Intent**: keep URLs stable and let HTTP methods express the action.
 
 Prefer noun-based URL paths. Avoid verbs in paths; use HTTP methods to express the action.
 
@@ -160,10 +159,10 @@ Prefer noun-based URL paths. Avoid verbs in paths; use HTTP methods to express t
 - ✅ `DELETE /accounts/{accountId}`
 - ❌ `GET /accounts/{accountId}/delete`
 
-<RuleHeader id="506" level="MUST" title="Use domain-specific resource names" />
-### #506 - Use Domain-specific Resource Names
+### #506 - Use Domain-Specific Resource Names
+<RuleHeader id="506" level="MUST" title="Use Domain-Specific Resource Names" externalDocs={[{ href: "https://cloud.google.com/apis/design/standard_fields", label: "Google API Standard Fields" }]} />
 
-**Intent**: make the API intuitive for customers/partners and stable across internal refactors.
+**Intent**: make the API intuitive and stable across internal refactors.
 
 Resource names should reflect domain concepts and business terminology rather than technical implementation details.
 
@@ -172,10 +171,10 @@ Resource names should reflect domain concepts and business terminology rather th
 - ✅ `/accounts`, `/entitlements`, `/identity-profiles`
 - ❌ `/dbUsers`, `/tblEntitlements`, `/internalAccounts`
 
-<RuleHeader id="507" level="MUST" title="Nest sub-resources only when tightly coupled" />
 ### #507 - Nest Sub-resources Only When Tightly Coupled
+<RuleHeader id="507" level="MUST" title="Nest Sub-resources Only When Tightly Coupled" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: express ownership/scoping clearly and prevent ambiguous identifiers.
+**Intent**: make ownership clear and prevent ambiguous identifiers.
 
 Use nested URL paths for sub-resources that are **tightly coupled** to a parent and cannot exist independently.
 
@@ -195,10 +194,10 @@ Use nested URL paths for sub-resources that are **tightly coupled** to a parent 
 
 - ❌ `/accounts/{accountId}/access-requests/{accessRequestId}` if access requests have a global ID and independent lifecycle (prefer `/access-requests/{accessRequestId}` with filters)
 
-<RuleHeader id="508" level="SHOULD" title="Prefer non-nested URLs for independent resources" />
 ### #508 - Prefer Non-nested URLs for Independent Resources
+<RuleHeader id="508" level="SHOULD" title="Prefer Non-nested URLs for Independent Resources" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep URLs stable, shallow, and reusable when resources have independent identity/lifecycle.
+**Intent**: keep URLs stable and shallow when resources are independent.
 
 Prefer flat (non-nested) URLs when a resource is independently addressable.
 
@@ -220,10 +219,10 @@ Prefer flat (non-nested) URLs when a resource is independently addressable.
 - Relationship resources: `GET /account-entitlements?accountId=...`
 - Links in payloads: `{ "links": { "entitlements": "/entitlements?accountId=..." } }`
 
-<RuleHeader id="509" level="SHOULD" title="Limit resource types" />
 ### #509 - Limit Resource Types
+<RuleHeader id="509" level="SHOULD" title="Limit Resource Types" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep APIs learnable and prevent uncontrolled surface area growth.
+**Intent**: keep APIs learnable and avoid uncontrolled surface area growth.
 
 Keep the number of distinct resource types manageable to reduce cognitive load for API consumers.
 
@@ -238,10 +237,10 @@ Keep the number of distinct resource types manageable to reduce cognitive load f
 - Consolidate near-duplicate resources by using query parameters, field filtering (`fields`), or embedding (`embed`) where appropriate.
 - Prefer a small set of well-designed core resources supporting filters/sorters over many narrow endpoints.
 
-<RuleHeader id="510" level="SHOULD" title="Limit nesting depth" />
 ### #510 - Limit Nesting Depth
+<RuleHeader id="510" level="SHOULD" title="Limit Nesting Depth" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep URLs readable and avoid deeply-coupled endpoint hierarchies.
+**Intent**: keep URLs readable and avoid deeply coupled endpoint hierarchies.
 
 Limit URL path nesting depth to **3 levels or fewer**.
 
@@ -255,10 +254,10 @@ Limit URL path nesting depth to **3 levels or fewer**.
 - ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`
 - ❌ `/orgs/{orgId}/identities/{identityId}/accounts/{accountId}/entitlements`
 
-<RuleHeader id="512" level="MUST" title="Use URL-friendly IDs" />
-### #512 - Use URL-friendly IDs
+### #512 - Use URL-Friendly IDs
+<RuleHeader id="512" level="MUST" title="Use URL-Friendly IDs" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: avoid encoding ambiguity and ensure IDs work across tooling, proxies, and clients.
+**Intent**: avoid encoding ambiguity and make IDs work across tooling, proxies, and clients.
 
 Resource identifiers used in URL path segments MUST be URL-friendly.
 
@@ -286,8 +285,8 @@ Resource identifiers used in URL path segments MUST be URL-friendly.
 
 - If an ID can include unsafe characters (legacy/natural keys), it MUST be carried as a query parameter or body field instead of a path segment.
 
-<RuleHeader id="513" level="MUST" title="Never include customer org names in paths" />
 ### #513 - Never Include Customer Org Names in Paths
+<RuleHeader id="513" level="MUST" title="Never Include Customer Org Names in Paths" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
 **Intent**: prevent tenant leakage and keep URLs stable across customer renames.
 
@@ -316,10 +315,10 @@ Public APIs MUST NOT embed customer org names or tenant identifiers in URL path 
 
 ---
 
-<RuleHeader id="514" level="MUST" title="Avoid sequential numeric IDs" />
-### #514 - Avoid Sequential Numeric IDs
+### #514 - Do Not Use Sequential Numeric IDs
+<RuleHeader id="514" level="MUST" title="Do Not Use Sequential Numeric IDs" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
-**Intent**: reduce enumeration risk and avoid leaking internal scale/ordering.
+**Intent**: reduce enumeration risk and avoid leaking internal scale or ordering.
 
 APIs MUST NOT expose sequential numeric identifiers as public resource IDs.
 
@@ -344,8 +343,8 @@ APIs MUST NOT expose sequential numeric identifiers as public resource IDs.
 ---
 
 ## Hypermedia & Links
-<RuleHeader id="511" level="MUST" title="Target REST maturity level 2" />
-### #511 - Target REST Maturity Level 2
+### #511 - Use REST Maturity Level 2
+<RuleHeader id="511" level="MUST" title="Use REST Maturity Level 2" externalDocs={[{ href: "https://martinfowler.com/articles/richardsonMaturityModel.html", label: "Richardson Maturity Model" }]} />
 
 **Intent**: make APIs predictable by using HTTP as designed.
 

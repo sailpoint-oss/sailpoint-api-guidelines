@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils";
 export function CopyRuleLinkButton({
   ruleId,
   className,
+  showLabel = false,
 }: {
   ruleId: string;
   className?: string;
+  showLabel?: boolean;
 }) {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
@@ -38,15 +40,24 @@ export function CopyRuleLinkButton({
       type="button"
       variant="outline"
       size="sm"
-      className={cn("h-7 w-7 p-0", className)}
+      className={cn(
+        showLabel ? "h-7 gap-1 px-2" : "h-7 w-7 p-0",
+        className,
+      )}
       onClick={onCopy}
       aria-label={`Copy link to rule #${ruleId}`}
       title={copied ? "Copied" : "Copy link"}
     >
       {copied ? (
-        <Check className="h-3.5 w-3.5" />
+        <>
+          <Check className="h-3.5 w-3.5" />
+          {showLabel ? <span className="text-xs">Copied</span> : null}
+        </>
       ) : (
-        <Copy className="h-3.5 w-3.5" />
+        <>
+          <Copy className="h-3.5 w-3.5" />
+          {showLabel ? <span className="text-xs">Copy link</span> : null}
+        </>
       )}
     </Button>
   );
