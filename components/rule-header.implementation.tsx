@@ -1,14 +1,17 @@
-import { cn } from "@/lib/utils";
 import type { ImplementationLink } from "./rule-header";
 
-export function Implementation({ implementation }: { implementation?: ImplementationLink[] }) {
+export function Implementation({
+  implementation,
+}: {
+  implementation?: ImplementationLink[];
+}) {
   if (!implementation || implementation.length === 0) return null;
   return (
-    <div className={cn(implementation?.length ? "border-t pt-3" : "")}>
-      <div className="text-xs font-medium text-muted-foreground">
+    <div>
+      <div className="mb-1.5 text-xs font-medium text-muted-foreground">
         Implementation
       </div>
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {implementation.map((l) => {
           const kind = l.kind ?? "other";
           return (
@@ -20,9 +23,7 @@ export function Implementation({ implementation }: { implementation?: Implementa
               <span className="font-mono text-[10px] text-muted-foreground">
                 {kind.toUpperCase()}
               </span>
-              <span className="underline underline-offset-2">
-                {l.label}
-              </span>
+              <span className="underline underline-offset-2">{l.label}</span>
             </a>
           );
         })}

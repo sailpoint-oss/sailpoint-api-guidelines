@@ -48,6 +48,14 @@ function LevelBadge({ level }: { level: RuleLevel }) {
   );
 }
 
+function RuleId({ id }: { id: string }) {
+  return (
+    <span className="font-mono text-sm font-semibold text-foreground">
+      #{id}
+    </span>
+  );
+}
+
 export function RuleHeader({
   id,
   level,
@@ -62,16 +70,32 @@ export function RuleHeader({
   externalDocs?: RuleLink[];
   implementation?: ImplementationLink[];
 }) {
+  const hasLinks =
+    (externalDocs && externalDocs.length > 0) ||
+    (implementation && implementation.length > 0);
+
   return (
     <>
       {/* Stable anchor target for deep links */}
       <span id={id} className="scroll-mt-28 block" aria-hidden="true" />
       <Card size="sm">
-        <CardContent className="flex flex-row items-center justify-between gap-3 py-3">
-          <LevelBadge level={level} />
-          <ExternalDocs externalDocs={externalDocs} />
-          <Implementation implementation={implementation} />
-          <CopyRuleLinkButton ruleId={id} showLabel />
+        <CardContent className={cn("py-3", hasLinks ? "space-y-3" : "")}>
+          {/* Top row: Rule ID + Badge + Copy link */}
+          <div className="flex items-center gap-3">
+            <RuleId id={id} />
+            <LevelBadge level={level} />
+            <div className="ml-auto">
+              <CopyRuleLinkButton ruleId={id} showLabel />
+            </div>
+          </div>
+
+          {/* Bottom row: External docs and implementation links */}
+          {hasLinks && (
+            <div className="flex flex-wrap items-start gap-x-6 gap-y-3 border-t pt-3">
+              <ExternalDocs externalDocs={externalDocs} />
+              <Implementation implementation={implementation} />
+            </div>
+          )}
         </CardContent>
       </Card>
     </>
