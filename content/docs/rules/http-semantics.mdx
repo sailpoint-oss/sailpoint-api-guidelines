@@ -5,13 +5,38 @@ description: Rules for HTTP method correctness, status codes, headers, retries, 
 
 These rules standardize HTTP behavior so APIs are interoperable, predictable, and safe to integrate with.
 
-**Related guides**:
-- [Idempotency & retries](/docs/guides/idempotency-and-retries)
-- [Error model & Problem Details](/docs/guides/error-model-and-problem-details)
+## Error Model Context
 
-**Related reference**:
-- [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
-- [Review checklist](/docs/appendices/review-checklist)
+Consistent error responses reduce client guesswork and make failures easier to diagnose and handle.
+
+**Recommendations:**
+
+- Use the most specific HTTP status code you can.
+- Keep error payloads **stable** and **documented** in OpenAPI.
+- Avoid leaking sensitive implementation details (stack traces, internal IDs, vendor exceptions).
+
+**Problem Details (RFC 7807):**
+
+Problem Details provides a standard JSON shape (`type`, `title`, `status`, `detail`, `instance`) while still allowing extensions.
+
+- Use a stable `type` URI for each error category.
+- Use `title` for a short human-readable category name.
+- Use `detail` for request-specific details (safe to show to callers).
+- Add extension fields for structured, machine-readable information (e.g., `errors[]` for field-level issues).
+
+## Idempotency Context
+
+Clients retry requests (network issues, timeouts, transient failures). APIs should make retries safe and predictable.
+
+**Patterns:**
+
+- **Optimistic locking for updates**: prefer HTTP-native optimistic locking using `ETag` + `If-Match` (or date-based preconditions when necessary).
+- **Idempotency keys for safe retries**: for operations that might be retried (especially POST that creates resources), consider a client-provided `Idempotency-Key`. Server deduplicates requests with the same key for a fixed window.
+- **Natural keys**: some domains have natural keys that can prevent duplicates. If used, document them explicitly and be clear about conflict behavior.
+
+**Reference**: [OpenAPI snippet library](/docs/appendices/openapi-snippet-library) | [Optimistic locking](/docs/appendices/optimistic-locking) | [Review checklist](/docs/appendices/review-checklist)
+
+---
 
 ## HTTP Methods & Operations
 ### #401 - Use HTTP Methods Correctly

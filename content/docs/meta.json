@@ -1,12 +1,3 @@
 {
-  "pages": [
-    "index",
-    "principles",
-    "conventions",
-    "---",
-    "rules",
-    "guides",
-    "---",
-    "appendices"
-  ]
+  "pages": ["index", "principles", "---", "rules", "---", "appendices"]
 }

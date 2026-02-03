@@ -1,6 +1,6 @@
 ---
 title: SailPoint API Guidelines
-description: Start here—how to use the Rules and Guides to design consistent, secure, evolvable APIs.
+description: Start here—how to use the Rules to design consistent, secure, evolvable APIs.
 ---
 
 This site is a public hub for SailPoint's API style and design guidelines—built to help teams ship
@@ -10,14 +10,32 @@ consistent, secure, evolvable APIs for customers and partners.
 
 If you're new, begin with this page, then choose a path:
 
-- **Designing a new API**: read the core principles, then work through the Rules categories as you model
-  resources, errors, pagination, and security.
+- **Designing a new API**: read the core [Principles](/docs/principles), then work through the Rules
+  categories as you model resources, errors, pagination, and security.
 - **Reviewing an API**: use the Rules as a checklist (each rule has a stable ID you can cite in review
   comments and docs).
-- **Implementing an API**: follow the Rules for the normative “must/should” requirements; use Guides for
-  rationale and examples.
-- **Integrating with SailPoint APIs**: use the Rules as a contract checklist and the Guides for practical
-  patterns (pagination, errors, retries) and terminology.
+- **Implementing an API**: follow the Rules for the normative requirements; use the Reference section
+  for checklists and recipes.
+- **Integrating with SailPoint APIs**: use the Rules as a contract checklist for practical patterns
+  (pagination, errors, retries) and terminology.
+
+## Reading this documentation
+
+### Normative language (RFC 2119)
+
+These guidelines use RFC 2119 keywords:
+
+- **MUST**: required for compliance.
+- **SHOULD**: strongly recommended; exceptions must be justified and documented.
+- **MAY**: optional; use when it improves client experience or operational safety.
+
+### Rule IDs and stable references
+
+Each rule heading includes a stable numeric ID, e.g. `[#401]`. Rule IDs exist so you can:
+
+- Reference rules in reviews and design docs ("violates [#404]").
+- Deep-link to a specific requirement.
+- Automate checks (linters) against durable anchors.
 
 ## What's in this hub?
 
@@ -28,17 +46,11 @@ stable numeric IDs for durable references.
 
 - [Browse all Rules](/docs/rules)
 
-### Guides (non-normative)
+### Reference
 
-Guides explain intent and provide patterns and examples that help teams apply the Rules.
+Reference material provides reusable checklists, recipes, and copy-paste patterns.
 
-- [Read Guides](/docs/guides)
-
-### Appendices (reference)
-
-Appendices provide reusable reference material: glossaries, checklists, and recipe-style guidance.
-
-- [Browse Appendices](/docs/appendices)
+- [Browse Reference](/docs/appendices)
 
 ## Quick links
 
@@ -50,3 +62,19 @@ Appendices provide reusable reference material: glossaries, checklists, and reci
 - [Payload conventions](/docs/rules/payload-conventions)
 - [Data types & common objects](/docs/rules/data-types-and-common-objects)
 
+## Recommended workflow
+
+### For external readers (integrators)
+
+- Treat the Rules as a **public checklist**: URL design, error handling, pagination, auth.
+- Include **the rule ID** in feedback ("this violates [#404]") and link to the relevant rule section.
+
+### For internal teams (designers/implementers/reviewers)
+
+1. **Start with a resource model** — identify primary resources, identifiers, and relationships.
+2. **Write the OpenAPI contract first** — keep OpenAPI as the single source of truth for contract + docs.
+3. **Run a structured review** — review against the Rules category-by-category (URLs, payloads, errors, pagination, security).
+4. **Implement and validate** — ensure runtime behavior matches OpenAPI examples and descriptions.
+5. **Publish and maintain** — document non-obvious decisions; include compatibility notes for changes.
+
+See: [Review checklist](/docs/appendices/review-checklist)

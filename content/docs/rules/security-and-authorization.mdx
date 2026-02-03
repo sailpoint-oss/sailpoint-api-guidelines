@@ -5,12 +5,32 @@ description: Rules for OAuth, scopes, licensing/entitlements, and secure-by-defa
 
 These rules define baseline authentication and authorization expectations and how to document them for consumers.
 
-**Related guides**:
-- [Authentication, authorization, & scopes](/docs/guides/authn-authz-and-scopes)
-- [OpenAPI authoring](/docs/guides/openapi-authoring)
+## Authentication and Scope Design Context
 
-**Related reference**:
-- [Review checklist](/docs/appendices/review-checklist)
+Security needs to be consistent and clearly documented: clients should know what credentials are
+required, what scopes are needed, and what failures look like.
+
+**Recommendations:**
+
+- Authenticate and authorize **before** doing expensive work.
+- Document security requirements per operation in OpenAPI.
+- Make authorization failures predictable (status code + error contract).
+
+**Scope design guidance:**
+
+- Prefer scopes that match **capabilities** (read/write/admin) for a resource domain.
+- Avoid overly granular scopes that explode in number unless there is a clear governance need.
+- Document what each scope grants and any important constraints.
+
+**OpenAPI documentation tips:**
+
+- Define `securitySchemes` once and reuse.
+- Add operation-level `security` requirements.
+- Provide error examples for auth failures.
+
+**Reference**: [Review checklist](/docs/appendices/review-checklist)
+
+---
 
 ### #300 - Secure Endpoints with OAuth 2.0
 <RuleHeader id="300" level="MUST" title="Secure Endpoints with OAuth 2.0" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />

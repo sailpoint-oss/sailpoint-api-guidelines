@@ -5,7 +5,7 @@
 .DS_Store
 
 # Node / FumaDocs site
-node_modules/
+node_modules
 .next/
 .source/
 out/
