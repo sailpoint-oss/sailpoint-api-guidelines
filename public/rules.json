@@ -353,6 +353,14 @@
       "url": "/docs/rules/lifecycle-and-compatibility#218"
     },
     {
+      "id": "219",
+      "title": "Annotate Enum Extensibility (Open vs Closed)",
+      "level": "SHOULD",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#219"
+    },
+    {
       "id": "300",
       "title": "Secure Endpoints with OAuth 2.0",
       "level": "MUST",
@@ -409,6 +417,38 @@
       "url": "/docs/rules/security-and-authorization#306"
     },
     {
+      "id": "307",
+      "title": "Document and Enforce Rate Limits",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#307"
+    },
+    {
+      "id": "308",
+      "title": "Support CORS for Browser Clients",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#308"
+    },
+    {
+      "id": "309",
+      "title": "Sanitize Inputs and Prevent Injection",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#309"
+    },
+    {
+      "id": "310",
+      "title": "Enforce Tenant Data Isolation in Responses",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#310"
+    },
+    {
       "id": "400",
       "title": "Use Standard HTTP Headers",
       "level": "MUST",
@@ -418,7 +458,7 @@
     },
     {
       "id": "401",
-      "title": "Use HTTP methods correctly",
+      "title": "Use HTTP Methods Correctly",
       "level": "MUST",
       "category": "HTTP Semantics",
       "categorySlug": "http-semantics",
@@ -465,6 +505,14 @@
       "url": "/docs/rules/http-semantics#406"
     },
     {
+      "id": "407",
+      "title": "Support Long-Running Operations",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#407"
+    },
+    {
       "id": "408",
       "title": "Never Expose Stack Traces or Internal Details",
       "level": "MUST",
@@ -503,6 +551,54 @@
       "category": "HTTP Semantics",
       "categorySlug": "http-semantics",
       "url": "/docs/rules/http-semantics#412"
+    },
+    {
+      "id": "413",
+      "title": "Document Caching Behavior",
+      "level": "SHOULD",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#413"
+    },
+    {
+      "id": "414",
+      "title": "Document Request and Response Size Limits",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#414"
+    },
+    {
+      "id": "415",
+      "title": "Use Optimistic Locking for Concurrent Writes",
+      "level": "SHOULD",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#415"
+    },
+    {
+      "id": "416",
+      "title": "Return 406 for Unsupported Accept Headers",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#416"
+    },
+    {
+      "id": "417",
+      "title": "Document HEAD and OPTIONS Method Support",
+      "level": "SHOULD",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#417"
+    },
+    {
+      "id": "418",
+      "title": "Classify Error Retryability",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#418"
     },
     {
       "id": "500",
@@ -625,6 +721,14 @@
       "url": "/docs/rules/resource-modeling-and-urls#514"
     },
     {
+      "id": "515",
+      "title": "Define Soft Delete Behavior",
+      "level": "SHOULD",
+      "category": "Resource Modeling & URLs",
+      "categorySlug": "resource-modeling-and-urls",
+      "url": "/docs/rules/resource-modeling-and-urls#515"
+    },
+    {
       "id": "600",
       "title": "Use Conventional Query Parameters",
       "level": "MUST",
@@ -665,12 +769,52 @@
       "url": "/docs/rules/requests-and-querying#604"
     },
     {
+      "id": "605",
+      "title": "Design Batch Request Endpoints",
+      "level": "SHOULD",
+      "category": "Requests & Querying",
+      "categorySlug": "requests-and-querying",
+      "url": "/docs/rules/requests-and-querying#605"
+    },
+    {
+      "id": "606",
+      "title": "Include Pagination Links in Collection Responses",
+      "level": "SHOULD",
+      "category": "Requests & Querying",
+      "categorySlug": "requests-and-querying",
+      "url": "/docs/rules/requests-and-querying#606"
+    },
+    {
       "id": "700",
       "title": "Handle Null Values Correctly",
       "level": "MUST",
       "category": "Payload Conventions",
       "categorySlug": "payload-conventions",
       "url": "/docs/rules/payload-conventions#700"
+    },
+    {
+      "id": "701",
+      "title": "Use Booleans Correctly",
+      "level": "MUST",
+      "category": "Payload Conventions",
+      "categorySlug": "payload-conventions",
+      "url": "/docs/rules/payload-conventions#701"
+    },
+    {
+      "id": "702",
+      "title": "Initialize Empty Arrays",
+      "level": "MUST",
+      "category": "Payload Conventions",
+      "categorySlug": "payload-conventions",
+      "url": "/docs/rules/payload-conventions#702"
+    },
+    {
+      "id": "703",
+      "title": "Model Nullable Fields in OpenAPI",
+      "level": "MUST",
+      "category": "Payload Conventions",
+      "categorySlug": "payload-conventions",
+      "url": "/docs/rules/payload-conventions#703"
     },
     {
       "id": "704",
@@ -719,6 +863,14 @@
       "category": "Payload Conventions",
       "categorySlug": "payload-conventions",
       "url": "/docs/rules/payload-conventions#710"
+    },
+    {
+      "id": "711",
+      "title": "Specify PATCH Content Type and Null Semantics",
+      "level": "MUST",
+      "category": "Payload Conventions",
+      "categorySlug": "payload-conventions",
+      "url": "/docs/rules/payload-conventions#711"
     },
     {
       "id": "801",
@@ -770,7 +922,7 @@
     },
     {
       "id": "807",
-      "title": "Encode Embedded Binary as base64url",
+      "title": "Encode Embedded Binary Safely",
       "level": "MUST",
       "category": "Data Types & Common Objects",
       "categorySlug": "data-types-and-common-objects",
@@ -799,6 +951,30 @@
       "category": "Operations & Quality",
       "categorySlug": "operations-and-quality",
       "url": "/docs/rules/operations-and-quality#902"
+    },
+    {
+      "id": "903",
+      "title": "Return a Request ID on Every Response",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#903"
+    },
+    {
+      "id": "904",
+      "title": "Design Webhooks and Event Notifications",
+      "level": "SHOULD",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#904"
+    },
+    {
+      "id": "905",
+      "title": "Provide Health Check Endpoints",
+      "level": "SHOULD",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#905"
     }
   ]
 }

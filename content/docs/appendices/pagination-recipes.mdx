@@ -32,14 +32,14 @@ Use `limit` + `offset` for most list endpoints:
 - Always define a stable default sort order (otherwise pagination is non-deterministic).
 - Document maximum `limit` and expected performance characteristics.
 
-## Cursor-based pagination (for large/volatile datasets)
+## Cursor-based pagination (optional complement)
 
-Prefer cursor pagination when datasets are large or change rapidly:
+Cursor-based pagination MAY be offered **in addition** to offset+limit for endpoints where offset performance degrades at scale or data is highly mutable. Offset+limit MUST still be supported on the same endpoint — cursor is never a replacement. See [#602] for the full requirements.
 
-- Request includes a `cursor` token and a `limit`.
-- Response returns `nextCursor` (and optionally `prevCursor`).
+- Request includes an opaque `cursor` token and a `limit`.
+- Response returns `nextCursor` (present when more results are available).
 
-Example:
+Example (cursor-only request):
 
 ```json
 {
@@ -49,6 +49,101 @@ Example:
 }
 ```
 
-Cursor contracts must be stable and opaque—clients should not parse cursor contents.
+Cursor contracts must be stable and opaque — clients should not parse cursor contents.
 
+## Combined offset + cursor example
 
+When an endpoint supports both offset and cursor pagination, the response envelope includes fields for both patterns:
+
+Offset request: `GET /accounts?limit=2&offset=0`
+
+```json
+{
+  "items": [{ "id": "A" }, { "id": "B" }],
+  "limit": 2,
+  "offset": 0,
+  "count": 123,
+  "nextCursor": "eyJpZCI6IkIifQ=="
+}
+```
+
+Cursor request: `GET /accounts?limit=2&cursor=eyJpZCI6IkIifQ==`
+
+```json
+{
+  "items": [{ "id": "C" }, { "id": "D" }],
+  "limit": 2,
+  "count": 123,
+  "nextCursor": "eyJpZCI6IkQifQ=="
+}
+```
+
+When a `cursor` parameter is provided, the server ignores `offset` and paginates from the cursor position. When neither `cursor` nor `offset` is provided, the server defaults to `offset=0`.
+
+## Pagination links
+
+Collection responses SHOULD include a `links` object with navigational URLs (see [#606]). Links let clients follow URLs instead of constructing them manually.
+
+### Offset pagination with links
+
+```http
+GET /accounts?limit=2&offset=2&filters=status eq "ACTIVE"
+```
+
+```json
+{
+  "items": [
+    { "id": "C", "name": "Account C" },
+    { "id": "D", "name": "Account D" }
+  ],
+  "limit": 2,
+  "offset": 2,
+  "count": 10,
+  "links": {
+    "self": "https://api.sailpoint.com/v2026/accounts?limit=2&offset=2&filters=status%20eq%20%22ACTIVE%22",
+    "next": "https://api.sailpoint.com/v2026/accounts?limit=2&offset=4&filters=status%20eq%20%22ACTIVE%22",
+    "prev": "https://api.sailpoint.com/v2026/accounts?limit=2&offset=0&filters=status%20eq%20%22ACTIVE%22"
+  }
+}
+```
+
+On the last page, omit `next`:
+
+```json
+{
+  "items": [
+    { "id": "I", "name": "Account I" },
+    { "id": "J", "name": "Account J" }
+  ],
+  "limit": 2,
+  "offset": 8,
+  "count": 10,
+  "links": {
+    "self": "https://api.sailpoint.com/v2026/accounts?limit=2&offset=8&filters=status%20eq%20%22ACTIVE%22",
+    "prev": "https://api.sailpoint.com/v2026/accounts?limit=2&offset=6&filters=status%20eq%20%22ACTIVE%22"
+  }
+}
+```
+
+### Cursor pagination with links
+
+```json
+{
+  "items": [{ "id": "E" }, { "id": "F" }],
+  "limit": 2,
+  "nextCursor": "eyJpZCI6IkYifQ==",
+  "links": {
+    "self": "https://api.sailpoint.com/v2026/accounts?limit=2&cursor=eyJpZCI6IkQifQ==",
+    "next": "https://api.sailpoint.com/v2026/accounts?limit=2&cursor=eyJpZCI6IkYifQ=="
+  }
+}
+```
+
+Note: cursor-based pagination typically does not include `prev` because cursors are forward-only. If your implementation supports backward cursors, include `prev` as well.
+
+### Link implementation notes
+
+- Links MUST be absolute URLs (include scheme, host, and path).
+- Preserve all original query parameters (filters, sorters) in link URLs.
+- Only change the pagination parameter (`offset` or `cursor`).
+- Omit `next` on the last page and `prev` on the first page.

@@ -1,0 +1,126 @@
+---
+title: Idempotency & retries
+description: Patterns for safe retries, idempotent writes, and concurrency control (ETags, Idempotency-Key).
+---
+
+# Idempotency & retries
+
+Clients retry requests (network issues, timeouts, transient failures). APIs should make retries safe
+and predictable.
+
+## When to use this guide
+
+- You’re designing POST/PUT/PATCH endpoints and want safe retry behavior.
+- You’re implementing concurrency control for updates.
+
+## Recommended patterns
+
+### Optimistic locking for updates
+
+For updates, prefer HTTP-native optimistic locking using `ETag` + `If-Match` (or date-based
+preconditions when necessary).
+
+- [Optimistic locking (Appendix)](/docs/appendices/optimistic-locking)
+
+### Idempotency keys for safe retries
+
+For operations that might be retried (especially POST that creates resources), consider a client
+provided idempotency key.
+
+Recommended behavior:
+
+- Client sends `Idempotency-Key` on the request.
+- Server deduplicates requests with the same key for a fixed window.
+- Server returns the original result for duplicate submissions.
+
+### Alternate keys / natural keys (use carefully)
+
+Some domains have natural keys that can prevent duplicates. If used, document them explicitly and be
+clear about conflict behavior.
+
+## Retry classification
+
+Not all errors are worth retrying. See [#418] for the normative rule. The table below summarizes retry behavior by status code.
+
+### Retryable errors
+
+| Status | Meaning | What to do |
+|---|---|---|
+| `429` | Too Many Requests | Wait for `Retry-After` header value, then retry |
+| `500` | Internal Server Error | Retry **at most once** after a short delay (1-2s) |
+| `502` | Bad Gateway | Retry with exponential backoff |
+| `503` | Service Unavailable | Use `Retry-After` if present, otherwise exponential backoff |
+| `504` | Gateway Timeout | Retry with exponential backoff |
+
+### Non-retryable errors
+
+| Status | Meaning | What to do |
+|---|---|---|
+| `400` | Bad Request | Fix the request and resubmit |
+| `401` | Unauthorized | Refresh or obtain new credentials |
+| `403` | Forbidden | Check permissions — retrying won't help |
+| `404` | Not Found | Resource doesn't exist |
+| `405` | Method Not Allowed | Use the correct HTTP method |
+| `409` | Conflict | Resolve the conflict, then retry with corrected state |
+| `410` | Gone | Resource permanently removed — stop retrying |
+| `412` | Precondition Failed | Re-fetch the resource (new ETag), then retry |
+| `413` | Content Too Large | Reduce payload size |
+| `422` | Unprocessable Content | Fix semantic errors in the request |
+
+## Exponential backoff with jitter
+
+When retrying transient errors, use exponential backoff with jitter to avoid thundering herd
+problems. Here is a reference algorithm:
+
+```
+base_delay = 1 second
+max_delay  = 30 seconds
+max_retries = 4
+
+for attempt in 1..max_retries:
+    delay = min(base_delay * 2^(attempt - 1), max_delay)
+    jitter = random(0, delay)
+    sleep(jitter)
+    response = make_request()
+    if response.status not in [429, 500, 502, 503, 504]:
+        break
+    if response.headers["Retry-After"]:
+        sleep(parse_retry_after(response.headers["Retry-After"]))
+```
+
+Key points:
+- Always respect `Retry-After` when the server provides it — it overrides the calculated delay.
+- Use **full jitter** (`random(0, delay)`) rather than no jitter to spread out retry storms.
+- Cap the maximum delay to avoid excessively long waits.
+- Cap the maximum number of retries (3-5 is typical).
+
+## Server signaling patterns
+
+Servers can help clients make better retry decisions:
+
+### Retry-After header
+Include `Retry-After` on `429` and `503` responses when you can estimate recovery time. The value
+can be seconds (`Retry-After: 30`) or an HTTP-date (`Retry-After: Tue, 11 Mar 2026 10:30:00 GMT`).
+
+### Retryable flag in Problem Details
+For application-specific errors, consider including a `retryable` boolean in the Problem Details
+body so clients can make programmatic decisions:
+
+```json
+{
+  "type": "https://developer.sailpoint.com/problems/source-connection-timeout",
+  "title": "Source connection timeout",
+  "status": 503,
+  "detail": "Could not connect to the configured source.",
+  "retryable": true
+}
+```
+
+### Idempotent endpoints
+Mark endpoints as idempotent (via `Idempotency-Key` support or inherent idempotency) so clients
+know retries are safe. See [#409], [#410], [#411].
+
+## Related reading
+
+- [OpenAPI authoring](/docs/guides/openapi-authoring)
+- [Review checklist](/docs/appendices/review-checklist)

@@ -9,17 +9,71 @@ These rules standardize JSON payload shapes so clients can parse consistently an
 
 ---
 
+## Boolean & Null Handling
+### #700 - Handle Null Values Correctly
+<RuleHeader id="700" level="MUST" title="Handle Null Values Correctly" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+
+- Treat `null` and absent as equivalent for optional properties unless the API explicitly documents a different meaning.
+- Prefer omitting optional properties over sending `null` — `{}` is cleaner than `{ "field": null }`.
+- `null` MUST NOT change the semantics relative to omission for a property unless explicitly documented.
+- Booleans: if not applicable, omit rather than returning `null` (see [#701]).
+- Avoid overloading `null` vs absent on the request side (e.g., "clear this value"). If you need "clear" semantics, use JSON Merge Patch (RFC 7396) or JSON Patch (RFC 6902).
+- If responses contain `null` for a field, the OpenAPI spec MUST reflect that.
+- If the spec does not mark a field as nullable, the runtime response MUST NOT contain `null` for it.
+
+### #701 - Use Booleans Correctly
+<RuleHeader id="701" level="MUST" title="Use Booleans Correctly" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+
+- Boolean properties MUST never be `null`.
+- Required booleans MUST be present and MUST be `true` or `false`.
+- Optional booleans that are not applicable MUST be omitted entirely — do not send `null`.
+- If you need three states, use an explicit enum (e.g., `"ENABLED" | "DISABLED" | "UNKNOWN"`).
+- Every optional boolean MUST have a documented default behavior when absent (see [#709]).
+- If omitted, the server MUST behave as if the default value was supplied.
+
+- ✅ `{ "enabled": true }`
+- ✅ `{}` (if `enabled` is optional and not applicable)
+- ❌ `{ "enabled": null }`
+
+### #702 - Initialize Empty Arrays
+<RuleHeader id="702" level="MUST" title="Initialize Empty Arrays" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+
+- Empty collections MUST be represented as empty arrays (`[]`), not `null`.
+- If the property is optional, omission is allowed, but if present it MUST be an array.
+- OpenAPI schemas MUST NOT mark array properties as nullable.
+
+- ✅ `{ "items": [] }`
+- ❌ `{ "items": null }`
+
+### #703 - Model Nullable Fields in OpenAPI
+<RuleHeader id="703" level="MUST" title="Model Nullable Fields in OpenAPI" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+
+- If an API can return or accept `null` for a field, the OpenAPI schema MUST model that.
+- If `null` is not modeled in the spec, it MUST NOT appear at runtime.
+- Prefer omitting optional fields rather than returning `null` (see [#700]).
+- Booleans MUST never be nullable (see [#701]). Arrays MUST never be nullable (see [#702]).
+
+#### OpenAPI modeling
+
+For OpenAPI 3.0.x, use `nullable: true`. For OpenAPI 3.1.x, use JSON Schema unions (e.g., `type: [string, "null"]`).
+
+```yaml
+middleName:
+  type: string
+  nullable: true
+```
+
+---
+
 ## JSON Structure & Properties
 ### #704 - Use Standard Non-JSON Media Types
 <RuleHeader id="704" level="MAY" title="Use Standard Non-JSON Media Types" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9457", label: "RFC 9457 — Problem Details" }]} />
 
-**Intent**: support downloads/exports without forcing JSON.
+- When non-JSON content types are needed, always set the correct `Content-Type`.
+- Use `Content-Disposition` for downloads when appropriate.
+- Error responses SHOULD still use JSON even when the success body is non-JSON (see [#404]).
 
-When non-JSON content types are needed (e.g., binary files, images, CSV), use standard content negotiation with appropriate `Content-Type` headers and follow HTTP conventions.
-
-**Patterns**:
-
-- File download endpoint:
+#### File download
 
 ```http
 GET /reports/123/content
@@ -32,69 +86,38 @@ Content-Type: application/pdf
 Content-Disposition: attachment; filename="report-123.pdf"
 ```
 
-- Binary upload endpoint:
+#### Binary upload
 
 ```http
 PUT /avatars/123
 Content-Type: image/png
 ```
 
-**Large exports** (recommended):
+#### Large exports
 
-- Prefer an async job resource:
-  - `POST /exports` → `202 Accepted` + status URL
-  - `GET /exports/{id}` → status + link to download
-
-**Rules**:
-
-- Always set the correct `Content-Type`.
-- Use `Content-Disposition` for downloads when appropriate.
-- Keep JSON for error responses even when the success body is non-JSON (see [#404]).
+For large exports, prefer an async job resource (`POST /exports` returning `202 Accepted` with a status URL, then `GET /exports/{id}` for status and a link to download). See [#407] for the async job pattern.
 
 ### #705 - Use Standard Media Types
 <RuleHeader id="705" level="SHOULD" title="Use Standard Media Types" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9457", label: "RFC 9457 — Problem Details" }]} />
 
-**Intent**: maximize compatibility across tools and clients.
-
-APIs SHOULD use standard IANA-registered media types.
-
-**Defaults**:
-
-- Success JSON: `application/json`
-- Error responses: `application/problem+json` (see [#404])
-
-**Common non-JSON cases**:
-
-- File download: `application/pdf`, `text/csv`, `application/zip`, etc.
-- Binary upload/download: `application/octet-stream`
-- Multipart upload: `multipart/form-data`
-
-**Rules**:
-
-- Always set the correct `Content-Type` for responses.
-- Require clients to send the correct `Content-Type` for requests with bodies.
+- APIs SHOULD use standard IANA-registered media types.
+- Defaults: `application/json` for success responses, `application/problem+json` for errors (see [#404]).
+- Common non-JSON types: `application/pdf`, `text/csv`, `application/zip`, `application/octet-stream`, `multipart/form-data`.
+- Always set the correct `Content-Type` for responses and require it for request bodies.
 - Avoid custom/vendor media types unless you have a strong compatibility reason.
-
-**Testability**:
-
-- OpenAPI declares correct content types for request/response bodies.
+- OpenAPI specs MUST declare correct content types for all request and response bodies.
 
 ### #706 - Define Maps with additionalProperties
 <RuleHeader id="706" level="SHOULD" title="Define Maps with additionalProperties" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: keep schemas valid and codegen-friendly when keys are dynamic.
+- When representing a map/dictionary with dynamic keys in JSON, model it as an object with `additionalProperties` describing the value type.
+- Document the key space: what keys mean, how they are constructed, and any constraints.
+- Make it clear whether keys are stable (contracted) or arbitrary (user-provided).
+- If the key set is bounded and known, use explicit properties or an array of objects instead.
 
-When representing a map/dictionary with dynamic keys in JSON, model it as an object with `additionalProperties` describing the value type.
+#### OpenAPI examples
 
-**Requirements**:
-
-- Document the **key space** (what keys mean, how they are constructed, constraints).
-- Document whether keys are **stable** (contracted) or arbitrary (user-provided).
-- Avoid maps when the key set is actually bounded/known: use explicit properties or an array of objects instead.
-
-**OpenAPI examples**:
-
-- Map of string → string:
+Map of string to string:
 
 ```yaml
 type: object
@@ -103,7 +126,7 @@ additionalProperties:
   type: string
 ```
 
-- Map of string → object:
+Map of string to object:
 
 ```yaml
 type: object
@@ -112,9 +135,9 @@ additionalProperties:
   $ref: "#/components/schemas/AttributeMetadata"
 ```
 
-**Alternative (prefer when ordering/duplication matters)**:
+#### When to use arrays instead
 
-If clients need ordering, duplicates, or additional per-entry metadata, prefer an array:
+If clients need ordering, duplicates, or additional per-entry metadata, prefer an array of key-value objects:
 
 ```json
 {
@@ -125,34 +148,16 @@ If clients need ordering, duplicates, or additional per-entry metadata, prefer a
 }
 ```
 
-**Notes**:
-
-- Free-form maps make filtering, sorting, and partial updates harder; use them intentionally.
-- If keys are user-provided, call out any normalization rules (case sensitivity, allowed characters).
+If keys are user-provided, document any normalization rules (case sensitivity, allowed characters).
 
 ### #708 - Avoid Nested Objects
 <RuleHeader id="708" level="SHOULD" title="Avoid Nested Objects" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: reduce payload complexity and improve evolvability.
-
-APIs SHOULD minimize deeply nested object structures.
-
-**Preferred patterns**:
-
+- APIs SHOULD minimize deeply nested object structures.
 - Use references to separate resources (IDs or links) instead of embedding full graphs.
 - If you embed related data, embed only a small, stable summary (e.g., `{id, name}`), not the full related object.
-
-**When nesting is acceptable**:
-
-- Small, intrinsic value objects that are not meaningful as standalone resources (e.g., `address`, `coordinates`).
-- Stable summary/reference shapes.
-
-**Anti-patterns**:
-
-- Deeply nested graphs where changes to one domain object ripple into many responses.
-- Embedding large sub-objects that make pagination/filtering/patching difficult.
-
-**Example (preferred)**:
+- Nesting is acceptable for small, intrinsic value objects that are not standalone resources (e.g., `address`, `coordinates`).
+- Avoid embedding large sub-objects that make pagination, filtering, or patching difficult.
 
 ```json
 {
@@ -161,58 +166,29 @@ APIs SHOULD minimize deeply nested object structures.
 }
 ```
 
-**Anti-example**: embedding entire related graphs several levels deep.
+- ✅ Reference with a small summary shape
+- ❌ Embedding entire related graphs several levels deep
 
 ### #709 - Define Defaults for Optional Properties
 <RuleHeader id="709" level="MUST" title="Define Defaults for Optional Properties" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: remove ambiguity when clients omit optional fields.
-
-Optional properties MUST have documented default behavior when omitted.
-
-**Guidance**:
-
+- Optional properties MUST have documented default behavior when omitted.
 - If a default is truly stable, declare it in OpenAPI using `default`.
-- If a default is contextual (depends on tenant config, caller, feature flags), document that explicitly in prose (do not pretend it is constant).
-- Avoid "magic defaults" that vary unpredictably across environments.
-
-**Boolean-specific guidance**:
-
-- Every optional boolean property MUST have a documented default behavior that applies when the property is absent.
-- Booleans MUST never be `null` (see [#700]).
+- If a default is contextual (depends on tenant config, caller identity, or feature flags), document that explicitly in prose.
+- Every optional boolean MUST have a documented default (see [#701]). Booleans MUST never be `null`.
 - If omitted, the server MUST behave as if the default value was supplied.
-- Document the default in OpenAPI (use `default` when it is truly stable) and in prose (especially if default is contextual).
+- A reviewer reading the spec SHOULD be able to determine what happens for every optional field when omitted.
 
-**Examples**:
-
-- `includeDisabled` (optional): default is `false`.
-- `count` (optional): default is `false`.
-
-**Testability**:
-
-- Reviewers can determine what happens when an optional field is omitted.
-- Reviewers can determine the default behavior for every optional boolean.
-
----
+- `includeDisabled` (optional): default is `false`
+- `count` (optional): default is `false`
 
 ### #710 - Define Required Fields per OpenAPI
 <RuleHeader id="710" level="MUST" title="Define Required Fields per OpenAPI" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: ensure clients and tooling know which inputs are mandatory.
-
-APIs MUST model requiredness explicitly in OpenAPI.
-
-**Rules**:
-
-- Request bodies and parameters MUST mark required inputs using OpenAPI `required` (properties) and `required: true` (parameters).
-- Responses SHOULD also be modeled accurately: if a field is always present, mark it required; if not always present, do not mark it required.
-
-**Create vs update**:
-
-- Do not overload one schema for every operation if requiredness differs.
-- Use separate schemas (e.g., `CreateAccountRequest` vs `UpdateAccountRequest`) when the set of required fields differs.
-
-**OpenAPI example**:
+- APIs MUST model requiredness explicitly in OpenAPI.
+- Request bodies and parameters MUST mark required inputs using OpenAPI `required` (for properties) and `required: true` (for parameters).
+- Responses SHOULD also be modeled accurately: mark always-present fields as required; do not mark conditionally-present fields as required.
+- When required fields differ between operations, use separate schemas (e.g., `CreateAccountRequest` vs `UpdateAccountRequest`).
 
 ```yaml
 type: object
@@ -224,99 +200,102 @@ properties:
     type: string
 ```
 
-**Testability**:
-
-- A reviewer can generate SDKs/validators that correctly enforce required inputs.
-- Required fields in the spec match actual server behavior.
-
 ---
 
-## Boolean & Null Handling
-### #700 - Handle Null Values Correctly
-<RuleHeader id="700" level="MUST" title="Handle Null Values Correctly" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+## Partial Update Conventions
 
-**Intent**: avoid confusion, simplify client code, and ensure schemas match runtime behavior.
+### #711 - Specify PATCH Content Type and Null Semantics
+<RuleHeader id="711" level="MUST" title="Specify PATCH Content Type and Null Semantics" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc7396", label: "RFC 7396 — JSON Merge Patch" }, { href: "https://www.rfc-editor.org/rfc/rfc6902", label: "RFC 6902 — JSON Patch" }, { href: "https://www.rfc-editor.org/rfc/rfc5789", label: "RFC 5789 — PATCH Method" }]} />
 
-This rule defines how to handle `null` values across different data types and contexts.
+- Every PATCH endpoint MUST declare the accepted content type in its OpenAPI `requestBody`.
+- Every PATCH endpoint MUST document null vs. omission semantics explicitly.
 
-## Part 1: Booleans
+#### Recognized PATCH formats
 
-Boolean properties MUST never be `null`.
+APIs MUST use one of these three approaches for each PATCH endpoint:
 
-**Rules**:
+**1. JSON Merge Patch (RFC 7396)** — `Content-Type: application/merge-patch+json`
 
-- If a boolean is required, it MUST be present and MUST be `true` or `false`.
-- If a boolean is optional and not applicable, omit it (do not send `null`).
-- If you truly need three states, use an explicit enum (e.g., `"ENABLED" | "DISABLED" | "UNKNOWN"`) and document the semantics.
+Send only the fields you want to change. Omitted fields are left unchanged. Sending `null` explicitly clears a field.
 
-**Examples**:
+```http
+PATCH /accounts/123
+Content-Type: application/merge-patch+json
 
-- ✅ `{ "enabled": true }`
-- ✅ `{}` (if `enabled` is optional and not applicable)
-- ❌ `{ "enabled": null }`
-
-## Part 2: Arrays
-
-Empty collections MUST be represented as empty arrays (`[]`), not `null`.
-
-**Examples**:
-
-- ✅ `{ "items": [] }`
-- ❌ `{ "items": null }`
-
-**Notes**:
-
-- If the property itself is optional, omission is allowed; but if the property is present, it must be an array.
-
-## Part 3: Null vs Absent Semantics
-
-**Default policy**:
-
-- Treat **`null` and "absent" as equivalent** for optional properties unless you explicitly document a different meaning.
-- Prefer **omitting** optional properties over sending `null`.
-- If `null` is allowed, it must not change semantics relative to omission.
-
-**Boolean-specific guidance**:
-
-- If a boolean is not applicable, omit it rather than returning `null` (see Part 1).
-
-**Examples**:
-
-- Response payloads: prefer `{}` over `{ "field": null }` when a field is not present.
-- Request payloads: avoid overloading `null` vs absent to mean different things (e.g., "clear this value") unless the API explicitly defines that contract.
-
-**If you need "clear" semantics**:
-
-- Do not overload `null` vs absent informally.
-- Prefer explicit PATCH semantics (e.g., JSON Patch) or a documented request contract that clearly defines how values are cleared.
-
-## Part 4: OpenAPI Modeling
-
-If an API can legitimately return or accept `null` for a field, the OpenAPI schema MUST model that.
-
-**Rules**:
-
-- If `null` is allowed at runtime, it must be modeled.
-- If `null` is not modeled, it MUST NOT appear at runtime.
-- Prefer omitting optional fields rather than returning `null` (see Part 3).
-- Booleans MUST never be nullable (see Part 1).
-
-**OpenAPI guidance**:
-
-- For OpenAPI 3.0.x: use `nullable: true`.
-- For OpenAPI 3.1.x: use JSON Schema unions (e.g., `type: [string, "null"]`).
-
-**Example (OAS 3.0)**:
-
-```yaml
-middleName:
-  type: string
-  nullable: true
+{ "description": "Updated", "nickname": null }
 ```
 
-**Testability**:
+Result: `description` is updated, `nickname` is cleared, all other fields unchanged.
 
-- If responses contain `null`, the spec reflects it.
-- If the spec does not mark nullable, responses do not contain `null` for that field.
-- Booleans never appear as `null` in responses.
-- Arrays never appear as `null`; empty arrays are used instead.
+**2. JSON Patch (RFC 6902)** — `Content-Type: application/json-patch+json`
+
+An array of discrete operations (`add`, `remove`, `replace`, `move`, `copy`, `test`). Supports array manipulation, positional updates, and atomic test-and-set.
+
+```http
+PATCH /accounts/123
+Content-Type: application/json-patch+json
+
+[
+  { "op": "replace", "path": "/description", "value": "Updated" },
+  { "op": "remove", "path": "/nickname" }
+]
+```
+
+**3. Resource-specific patch schema** — `Content-Type: application/json`
+
+A custom schema where the API defines exactly which fields are patchable. When using this format, the schema MUST document:
+- Which fields are included in the patch
+- Whether omitted fields are left unchanged (typical) or reset
+- How `null` is handled for each nullable field
+
+```http
+PATCH /accounts/123
+Content-Type: application/json
+
+{ "description": "Updated" }
+```
+
+#### Null vs. omission semantics
+
+Every PATCH endpoint MUST document:
+
+1. **What does omitting a field mean?** (Almost always: "leave unchanged.")
+2. **What does setting a field to `null` mean?** (Options: "clear the value," "invalid — rejected with 400," or "same as omission.")
+
+If `null` and omission mean the same thing, state that explicitly.
+
+#### OpenAPI modeling
+
+Declare the content type in the `requestBody` for each PATCH operation:
+
+```yaml
+paths:
+  /accounts/{accountId}:
+    patch:
+      summary: Update account
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/AccountPatch"
+      responses:
+        "200":
+          description: Updated account
+```
+
+For resource-specific patch schemas, use a separate schema (e.g., `AccountPatch`) distinct from the create schema. Do not reuse the same schema for POST and PATCH.
+
+#### Examples
+
+Every PATCH endpoint MUST include at least one example showing how `null` is handled:
+
+```json
+// Merge Patch: clear optional nickname, update description
+{ "description": "New description", "nickname": null }
+
+// Merge Patch: update description only, nickname unchanged
+{ "description": "New description" }
+```
+
+**Related rules**: [#401] HTTP methods (PATCH section), [#700] null handling, [#703] nullable fields in OpenAPI, [#705] standard media types.

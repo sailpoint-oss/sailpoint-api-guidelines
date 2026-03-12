@@ -9,105 +9,229 @@ These rules cover versioning and compatibility decisions that keep client integr
 
 ---
 
+## Backward Compatibility
+### #200 - Do Not Break Compatibility
+<RuleHeader id="200" level="MUST" title="Do Not Break Compatibility" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+
+Within the same major version, changes MUST remain backward compatible.
+
+#### Breaking changes (avoid within a major version)
+
+- Removing or renaming endpoints, fields, enum values, or query parameters.
+- Changing a field type or shape (e.g., `string` to `object`, array to object).
+- Changing formats or constraints in a way that rejects previously valid data (tighter regex, smaller max length, new required fields).
+- Tightening request validation when clients may already be sending additional fields.
+- Changing default behavior in a visible way (sorting, pagination defaults, implicit filters).
+- Changing authorization requirements for existing operations without a compatible migration path.
+- Changing error contracts in a way that breaks parsing or branching.
+
+#### Safe changes within a major version
+
+- Adding new optional response fields.
+- Adding new endpoints.
+- Adding new optional request fields with safe defaults.
+- Adding new enum values, but only if clients are prepared to handle unknowns (see [#202]).
+
+### #201 - Prefer Compatible Extensions
+<RuleHeader id="201" level="SHOULD" title="Prefer Compatible Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+
+Teams SHOULD evolve APIs by adding capabilities instead of changing existing behavior:
+
+- Adding a new optional response field.
+- Adding a new optional request field with a safe default.
+- Adding a new query parameter that does not change behavior when omitted.
+- Adding a new endpoint instead of overloading an existing one.
+
+Be careful with changes that look compatible but can still break clients: new enum values can crash naive clients (see [#202]), tightened validation rejects inputs that used to pass, and changed defaults shift behavior without touching the schema.
+
+If behavior genuinely must change, prefer a new endpoint or a new major version rather than changing semantics in-place.
+
+### #202 - Prepare Clients for Extensions
+<RuleHeader id="202" level="MUST" title="Prepare Clients for Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+
+Clients MUST be prepared for compatible server extensions:
+
+- **Ignore unknown fields** in responses. If the server adds `newField`, existing parsing MUST keep working.
+- **Tolerate new enum values.** If a client receives an unrecognized value, it MUST NOT crash. Map unrecognized values to `UNKNOWN` or treat them as a safe default. See [#219] for how APIs annotate enum extensibility.
+- **Handle undocumented HTTP status codes.** If a client receives `429` or `503`, it SHOULD follow retry/backoff guidance rather than failing with an unhandled exception.
+
+For SDK teams: avoid generated enums that throw on unknown values. Prefer string unions or safe mapping with an `UNKNOWN` case.
+
+### #203 - Be Conservative with Inputs
+<RuleHeader id="203" level="SHOULD" title="Be Conservative with Inputs" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+
+- Teams SHOULD define and document input constraints explicitly — types, formats, length limits, required fields.
+- Choose your unknown-field policy (ignore vs. reject) up front and document it. Changing from "ignore" to "reject" later is a breaking change.
+- Constraints like `minLength`, `maxLength`, `format`, `pattern`, and `minimum`/`maximum` SHOULD be expressed in OpenAPI so they are machine-readable.
+- If you need to tighten validation over time, do it with a migration path: warn first, document timelines, and consider new endpoints or versions.
+
+### #204 - Return Top-Level JSON Objects
+<RuleHeader id="204" level="MUST" title="Return Top-Level JSON Objects" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc8259", label: "RFC 8259 — The JSON Data Interchange Format" }]} />
+
+Responses MUST use a JSON object as the top-level structure, not a bare array. This keeps the door open to add metadata (counts, links, paging cursors) without changing the response shape.
+
+```json
+{
+  "items": [{ "id": "A" }, { "id": "B" }],
+  "count": 123,
+  "limit": 2,
+  "offset": 0
+}
+```
+
+- ✅ List envelope: `{ "items": [ ... ], "count": 123 }`
+- ✅ Later add metadata (non-breaking): `{ "items": [ ... ], "count": 123, "links": { "self": "..." } }`
+- ❌ Top-level array: `[ { "id": "A" }, { "id": "B" } ]` (prevents adding metadata compatibly)
+
+For single-resource responses, return the resource object directly. For errors, use Problem Details (`application/problem+json`) (see [#404]).
+
+`204 No Content` is still valid for operations that intentionally return no body. Non-JSON success responses are allowed for downloads/uploads when appropriate (see [#704]), but error responses should remain JSON (Problem Details).
+
+### #205 - Treat OpenAPI Objects as Extensible
+<RuleHeader id="205" level="MUST" title="Treat OpenAPI Objects as Extensible" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+
+Object schemas in responses MUST be treated as open for extension by default:
+
+- Clients MUST ignore unknown response fields (see [#202]).
+- Servers MUST NOT make new fields required in existing responses.
+- Enum sets MAY grow over time; clients MUST tolerate unknown enum values (see [#202]).
+- Servers MAY add new optional properties over time without requiring clients to upgrade.
+
+None of these additive changes should require a version bump or break existing clients.
+
+---
+
 ## Versioning & Metadata
 ### #206 - Avoid Breaking Changes as the Default Strategy
 <RuleHeader id="206" level="SHOULD" title="Avoid Breaking Changes as the Default Strategy" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }, { href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep clients stable and reduce long-term maintenance cost.
-
-Prefer **compatible evolution** over breaking changes. Do not treat “we can bump the version” as the default approach to making changes.
-
-**Guidance**:
-
-- Prefer additive changes:
-  - add optional fields
-  - add new endpoints
-  - add optional query parameters with safe defaults
-- Only introduce a new version when you have a clear, unavoidable breaking change and a migration plan.
-
-**Common anti-patterns** (avoid):
-
-- Breaking an endpoint and \"fixing\" it by bumping the version, even though the change could have been additive.
-- Creating a new version without a deprecation timeline for the old one.
+- Teams SHOULD prefer compatible evolution over breaking changes: add optional fields, new endpoints, and optional query parameters with safe defaults.
+- Only introduce a new version when you have a clear, unavoidable breaking change and a concrete migration plan.
+- Avoid breaking an endpoint and "fixing" it by bumping the version when the change could have been additive.
+- Do not create a new version without a deprecation timeline for the old one.
 
 ### #207 - Use Path Versioning When Versions Coexist
 <RuleHeader id="207" level="MUST" title="Use Path Versioning When Versions Coexist" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make version routing explicit and predictable for clients, gateways, and docs.
-
-If multiple API versions must coexist, represent the version in the **URL path** (URI versioning), e.g. `/v2026/...` or `/v3/...`.
-
-**Why this approach**:
-
-- Version is visible in logs, metrics, caches, and links.
-- Simple routing at gateways and reverse proxies.
-- Documentation can be hosted per version without ambiguity.
-
-**Alternatives and tradeoffs** (why we avoid them by default):
-
-- Header-based versioning (custom headers or media type params): less discoverable, harder to troubleshoot, often poorly supported by generic tooling.
-- Query parameter versioning (`?version=`): easy to misuse and can create caching surprises.
-
-**When versioning is warranted**:
-
-- Only when you have unavoidable breaking changes and need old/new versions live concurrently.
-- Prefer additive evolution when possible (see [#200] and [#206]).
-
-**Examples**:
+If multiple API versions must coexist, teams MUST represent the version in the URL path (URI versioning), e.g. `/v2026/...` or `/v3/...`.
 
 - ✅ `/v2026/accounts` and `/v2027/accounts`
 - ✅ `/v3/accounts` and `/v4/accounts`
 - ❌ `/accounts?version=3`
-- ❌ `Accept: application/vnd.company.v3+json` (unless explicitly approved as an exception)
+- ❌ `Accept: application/vnd.company.v3+json`
+
+Versioning is only warranted when you have unavoidable breaking changes and need old and new versions live concurrently. Prefer additive evolution when possible (see [#200] and [#206]).
 
 ### #208 - Use Year-Based API Versioning (YYYY.Revision)
 <RuleHeader id="208" level="MUST" title="Use Year-Based API Versioning (YYYY.Revision)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: provide a clear versioning system that matches how APIs evolve.
-
-APIs MUST use a year-based version identifier in the form:
-
-- `YYYY.{revision}` (example: `2026.1`, `2026.2`)
-
-**Definitions**:
-
-- `YYYY` identifies the major contract line.
-- `{revision}` increments when the **published contract** changes (additive or breaking), and is used for documentation/changelog purposes.
-
-**Rules**:
-
+- APIs MUST use a year-based version identifier in the form `YYYY.{revision}` (example: `2026.1`, `2026.2`).
+- The `YYYY` portion identifies the major contract line. The `{revision}` increments when the published contract changes.
 - If multiple versions must coexist, use URI versioning (see [#207]) using the year line (e.g., `/v2026/...`).
 - Within a version line, avoid breaking changes (see [#200]).
-- Each `{revision}` MUST have a corresponding changelog entry describing contract changes and any migration/deprecation notes.
+- Each `{revision}` MUST have a corresponding changelog entry describing contract changes and any migration or deprecation notes.
+- Implementation-only changes that do not change the published contract do not require a revision bump.
 
-**What does NOT require a revision bump**:
+---
 
-- Implementation-only changes that do not change the published contract.
+## Deprecation & Sunset
+### #209 - Reflect Deprecation in OpenAPI
+<RuleHeader id="209" level="MUST" title="Reflect Deprecation in OpenAPI" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
+When deprecating any API element (operation, parameter, schema, field), teams MUST:
+
+- Mark it as deprecated in OpenAPI (`deprecated: true`).
+- Provide a clear migration path (replacement endpoint, field, or version).
+- Publish a sunset timeline with a link to migration documentation.
+- State what is deprecated, what to use instead, and by when.
+
+```yaml
+paths:
+  /accounts/{id}:
+    get:
+      deprecated: true
+      summary: Get account (deprecated)
+      description: |
+        Deprecated. Use GET /v2027/accounts/{id}.
+        Sunset: 2027-06-30.
+      externalDocs:
+        description: Migration guide
+        url: https://developer.sailpoint.com/docs/guides/.../migration
+      responses:
+        "200": { ... }
+```
+
+### #210 - Monitor Deprecated API Usage
+<RuleHeader id="210" level="MUST" title="Monitor Deprecated API Usage" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
+
+When an API element is deprecated (see [#209]), teams MUST monitor usage and proactively notify consumers:
+
+- Track calls to deprecated operations (and, where feasible, deprecated parameters and fields).
+- Identify calling clients by token client ID, integration identifier, or other stable identifier.
+- Maintain dashboards and alerts leading up to sunset.
+
+#### Recommended workflow
+
+- **At deprecation**: announce the deprecation, replacement, and sunset date.
+- **During migration window**: notify top callers and provide migration support.
+- **Before sunset**: escalate notifications and confirm readiness.
+
+Teams SHOULD have a playbook for contacting consumers so this process does not get reinvented every time.
+
+### #211 - Add Deprecation and Sunset Headers
+<RuleHeader id="211" level="SHOULD" title="Add Deprecation and Sunset Headers" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
+
+When an endpoint is deprecated, APIs SHOULD include `Deprecation` and `Sunset` headers in responses:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Deprecation: true
+Sunset: Tue, 30 Jun 2027 00:00:00 GMT
+
+{ "id": "123", "name": "Example" }
+```
+
+These headers complement but do not replace OpenAPI `deprecated: true` and migration guidance (see [#209]).
+
+### #212 - Have Clients Monitor Deprecation and Sunset Headers
+<RuleHeader id="212" level="SHOULD" title="Have Clients Monitor Deprecation and Sunset Headers" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+
+API clients SHOULD treat `Deprecation` and `Sunset` response headers as actionable signals:
+
+- When `Deprecation` is present, log it or emit telemetry.
+- When `Sunset` is present, record the sunset date and create an alert or ticket.
+- For SDKs and shared client libraries, provide a common hook or middleware so application teams do not need to implement this repeatedly.
+
+Presence or absence of headers MUST NOT be the only way clients learn about deprecation. Specs and docs remain canonical (see [#209]). Clients MUST NOT ignore server-side deprecation just because headers are missing.
+
+### #213 - Do Not Start New Usage of Deprecated APIs or Features
+<RuleHeader id="213" level="MUST" title="Do Not Start New Usage of Deprecated APIs or Features" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
+
+Teams MUST NOT start new dependencies on APIs or features that are already marked deprecated. This applies to:
+
+- New code paths calling deprecated endpoints or fields.
+- New integrations or clients adopting deprecated behavior.
+- New tenants or environments enabling or onboarding onto deprecated versions.
+
+The only exception is with explicit owner approval and a documented remediation plan that includes a timeline and migration path. Any such exceptions SHOULD be time-bounded and tracked.
+
+---
+
+## API Metadata & Version Lifecycle
 ### #214 - Include API Metadata
 <RuleHeader id="214" level="MUST" title="Include API Metadata" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: ensure every API contract can be identified and supported.
+OpenAPI specifications MUST include complete API metadata. Required fields:
 
-OpenAPI specifications MUST include complete API metadata under `info` and related top-level fields.
-
-**Required**:
-
-- `info.title`: human-friendly API name
-- `info.version`: published contract version (aligned with [#208])
-- `info.description`: what the API is for, key concepts, and link to guides
-- `info.contact`: support/owner contact (team or distribution list)
+- `info.title`: a human-friendly API name
+- `info.version`: the published contract version (aligned with [#208])
+- `info.description`: what the API is for, key concepts, and a link to guides
+- `info.contact`: support or owner contact (team or distribution list)
 - `servers`: at least one base URL (or environment template)
-- `tags`: consistent tagging strategy for operations (at least one tag per operation)
+- `tags`: a consistent tagging strategy for operations (at least one tag per operation)
 
-**Strongly recommended**:
-
-- `info.termsOfService` (when external)
-- `info.license` (when external)
-- `externalDocs` (link to developer portal / guides)
-- `info.x-audience` (see [#215]) and any platform-required extensions
-
-**Example**:
+Strongly encouraged: `info.termsOfService`, `info.license`, `externalDocs`, and `info.x-audience` (see [#215]).
 
 ```yaml
 openapi: 3.0.3
@@ -133,72 +257,38 @@ tags:
   - name: Identities
 ```
 
-**Testability**:
-
-- Reviewers can locate owner/support contact and version quickly.
-- All operations are tagged and the spec has at least one `servers` entry.
-
 ### #215 - Specify API Audience
 <RuleHeader id="215" level="MUST" title="Specify API Audience" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-**Intent**: make intended consumers and publishing expectations explicit.
-
-APIs MUST declare the intended audience in OpenAPI using `info.x-audience`.
-
-**Allowed values**:
-
-- `internal-company`: internal-only APIs
-- `external-public`: customer/partner-facing APIs
-
-**Guidance**:
-
-- Audience affects publishing, support expectations, and compatibility rigor.
-- Ensure the audience value matches how the API is actually exposed and documented.
-
-**OpenAPI example**:
+- APIs MUST declare the intended audience in OpenAPI using `info.x-audience`.
+- Allowed values: `internal-company` (internal-only APIs) and `external-public` (customer- and partner-facing APIs).
+- The audience value affects publishing, support expectations, and compatibility rigor — teams SHOULD ensure it matches how the API is actually exposed and documented.
 
 ```yaml
 info:
   x-audience: external-public
 ```
 
-**Testability**:
-
-- OpenAPI contains `info.x-audience` with an allowed value.
-
 ### #216 - Follow Version Requirements
 <RuleHeader id="216" level="MUST" title="Follow Version Requirements" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: keep versioned APIs stable while allowing safe evolution.
+- Teams MUST NOT introduce breaking changes within a published major version line (see [#200]).
+- Each major version line MUST receive at least 2 years of support.
+- The versioning strategy MUST be documented in the OpenAPI specification (see [#208], [#207]).
 
-For versioned APIs:
-
-- Do not introduce breaking changes within a published major version line (see [#200]).
-- Provide at least **2 years** of support for each major version line.
-- Document versioning strategy clearly in the OpenAPI specification (see [#208], [#207]).
-
-**What “support” means (minimum bar)**:
-
+"Support" at minimum means:
 - The version remains available and documented.
-- Critical security/availability fixes may be applied without changing the published contract.
+- Critical security and availability fixes MAY be applied without changing the published contract.
 - A sunset/deprecation timeline is communicated for retirement (see [#209], [#211], [#212]).
-
-**Testability**:
-
-- OpenAPI clearly identifies the version line and base path.
-- Deprecation/sunset plans exist for versions that will be retired.
 
 ### #217 - Follow Beta Requirements When Applicable
 <RuleHeader id="217" level="MUST" title="Follow Beta Requirements When Applicable" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-**Intent**: make beta APIs usable while setting clear expectations about stability and support.
+If an API (or endpoint/field) is beta or preview, it MUST follow these requirements.
 
-If an API (or endpoint/field) is **beta/preview**, it MUST follow these requirements.
+#### Labeling
 
-## 1) Labeling (machine + human)
-
-- Beta MUST be clearly visible in developer docs.
-- Beta MUST be machine-readable in OpenAPI using a consistent extension (example):
+Beta status MUST be clearly visible in developer docs and machine-readable in OpenAPI:
 
 ```yaml
 info:
@@ -206,400 +296,93 @@ info:
 # or at tag/operation/schema granularity
 ```
 
-## 2) Stability expectations
+#### Stability expectations
 
 - Beta contracts MAY change in ways that would be considered breaking for GA.
 - Teams MUST still aim for compatibility and MUST document any known churn areas.
-- Do not “ship breaking changes silently”; publish changelogs for beta changes.
+- Teams MUST publish changelogs for beta changes.
 
-## 3) Support expectations
+#### Support expectations
 
-- Document the support model (SLA/response expectations) for beta.
-- Document intended audience and any enrollment/whitelist requirements.
+- Teams MUST document the support model (SLA and response expectations) for beta APIs.
+- Teams MUST document the intended audience and any enrollment or whitelist requirements.
 
-## 4) Migration to GA
+#### Migration to GA
 
-- Provide a clear path to GA:
-  - what “GA readiness” means (exit criteria)
-  - expected timeline (even if approximate)
-  - how beta consumers will be notified of GA
+- Every beta API SHOULD have a clear path to GA with defined exit criteria.
+- Teams SHOULD provide an expected timeline (even if approximate).
+- Teams SHOULD explain how beta consumers will be notified of GA.
 
-## 5) Compatibility boundaries
+#### Compatibility boundaries
 
 - Do not mix GA and beta semantics under the same endpoint without clear labeling.
-- If only parts of a schema are beta (fields), label at field level and document behaviors.
+- If only parts of a schema are beta (individual fields), label at the field level and document the behaviors explicitly.
 
-**Testability**:
+### #218 - Agree on Deprecation Timeframes with Clients
+<RuleHeader id="218" level="SHOULD" title="Agree on Deprecation Timeframes with Clients" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-- OpenAPI includes `x-stability: beta` (or equivalent standardized extension) at the appropriate scope.
-- Docs display beta status prominently and include support + migration guidance.
+- Teams SHOULD collaborate with known clients to agree on reasonable deprecation timeframes.
+- Prefer longer windows for external and public APIs than for internal-only APIs.
+- If client coordination is not possible, publish a conservative default window and provide an escalation path.
+- The sunset date and migration guidance MUST be published (see [#209]).
 
 ---
 
----
+## Enum Evolution
 
-## Backward Compatibility
-### #200 - Do Not Break Compatibility
-<RuleHeader id="200" level="MUST" title="Do Not Break Compatibility" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+### #219 - Annotate Enum Extensibility (Open vs Closed)
+<RuleHeader id="219" level="SHOULD" title="Annotate Enum Extensibility (Open vs Closed)" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }, { href: "https://google.aip.dev/126", label: "Google AIP-126: Enumerations" }]} />
 
-**Intent**: let clients upgrade safely without urgent rewrites.
+APIs SHOULD annotate enums with their extensibility intent using the `x-extensible` vendor extension.
 
-Within the same major version, changes MUST remain backward compatible.
+#### Open enums (extensible)
 
-**Breaking changes (avoid within a major version)**:
-
-- Remove or rename endpoints, fields, enum values, or query parameters.
-- Change a field type or shape (e.g., `string` → `object`, array ↔ object).
-- Change formats or constraints in a way that rejects previously valid data (e.g., tighter regex, smaller max length, new required fields).
-- Tighten request validation when clients may already be sending additional fields.
-- Change default behavior in a visible way (sorting, pagination defaults, implicit filters).
-- Change authorization requirements for existing operations (new scopes/capabilities) without a compatible migration path.
-- Change error contracts in a way that breaks parsing/branching (different media type, different envelope, removed fields).
-
-**Compatible changes (generally safe within a major version)**:
-
-- Add new optional response fields.
-- Add new endpoints.
-- Add new optional request fields with safe defaults (and server-side tolerance).
-- Add new enum values only if clients are prepared to handle unknowns (see [#202]).
-
-**Testability**:
-
-- Spec diffs are reviewed for compatibility impacts.
-- Clients/SDKs tolerate unknown response fields and unknown enum values.
-
-### #201 - Prefer Compatible Extensions
-<RuleHeader id="201" level="SHOULD" title="Prefer Compatible Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
-
-**Intent**: evolve APIs by adding capabilities instead of changing existing behavior.
-
-When evolving an API, prefer **compatible extensions** over breaking changes.
-
-**Examples of compatible extensions**:
-
-- Add a new optional response field.
-- Add a new optional request field with a safe default.
-- Add a new query parameter that does not change behavior when omitted.
-- Add a new endpoint instead of overloading an existing one.
-
-**Examples that are often mistaken as compatible but can be breaking**:
-
-- Adding a new enum value (server-compatible, but can break naive clients; see [#202]).
-- Tightening validation (rejecting inputs that used to pass).
-- Changing default sort order, pagination defaults, or implicit filtering.
-
-**Guidance**:
-
-- If behavior must change, prefer a new endpoint or a new major version rather than changing semantics in-place.
-
-**Testability**:
-
-- Proposed changes include a compatibility assessment (what clients might break and why).
-
-### #202 - Prepare Clients for Extensions
-<RuleHeader id="202" level="MUST" title="Prepare Clients for Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
-
-**Intent**: help clients stay resilient as the API evolves.
-
-Clients MUST be prepared for compatible server extensions.
-
-**Client requirements**:
-
-- Ignore unknown fields in responses.
-- Tolerate new enum values (use an "unknown" fallback behavior).
-- Handle HTTP status codes that are not explicitly documented for an endpoint.
-
-**Examples**:
-
-- **Unknown field**:
-  - If the server adds `newField`, clients should continue parsing existing fields and ignore `newField`.
-
-- **Unknown enum value**:
-  - If a client expects `status` in `{ "ACTIVE", "INACTIVE" }` and receives `"PENDING"`, it must not crash; it should map to `UNKNOWN` or treat it as a safe default.
-
-- **Unexpected status code**:
-  - If a client receives `429` or `503`, it should follow documented retry/backoff guidance rather than failing with an unhandled exception.
-
-**SDK guidance**:
-
-- Avoid generated enums that throw on unknown values; prefer string unions or safe mapping with an `UNKNOWN` case.
-
-**Testability**:
-
-- Client tests cover unknown response fields and unknown enum values.
-- Error handling includes a generic fallback path for unexpected status codes.
-
-### #203 - Be Conservative with Inputs
-<RuleHeader id="203" level="SHOULD" title="Be Conservative with Inputs" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
-
-**Intent**: avoid ambiguous inputs that create long-term compatibility traps.
-
-Design request inputs conservatively and document constraints early.
-
-**Guidance**:
-
-- Define and document constraints explicitly (types, formats, length limits, required fields).
-- Prefer clear, unambiguous shapes over "polymorphic" inputs that require guesswork.
-- Be careful with unknown-field handling:
-  - Rejecting unknown input fields can catch client mistakes early.
-  - But changing from "ignore" to "reject" (or tightening validation) later can be a breaking change.
-
-**Recommended approach**:
-
-- Choose and document your unknown-field policy up front.
-- If you need to tighten validation over time, do it with a migration path (warn first, document timelines, and consider new endpoints/versions).
-
-**Examples**:
-
-- If `limit` is accepted, document min/max and default.
-- If a field is an enum, document how clients should handle unknown values.
-
-**Testability**:
-
-- OpenAPI documents constraints (e.g., `minLength`, `maxLength`, `format`, `pattern`, `minimum`/`maximum`).
-- Validation behavior is consistent across endpoints and changes are reviewed for compatibility impact.
-
-### #204 - Return Top-Level JSON Objects
-<RuleHeader id="204" level="MUST" title="Return Top-Level JSON Objects" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc8259", label: "RFC 8259 — The JSON Data Interchange Format" }]} />
-
-**Intent**: preserve evolvability and enable consistent metadata without breaking clients.
-
-Use JSON as the default payload format for requests and responses. Responses MUST use a JSON **object** as the top-level structure (not a bare array). This keeps the door open to add metadata (counts, links, warnings, paging cursors) without changing the response type.
-
-**Why**:
-
-- A top-level object allows adding metadata (pagination, links, counts) without changing the shape clients parse.
-
-**Recommended response envelope**:
-
-```json
-{
-  "items": [{ "id": "A" }, { "id": "B" }],
-  "count": 123,
-  "limit": 2,
-  "offset": 0
-}
-```
-
-**Examples**:
-
-- ✅ list envelope: `{ "items": [ ... ], "count": 123 }`
-- ✅ later add metadata (non-breaking): `{ "items": [ ... ], "count": 123, "links": { "self": "..." } }`
-- ❌ top-level array: `[ { "id": "A" }, { "id": "B" } ]` (prevents adding metadata compatibly)
-
-**Patterns**:
-
-- Collection responses: wrap in an envelope like `{ items, count, limit, offset }`.
-- Single-resource responses: return the resource object.
-- Errors: use Problem Details (`application/problem+json`) (see [#404]).
-
-**Exceptions**:
-
-- `204 No Content` is still valid for operations that intentionally return no body.
-- Non-JSON success responses are allowed for downloads/uploads when appropriate (see [#704]), but error responses should remain JSON (Problem Details).
-
-### #205 - Treat OpenAPI Objects as Extensible
-<RuleHeader id="205" level="MUST" title="Treat OpenAPI Objects as Extensible" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
-
-**Intent**: enable additive evolution without breaking existing clients.
-
-Object schemas in responses MUST be treated as **open for extension** by default. Servers MAY add new optional properties over time without requiring clients to upgrade.
-
-**What this means in practice**:
-
-- Clients MUST ignore unknown response fields (see [#202]).
-- Servers MUST NOT make new fields required in existing responses.
-- Enum sets may grow over time; clients must tolerate unknown enum values (see [#202]).
-
-**Examples**:
-
-- Additive field (compatible):
-
-```json
-{ "id": "123", "name": "Example", "createdAt": "2026-01-01T00:00:00Z" }
-```
-
-- Additive links (compatible):
-
-```json
-{ "id": "123", "links": { "self": "/accounts/123", "owner": "/users/9" } }
-```
-
-- Enum expansion (server-compatible; client must be resilient):
-  - Before: `status ∈ {"ACTIVE","INACTIVE"}`
-  - After: server returns `"PENDING"`
-
-**Testability checklist**:
-
-- Clients ignore unknown response fields.
-- Clients tolerate unknown enum values.
-- Response bodies are top-level objects (not arrays).
-- New optional fields do not change required/validation semantics.
-
----
-
----
-
-## Deprecation
-### #209 - Reflect Deprecation in OpenAPI
-<RuleHeader id="209" level="MUST" title="Reflect Deprecation in OpenAPI" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
-
-**Intent**: make deprecations visible, machine-readable, and actionable.
-
-When deprecating any API element (operation, parameter, schema, field):
-
-- Mark it as deprecated in OpenAPI (`deprecated: true`).
-- Provide a clear migration path (replacement endpoint/field/version).
-- Publish a sunset timeline (date) and link to migration documentation.
-
-**OpenAPI example**:
+New values MAY be added in any minor revision without a major version bump. Clients MUST handle unknown values gracefully (see [#202]).
 
 ```yaml
-paths:
-  /accounts/{id}:
-    get:
-      deprecated: true
-      summary: Get account (deprecated)
-      description: |
-        Deprecated. Use GET /v2027/accounts/{id}.
-        Sunset: 2027-06-30.
-      externalDocs:
-        description: Migration guide
-        url: https://developer.sailpoint.com/docs/guides/.../migration
-      responses:
-        "200": { ... }
+status:
+  type: string
+  x-extensible: true
+  enum: [ACTIVE, INACTIVE, PENDING]
+  description: >
+    Account status. This enum is extensible — new values may be
+    added in future revisions. Clients must handle unknown values.
 ```
 
-**Docs requirements**:
+#### Closed enums (non-extensible)
 
-- State **what is deprecated**, **what to use instead**, and **by when**.
-- Call out any behavior differences clients must handle.
+New values MUST NOT be added without a major version bump.
 
-**Testability**:
-
-- OpenAPI contains `deprecated: true` and migration guidance for deprecated elements.
-- A documented sunset date exists and is communicated consistently.
-
-### #210 - Monitor Deprecated API Usage
-<RuleHeader id="210" level="MUST" title="Monitor Deprecated API Usage" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
-
-**Intent**: enable safe retirement by knowing who still depends on deprecated behavior.
-
-When an API element is deprecated (see [#209]), teams MUST monitor usage and proactively notify consumers.
-
-**Minimum expectations**:
-
-- Track calls to deprecated operations (and, where feasible, deprecated parameters/fields).
-- Identify calling clients (token client ID, integration identifier, or other stable identifier).
-- Maintain dashboards and alerts leading up to sunset.
-
-**Recommended workflow**:
-
-- At deprecation time:
-  - announce deprecation, replacement, and sunset date
-- During migration window:
-  - notify top callers and provide migration support
-- Before sunset:
-  - escalate notifications and confirm readiness
-
-**Testability**:
-
-- There is a queryable metric/log dimension for deprecated usage.
-- Ownership has a playbook for contacting consumers.
-
-### #211 - Add Deprecation and Sunset Headers
-<RuleHeader id="211" level="SHOULD" title="Add Deprecation and Sunset Headers" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
-
-**Intent**: provide machine-readable deprecation signals in live traffic.
-
-When an endpoint is deprecated, APIs SHOULD include `Deprecation` and `Sunset` headers in responses from that endpoint.
-
-**Guidance**:
-
-- `Deprecation` indicates the endpoint is deprecated.
-- `Sunset` indicates the planned date/time the endpoint will no longer be available.
-- Headers complement (but do not replace) OpenAPI `deprecated: true` + migration guidance (see [#209]).
-
-**Example**:
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-Deprecation: true
-Sunset: Tue, 30 Jun 2027 00:00:00 GMT
-
-{ "id": "123", "name": "Example" }
+```yaml
+httpMethod:
+  type: string
+  x-extensible: false
+  enum: [GET, POST, PUT, PATCH, DELETE]
+  description: >
+    HTTP method. This enum is closed — the value set is fixed
+    within this major version.
 ```
 
-**Testability**:
+#### Default assumption
 
-- Deprecated endpoints consistently return the deprecation headers.
+If `x-extensible` is not present, clients SHOULD assume the enum is **open** (extensible).
 
-### #212 - Have Clients Monitor Deprecation and Sunset Headers
-<RuleHeader id="212" level="SHOULD" title="Have Clients Monitor Deprecation and Sunset Headers" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
+#### Compatibility rules
 
-**Intent**: ensure clients learn about deprecations early and can plan migrations.
+- Adding a value to an **open** enum is a compatible change.
+- Adding a value to a **closed** enum is a breaking change and requires a new major version (see [#200]).
+- Removing or renaming an enum value is always a breaking change, regardless of extensibility.
 
-API clients SHOULD treat `Deprecation` and `Sunset` response headers as actionable signals (when present) and surface them to developers/operators.
+#### SDK generation guidance
 
-**Client expectations**:
+- For open enums, generate string unions with an `UNKNOWN` fallback (or equivalent).
+- For closed enums, exhaustive enums without a fallback are acceptable.
 
-- Log and/or emit telemetry when `Deprecation` is present.
-- If `Sunset` is present, record the sunset date and create an alert/ticket within the client owner team.
-- For SDKs and shared client libraries, provide a common hook/middleware so application teams do not need to implement this repeatedly.
-
-**Recommended behaviors** (examples):
-
-- CLI / local dev:
-  - warn once per endpoint per run when `Deprecation` is present
-- Production:
-  - count deprecated calls (metric)
-  - alert when deprecated usage is non-zero past a threshold
-  - alert when current date is within N days of `Sunset`
-
-**Notes**:
-
-- Presence/absence of headers MUST NOT be the only way clients learn about deprecation; specs and docs remain canonical (see [#209]).
-- Clients MUST NOT ignore server-side deprecation just because headers are missing.
-
-### #213 - Do Not Start New Usage of Deprecated APIs or Features
-<RuleHeader id="213" level="MUST" title="Do Not Start New Usage of Deprecated APIs or Features" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
-
-**Intent**: stop new dependencies on deprecated features.
-
-Teams MUST NOT start new dependencies on APIs/features that are already marked deprecated.
-
-**What “start using” means**:
-
-- New code paths calling deprecated endpoints/fields.
-- New integrations/clients adopting deprecated behavior.
-- New tenants/environments enabling or onboarding onto deprecated versions.
-
-**Exceptions**:
-
-- Only allowed with explicit owner approval and a documented remediation plan (timeline + migration).
-
-**Testability**:
-
-- Reviews/CI checks prevent introducing new calls to deprecated endpoints (where feasible).
-- Any exceptions are documented and time-bounded.
-
+**Related rules**: [#112] enum naming, [#200] backward compatibility, [#201] compatible extensions, [#202] client resilience, [#205] extensible objects.
 
 ---
 
 For patterns and examples that support these rules, see:
 
-- [Reference](/docs/appendices)
-
-### #218 - Agree on Deprecation Timeframes with Clients
-<RuleHeader id="218" level="SHOULD" title="Agree on Deprecation Timeframes with Clients" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
-
-**Intent**: choose deprecation windows that are realistic for consumers.
-
-When planning to deprecate API features, versions, or behaviors, teams SHOULD collaborate with known clients to agree on reasonable deprecation timeframes.
-
-**Guidance**:
-
-- Prefer longer windows for external/public APIs than for internal-only APIs.
-- If client coordination is not possible, publish a conservative default window and provide an escalation path.
-- Always publish the sunset date and migration guidance (see [#209]).
+- [Guides](/docs/guides)
+- [Appendices](/docs/appendices)
