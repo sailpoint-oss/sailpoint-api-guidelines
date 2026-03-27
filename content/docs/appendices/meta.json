@@ -6,6 +6,7 @@
     "glossary",
     "review-checklist",
     "compatibility-checklist",
+    "breaking-change-reference",
     "openapi-snippet-library",
     "optimistic-locking",
     "pagination-recipes"

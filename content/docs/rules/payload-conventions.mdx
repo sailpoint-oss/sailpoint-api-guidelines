@@ -3,9 +3,15 @@ title: "Payload Conventions"
 description: Rules for JSON structure, media types, and consistent payload conventions.
 ---
 
-These rules standardize JSON payload shapes so clients can parse consistently and services can evolve safely.
+These rules explain the payload defaults that callers should be able to rely on without guessing.
 
 **Reference**: [OpenAPI snippet library](/docs/appendices/openapi-snippet-library) | [Review checklist](/docs/appendices/review-checklist)
+
+Use this section to answer:
+
+- When is a field omitted versus returned as `null`?
+- What defaults apply when an optional field is missing?
+- Which media type and PATCH behavior should the contract declare?
 
 ---
 
@@ -28,8 +34,7 @@ These rules standardize JSON payload shapes so clients can parse consistently an
 - Required booleans MUST be present and MUST be `true` or `false`.
 - Optional booleans that are not applicable MUST be omitted entirely — do not send `null`.
 - If you need three states, use an explicit enum (e.g., `"ENABLED" | "DISABLED" | "UNKNOWN"`).
-- Every optional boolean MUST have a documented default behavior when absent (see [#709]).
-- If omitted, the server MUST behave as if the default value was supplied.
+- Every optional boolean MUST have documented omission behavior (see [#709]).
 
 - ✅ `{ "enabled": true }`
 - ✅ `{}` (if `enabled` is optional and not applicable)
@@ -69,6 +74,7 @@ middleName:
 ### #704 - Use Standard Non-JSON Media Types
 <RuleHeader id="704" level="MAY" title="Use Standard Non-JSON Media Types" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9457", label: "RFC 9457 — Problem Details" }]} />
 
+- Default to JSON unless the use case genuinely needs a non-JSON representation (see [#705]).
 - When non-JSON content types are needed, always set the correct `Content-Type`.
 - Use `Content-Disposition` for downloads when appropriate.
 - Error responses SHOULD still use JSON even when the success body is non-JSON (see [#404]).
@@ -180,7 +186,7 @@ If keys are user-provided, document any normalization rules (case sensitivity, a
 - A reviewer reading the spec SHOULD be able to determine what happens for every optional field when omitted.
 
 - `includeDisabled` (optional): default is `false`
-- `count` (optional): default is `false`
+- `dryRun` (optional): default is `false`
 
 ### #710 - Define Required Fields per OpenAPI
 <RuleHeader id="710" level="MUST" title="Define Required Fields per OpenAPI" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
@@ -209,6 +215,12 @@ properties:
 
 - Every PATCH endpoint MUST declare the accepted content type in its OpenAPI `requestBody`.
 - Every PATCH endpoint MUST document null vs. omission semantics explicitly.
+
+Pick one PATCH style per endpoint and make the contract obvious to callers:
+
+- Use JSON Merge Patch when omitted means "leave unchanged" and `null` means "clear".
+- Use JSON Patch when callers need explicit operations on arrays or nested paths.
+- Use a resource-specific JSON body only when the API has a small, well-documented patch contract.
 
 #### Recognized PATCH formats
 

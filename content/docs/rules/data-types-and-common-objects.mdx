@@ -3,9 +3,15 @@ title: "Data Types & Common Objects"
 description: Rules for consistent data formats (dates, durations, identifiers) and reusable common objects.
 ---
 
-These rules standardize common data types and formats so APIs stay consistent across languages, timezones, and tooling.
+These rules standardize common formats and field names so the same concepts look the same across APIs.
 
 **Reference**: [Glossary](/docs/appendices/glossary) | [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
+
+Use this section to answer:
+
+- Which wire format should this value use?
+- What is the standard field name for this shared concept?
+- Which OpenAPI `format` should I declare?
 
 ---
 
@@ -139,7 +145,7 @@ resourceId:
   - `externalId` (string): external system identifier (see [#411])
   - `tags` (array of strings): user-defined categorization labels
   - `etag` (string): entity version tag for optimistic locking (see [Optimistic locking](/docs/appendices/optimistic-locking))
-  - `deletedAt` (string, date-time, nullable): soft-delete timestamp (null if not deleted)
+  - `deletedAt` (string, date-time, nullable): soft-delete timestamp (see [#703] if `null` is used)
   - `href` or `self` (string, uri): canonical self-link URL
   - `ownerRef` (object: `{ id, name }`): standard reference shape for related entities
 - Do not invent synonyms (`created` vs `createdAt`, `lastModified` vs `modifiedAt`). Prefer the standard name for all new APIs and fields.
@@ -152,7 +158,7 @@ resourceId:
 - APIs MUST use standardized OpenAPI formats where they apply, and SHOULD validate them at runtime.
 - Use `format` only when it accurately describes the values emitted and accepted, and always provide matching examples.
 - Common formats:
-  - `date-time` / `date` (see [#802])
+  - `date-time` / `date` (see [#802] for the canonical date/time rules)
   - `uuid` for UUID strings
   - `uri` for absolute URIs; `uri-reference` when relative references are allowed
   - `email` for email addresses

@@ -31,6 +31,8 @@ Use `limit` + `offset` for most list endpoints:
 
 - Always define a stable default sort order (otherwise pagination is non-deterministic).
 - Document maximum `limit` and expected performance characteristics.
+- If `offset` is past the end of the result set, return `200 OK` with `items: []`.
+- If `count` is omitted or `false`, the response may omit the `count` field.
 
 ## Cursor-based pagination (optional complement)
 
@@ -49,7 +51,7 @@ Example (cursor-only request):
 }
 ```
 
-Cursor contracts must be stable and opaque — clients should not parse cursor contents.
+Cursor contracts must be stable and opaque. Clients should not parse cursor contents, and servers should treat a cursor as valid only for the same filter and sorter context that created it.
 
 ## Combined offset + cursor example
 

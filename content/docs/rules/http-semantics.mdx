@@ -3,7 +3,7 @@ title: "HTTP Semantics"
 description: Rules for HTTP method correctness, status codes, headers, retries, and safe semantics.
 ---
 
-These rules standardize HTTP behavior so APIs are interoperable, predictable, and safe to integrate with.
+These rules standardize method, status code, error, and retry behavior so clients can predict what the API will do from the wire contract alone.
 
 ## Error Model Context
 
@@ -15,7 +15,7 @@ Consistent error responses reduce client guesswork and make failures easier to d
 - Keep error payloads **stable** and **documented** in OpenAPI.
 - Avoid leaking sensitive implementation details (stack traces, internal IDs, vendor exceptions).
 
-**Problem Details (RFC 7807):**
+**Problem Details (RFC 9457):**
 
 Problem Details provides a standard JSON shape (`type`, `title`, `status`, `detail`, `instance`) while still allowing extensions.
 
@@ -36,9 +36,34 @@ Clients retry requests (network issues, timeouts, transient failures). APIs shou
 
 **Reference**: [OpenAPI snippet library](/docs/appendices/openapi-snippet-library) | [Optimistic locking](/docs/appendices/optimistic-locking) | [Review checklist](/docs/appendices/review-checklist)
 
+Use this section to answer:
+
+- Which HTTP method and status code should this operation use?
+- What does the standard error body look like?
+- Is the operation safe to retry?
+
+## Quick Reference
+
+| If you are implementing... | Start here |
+| --- | --- |
+| A standard read or write endpoint | [#401], [#402], and [#403] |
+| A shared error contract | [#404] |
+| A long-running operation | [#407] |
+| Retry-safe writes | [#409], [#410], and [#415] |
+| Retry guidance for clients | [#406] and [#418] |
+
 ---
 
 ## HTTP Headers & Methods
+
+| Method | Default use | Key requirement |
+| --- | --- | --- |
+| `GET` | Read data | Safe and side-effect free |
+| `POST` | Create resources or submit request/search resources | `201` for creation, no hidden update semantics |
+| `PUT` | Full replacement | Missing fields are reset |
+| `PATCH` | Partial update | Document content type and null semantics |
+| `DELETE` | Hard delete or documented soft delete | Be explicit about the response behavior |
+
 ### #400 - Use Standard HTTP Headers
 <RuleHeader id="400" level="MUST" title="Use Standard HTTP Headers" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]} />
 
@@ -88,9 +113,10 @@ PUT replaces the entire resource representation. Missing fields are reset, not l
 
 #### DELETE
 
-DELETE removes a resource or performs a documented soft-delete. Returns `204 No Content`.
+DELETE removes a resource or performs a documented soft-delete.
 
-- ✅ `DELETE /accounts/{accountId}` → `204 No Content`
+- ✅ `DELETE /accounts/{accountId}` → `204 No Content` for hard delete
+- ✅ `DELETE /accounts/{accountId}` → documented soft-delete response (see [#515])
 - ❌ `GET /accounts/{accountId}/delete`
 
 ### #402 - Honor Method Properties
@@ -145,32 +171,21 @@ Design operations to be idempotent where feasible, especially if clients might r
 ### #404 - Define a Standard Error Contract in OpenAPI (Problem Details)
 <RuleHeader id="404" level="MUST" title="Define a Standard Error Contract in OpenAPI (Problem Details)" externalDocs={[{ label: "RFC 9457 — Problem Details for HTTP APIs", href: "https://www.rfc-editor.org/rfc/rfc9457" }, { label: "OpenAPI Specification", href: "https://spec.openapis.org/oas/latest.html" }]} />
 
+At minimum, every operation should make these things obvious to callers:
+
+- which success responses can happen,
+- which error responses can happen,
+- what the shared Problem Details shape looks like,
+- and what a real error payload looks like.
+
 - Every operation MUST define success responses (status code + schema + examples) and error responses (status code + standardized schema + examples).
 - Error responses MUST use Problem Details (RFC 9457) with media type `Content-Type: application/problem+json`.
-
-#### Document responses explicitly
-
-For each operation, define the common success responses (2xx) and common error responses (400/401/403/404/409/412/429/5xx) where applicable. Use the OpenAPI `default` response only for truly unexpected server errors.
-
-#### Use Problem Details for errors
-
-- Required fields: `type`, `title`, `status`, `detail`, and `instance`.
-- Recommended extensions: `errors[]` for field-level validation details, `code` (or `detailCode`) for stable application-specific error identifiers, and `correlationId` for support and debugging (from the `X-Request-Id` header; see [#903]).
-- Extension members MUST be documented and stable.
-
-#### Application-specific error codes
-
-- If defined, error codes MUST be documented with their meaning, when they are emitted, and whether retry is safe.
-- They MUST be stable across versions and MUST NOT encode internal implementation details.
-- Error codes MUST NOT replace HTTP status codes.
-
-#### Standardize error shape across APIs
-
-All SailPoint APIs MUST use a single standardized error schema so clients can share error handling logic. Define and reuse a shared OpenAPI component (e.g., `ProblemDetails`) across services.
-
-#### Provide accurate examples
-
-Include at least one error example per operation. Never include secrets or real customer data.
+- For each operation, define the common success responses (2xx) and the expected error responses (400/401/403/404/409/412/429/5xx) where applicable. Use OpenAPI `default` only for truly unexpected server errors.
+- Required fields are `type`, `title`, `status`, `detail`, and `instance`.
+- Recommended extensions are `errors[]` for field-level validation, `code` for stable application-specific identifiers, and `correlationId` for support and debugging (see [#903]).
+- If application-specific error codes are used, they MUST be documented, stable, and MUST NOT replace HTTP status codes.
+- Reuse one shared `ProblemDetails` schema across SailPoint APIs so clients can share error handling logic.
+- Include at least one accurate error example per operation. Never include secrets or real customer data.
 
 #### Examples
 
@@ -236,6 +251,11 @@ See [#307] for rate limit documentation requirements.
 <RuleHeader id="407" level="MUST" title="Support Long-Running Operations" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-15.3.3", label: "RFC 9110 §15.3.3 — 202 Accepted" }, { href: "https://google.aip.dev/151", label: "Google AIP-151: Long-Running Operations" }, { href: "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#asynchronous-operations", label: "Azure: Asynchronous Operations" }]} />
 
 Operations expected to exceed roughly 5 seconds MUST use the async job pattern:
+
+- Return `202 Accepted`.
+- Include `Location` and `Retry-After`.
+- Expose a status resource with `id`, `status`, timestamps, and `result` or `error`.
+- Document how clients poll and what terminal states mean.
 
 1. Client sends the initiating request (typically POST).
 2. Server returns `202 Accepted` with a `Location` header pointing to a status resource and a `Retry-After` header.
@@ -363,6 +383,7 @@ Follow the operationId convention: `create<Thing>Job`, `get<Thing>Job`, `list<Th
 <RuleHeader id="409" level="SHOULD" title="Prefer Idempotent POST/PATCH Where Possible" externalDocs={[{ href: "https://stripe.com/docs/idempotency", label: "Stripe API: Idempotency" }]} />
 
 - For operations that clients are likely to retry (network timeouts, 5xx, gateway errors), APIs SHOULD provide an idempotency mechanism for POST and PATCH.
+- If duplicate side effects would be harmful, do not rely on clients to "just avoid retries."
 - Recommended mechanisms:
   - Optimistic locking for updates (`ETag` + `If-Match`, preferred for PATCH/PUT)
   - `Idempotency-Key` header for side-effecting requests (see [#410])
@@ -417,6 +438,8 @@ Best for resources with a stable external identifier (imports, integrations, ID 
 
 ### #412 - Provide Accurate Response Examples
 <RuleHeader id="412" level="MUST" title="Provide Accurate Response Examples" externalDocs={[{ label: "OpenAPI: Example Object", href: "https://spec.openapis.org/oas/latest.html#example-object" }]} />
+
+If a caller cannot tell how the endpoint behaves from the examples, the examples are not good enough.
 
 - Every operation MUST include realistic, accurate examples for both success and error responses.
 - Include at least one 2xx example and at least one error example per operation.
@@ -569,6 +592,8 @@ Document maximum sizes in the OpenAPI operation description and in the API user 
 <RuleHeader id="415" level="SHOULD" title="Use Optimistic Locking for Concurrent Writes" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-13.1", label: "RFC 9110 §13.1 — Conditional Requests" }, { href: "https://google.aip.dev/154", label: "Google AIP-154: Resource Freshness" }]} />
 
 Write endpoints for resources modified by multiple actors SHOULD require optimistic locking via `ETag`/`If-Match`.
+
+Use this when silent last-write-wins updates would cause data loss, stale overwrites, or operator confusion.
 
 #### How it works
 
@@ -723,6 +748,12 @@ Most frameworks and gateways handle HEAD and OPTIONS automatically. Only documen
 <RuleHeader id="418" level="MUST" title="Classify Error Retryability" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/", label: "AWS Builders' Library: Timeouts, Retries, and Backoff" }]} />
 
 APIs MUST classify error responses into retryable and non-retryable categories, and document retry expectations for any application-specific error codes.
+
+At minimum, tell callers:
+
+- which errors they can retry as-is,
+- which ones require fixing the request first,
+- and whether any custom error code changes the default retry behavior.
 
 #### Retryable errors
 

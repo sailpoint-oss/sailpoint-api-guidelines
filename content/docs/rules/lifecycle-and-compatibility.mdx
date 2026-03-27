@@ -3,9 +3,15 @@ title: "Lifecycle & Compatibility"
 description: Rules for versioning, deprecation, and safe evolution without breaking clients.
 ---
 
-These rules cover versioning and compatibility decisions that keep client integrations stable over time.
+Use these rules when changing an existing API, introducing a new version, or marking something as beta or deprecated.
 
-**Reference**: [Compatibility checklist](/docs/appendices/compatibility-checklist) | [Review checklist](/docs/appendices/review-checklist)
+**Reference**: [Compatibility checklist](/docs/appendices/compatibility-checklist) | [Breaking change reference](/docs/appendices/breaking-change-reference) | [Review checklist](/docs/appendices/review-checklist)
+
+Use this section to answer:
+
+- Is this change compatible inside the current version line?
+- If not, what is the versioning or migration path?
+- How long can beta or experimental behavior stay in that state?
 
 ---
 
@@ -32,19 +38,21 @@ Within the same major version, changes MUST remain backward compatible.
 - Adding new optional request fields with safe defaults.
 - Adding new enum values, but only if clients are prepared to handle unknowns (see [#202]).
 
+When in doubt, treat a visible behavior change as breaking and require a migration plan.
+
+For the detailed change matrix across HTTP, OpenAPI, SDKs, and docs, see the [Breaking change reference](/docs/appendices/breaking-change-reference).
+
 ### #201 - Prefer Compatible Extensions
 <RuleHeader id="201" level="SHOULD" title="Prefer Compatible Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
 
-Teams SHOULD evolve APIs by adding capabilities instead of changing existing behavior:
+Teams SHOULD add capabilities instead of changing existing behavior:
 
 - Adding a new optional response field.
 - Adding a new optional request field with a safe default.
 - Adding a new query parameter that does not change behavior when omitted.
 - Adding a new endpoint instead of overloading an existing one.
 
-Be careful with changes that look compatible but can still break clients: new enum values can crash naive clients (see [#202]), tightened validation rejects inputs that used to pass, and changed defaults shift behavior without touching the schema.
-
-If behavior genuinely must change, prefer a new endpoint or a new major version rather than changing semantics in-place.
+Changes that look additive can still break clients if they tighten validation or change defaults. If behavior genuinely must change, prefer a new endpoint or a new major version.
 
 ### #202 - Prepare Clients for Extensions
 <RuleHeader id="202" level="MUST" title="Prepare Clients for Extensions" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]} />
@@ -97,7 +105,7 @@ Object schemas in responses MUST be treated as open for extension by default:
 - Enum sets MAY grow over time; clients MUST tolerate unknown enum values (see [#202]).
 - Servers MAY add new optional properties over time without requiring clients to upgrade.
 
-None of these additive changes should require a version bump or break existing clients.
+These additive changes should not require a version bump.
 
 ---
 
@@ -105,10 +113,10 @@ None of these additive changes should require a version bump or break existing c
 ### #206 - Avoid Breaking Changes as the Default Strategy
 <RuleHeader id="206" level="SHOULD" title="Avoid Breaking Changes as the Default Strategy" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }, { href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-- Teams SHOULD prefer compatible evolution over breaking changes: add optional fields, new endpoints, and optional query parameters with safe defaults.
-- Only introduce a new version when you have a clear, unavoidable breaking change and a concrete migration plan.
-- Avoid breaking an endpoint and "fixing" it by bumping the version when the change could have been additive.
-- Do not create a new version without a deprecation timeline for the old one.
+- Teams SHOULD prefer additive changes first: optional fields, new endpoints, and optional query parameters with safe defaults.
+- Introduce a new version only for a clear, unavoidable breaking change with a concrete migration plan.
+- Do not create a new version when the same outcome could have been achieved additively.
+- Do not create a new version without a deprecation or support plan for the old one.
 
 ### #207 - Use Path Versioning When Versions Coexist
 <RuleHeader id="207" level="MUST" title="Use Path Versioning When Versions Coexist" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
@@ -284,7 +292,7 @@ info:
 ### #217 - Follow Beta Requirements When Applicable
 <RuleHeader id="217" level="MUST" title="Follow Beta Requirements When Applicable" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-If an API (or endpoint/field) is beta or preview, it MUST follow these requirements.
+If an API, endpoint, or field is beta or preview, it MUST be clearly labeled and have an explicit path out of that state.
 
 #### Labeling
 
@@ -310,7 +318,7 @@ info:
 #### Migration to GA
 
 - Every beta API SHOULD have a clear path to GA with defined exit criteria.
-- Teams SHOULD provide an expected timeline (even if approximate).
+- Teams SHOULD provide an expected timeline or review date.
 - Teams SHOULD explain how beta consumers will be notified of GA.
 
 #### Compatibility boundaries
@@ -379,6 +387,32 @@ If `x-extensible` is not present, clients SHOULD assume the enum is **open** (ex
 - For closed enums, exhaustive enums without a fallback are acceptable.
 
 **Related rules**: [#112] enum naming, [#200] backward compatibility, [#201] compatible extensions, [#202] client resilience, [#205] extensible objects.
+
+---
+
+## Experimental Lifecycle
+
+### #220 - Time-Box Experimental APIs
+<RuleHeader id="220" level="MUST" title="Time-Box Experimental APIs" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+
+If an API requires an experimental opt-in mechanism, it MUST have a documented expiration and owner.
+
+- Document the exact opt-in mechanism and spelling in the contract and docs. If access depends on a special header, show the exact header name and expected value in examples.
+- Record when the experimental period started, who owns it, and the target decision date to promote, replace, or remove it.
+- Experimental state MUST NOT stay open-ended. Set an expiration no more than 180 days from first publication unless an exception is explicitly approved and documented.
+- When the deadline is reached, teams MUST either promote the behavior to beta or GA, publish an approved extension, or remove the experimental path.
+- Do not require undocumented experimental markers for behavior that otherwise looks stable.
+
+```yaml
+paths:
+  /accounts:
+    get:
+      description: |
+        Experimental until 2026-09-30.
+        Requires header X-SailPoint-Experimental: accounts-search-v2.
+      x-stability: experimental
+      x-sailpoint-experimental-expires: 2026-09-30
+```
 
 ---
 

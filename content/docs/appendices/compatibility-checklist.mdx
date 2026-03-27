@@ -8,6 +8,8 @@ description: Practical guidance for evolving APIs safely without breaking client
 Use this checklist when changing an existing API. It focuses on the common ways teams accidentally
 break clients.
 
+Need the full classification matrix? See the [Breaking change reference](/docs/appendices/breaking-change-reference).
+
 ## Generally safe (often compatible)
 
 - Adding optional response fields.
@@ -29,5 +31,6 @@ break clients.
 - Is the change additive? If not, what is the migration plan?
 - Are examples updated in OpenAPI to match the new behavior?
 - Are changes called out in release notes/changelog?
+- If the behavior is beta or experimental, is there a documented owner, exit path, and expiration date?
 
 

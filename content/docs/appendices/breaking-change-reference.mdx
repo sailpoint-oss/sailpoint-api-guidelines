@@ -1,0 +1,222 @@
+---
+title: Breaking change reference
+description: Definitive classification of breaking vs non-breaking changes across HTTP behavior, OpenAPI, SDK generation, and documentation.
+---
+
+# Breaking change reference
+
+This appendix is the definitive compatibility classification for this organization.
+
+Use it when:
+
+- deciding whether a change can ship inside the current version line,
+- reviewing whether a change is additive or breaking,
+- evaluating SDK impact separately from HTTP compatibility,
+- documenting migration, deprecation, or versioning decisions.
+
+## How to use this reference
+
+- Classify every change at each layer it affects: HTTP/REST behavior, OpenAPI specification, SDK generation, and documentation.
+- A change that is non-breaking at the HTTP layer can still be breaking at the SDK layer. Both classifications matter.
+- If any consumer-facing layer is breaking, treat the change as breaking for release planning and migration review (see [#200], [#206], [#208], and [#209]).
+- `Conditional` means the change may be safe for some consumers but breaking for others. Default to conservative handling unless you have clear evidence that the impacted clients and generators are tolerant.
+
+## Layer 1: HTTP / REST Behavioral Changes
+
+### Endpoints & methods
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Remove a path entirely | BREAKING | All consumers calling that path will receive `404`. |
+| Rename a path | BREAKING | Equivalent to remove + add; the old path returns `404`. |
+| Add a new path | Non-breaking | Purely additive. |
+| Change HTTP method on existing path (`POST` -> `PUT`) | BREAKING | Existing clients using the old method will receive `405`. |
+| Add a new HTTP method to an existing path | Non-breaking | Additive. |
+| Change a successful response status code (`200` -> `201`) | BREAKING | Clients checking status codes explicitly may fail. |
+| Add a new error status code | Conditional | Breaking if clients treat unknown codes as success or do not handle them safely. |
+| Change behavior of an existing status code | BREAKING | Semantic contract violation. |
+
+### Request parameters
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Add a required query, path, or header parameter | BREAKING | Existing calls missing the parameter will fail. |
+| Add an optional query parameter | Non-breaking | Existing calls remain valid. |
+| Remove any parameter (required or optional) | BREAKING | Clients sending the parameter may receive errors, and the documented behavior no longer exists. |
+| Rename a parameter | BREAKING | Equivalent to remove + add; the old name no longer works. |
+| Change parameter location (`query` -> `header`) | BREAKING | Clients sending the parameter in the old location will be ignored or rejected. |
+| Make an optional parameter required | BREAKING | Existing calls missing the parameter will fail. |
+| Make a required parameter optional | Non-breaking | Existing clients already send it; their calls still work. |
+| Narrow validation on a parameter (stricter regex, lower max) | BREAKING | Previously valid values are now rejected. |
+| Widen validation on a parameter (looser regex, higher max) | Non-breaking | Previously valid values remain valid. |
+| Change parameter type (`string` -> `integer`) | BREAKING | Clients sending the old type will fail. |
+| Change parameter format (`date` -> `date-time`) | BREAKING | Clients sending the previous format may fail. |
+
+### Request body
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Add a required field | BREAKING | Existing requests missing the field will be rejected. |
+| Add an optional field | Non-breaking | Existing requests remain valid. |
+| Remove a field (required or optional) | BREAKING | Clients sending the field may receive validation errors, and the semantic contract disappears. |
+| Rename a field | BREAKING | Equivalent to remove + add. |
+| Change a field's type | BREAKING | Clients sending the old type will be rejected. |
+| Change a field's format | BREAKING | Often breaks parsing or validation. |
+| Make an optional field required | BREAKING | Existing requests missing it will fail. |
+| Make a required field optional | Non-breaking | Existing clients already send it. |
+| Add a stricter constraint (`minLength`, `pattern`, `minimum`) | BREAKING | Previously valid values are now rejected. |
+| Remove a constraint | Non-breaking | Previously valid values remain valid. |
+| Change accepted `Content-Type` | BREAKING | Clients sending the old content type will receive `415`. |
+
+### Response body
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Remove a field from a response | BREAKING | Clients reading that field will receive missing data or fail. |
+| Rename a field in a response | BREAKING | Equivalent to remove + add. |
+| Change a response field's type | BREAKING | Typed clients will fail deserialization or runtime expectations. |
+| Change a response field's format | BREAKING | May silently corrupt data during deserialization. |
+| Add a field to a response | Conditional | Non-breaking for lenient clients, breaking for strict deserializers that reject unknown fields. |
+| Make a nullable field non-nullable | BREAKING | Previously returned `null` values disappear and clients relying on `null` semantics break. |
+| Make a non-nullable field nullable | Conditional | Clients that do not handle `null` may panic or crash. |
+| Change response `Content-Type` | BREAKING | Clients parsing the old content type will fail. |
+| Remove a response header | BREAKING (if documented) | Clients reading that header will get an empty or missing value. |
+| Add a response header | Non-breaking | Additive. |
+
+### Authentication & authorization
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Add a new auth requirement to a previously open endpoint | BREAKING | Unauthenticated clients will receive `401`. |
+| Remove an auth requirement | Non-breaking (usually) | Existing clients still sending credentials continue to work. |
+| Change auth scheme (`Bearer` -> `ApiKey`) | BREAKING | Clients using the old scheme will be rejected. |
+| Add a new optional auth scheme alongside an existing one | Non-breaking | Existing auth still works. |
+| Change required OAuth scopes | BREAKING | Clients with the old scopes will receive `403`. |
+| Add a required OAuth scope | BREAKING | Same reason as above. |
+| Remove a required OAuth scope | Non-breaking | Less restrictive. |
+
+### Enums
+
+| Change | HTTP/REST | SDK | Reasoning |
+| --- | --- | --- | --- |
+| Remove an enum value | BREAKING | BREAKING | Clients sending the removed value will be rejected, and the generated SDK constant disappears. |
+| Rename an enum value | BREAKING | BREAKING | Equivalent to remove + add. |
+| Add an enum value to a request field | Non-breaking | BREAKING | HTTP is usually fine, but typed SDK consumers with exhaustive switches or matches may fail or need updates. |
+| Add an enum value to a response field | Conditional | BREAKING | Strict or exhaustive consumers may hit default branches, panic, or require code changes. |
+
+Policy recommendation: treat adding enum values as BREAKING for organizational change management. The SDK layer makes this effectively unavoidable for typed-language consumers.
+
+## Layer 2: OpenAPI Specification Changes
+
+These changes may not change live HTTP behavior at all, but they still matter because they affect generated SDKs, documentation, and tooling.
+
+### Operation metadata
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Change `operationId` | SDK BREAKING | `operationId` becomes the function name in generated SDKs. Renaming it changes every call site. |
+| Remove `operationId` | SDK BREAKING | Generators fall back to derived names, which usually differ from the previous explicit name. |
+| Add `operationId` when it was previously missing | SDK BREAKING | Generated function names change from derived to explicit names. |
+| Change tags on an operation | SDK BREAKING | Tags often control SDK package or module grouping. Import paths and namespaces may change. |
+| Add or remove `deprecated: true` | Non-breaking (SDK warning) | Deprecation annotations appear or disappear, but runtime behavior is unchanged. |
+| Change summary or description | Non-breaking | Documentation only; no generated code impact on its own. |
+
+### Schema and type names
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Rename a `$ref` schema | SDK BREAKING | The schema name becomes the generated struct, class, or type name. |
+| Move a schema from inline to `$ref` | SDK BREAKING | The generated type changes from anonymous or inline to named. |
+| Move a schema from `$ref` to inline | SDK BREAKING | The generated named type disappears or becomes anonymous. |
+| Change a property name in a schema | BREAKING (HTTP + SDK) | JSON field names change on the wire and generated field names change in SDKs. |
+| Change the `required` array in a schema | BREAKING | Validation behavior changes and generated type metadata changes. |
+| Add `nullable: true` to a field | Conditional | Often changes generated SDK types, for example `string` -> `*string` in Go. |
+| Remove `nullable: true` from a field | BREAKING | Generated types may change from pointer to value types and compile/runtime assumptions break. |
+| Change `additionalProperties` | Conditional | Unknown-field behavior and generated map shapes may change. |
+| Add a discriminator | BREAKING | Generated deserialization behavior changes fundamentally. |
+| Change discriminator mapping | BREAKING | Generated union or polymorphic deserialization logic changes. |
+| Add `allOf`, `oneOf`, or `anyOf` to an existing schema | SDK BREAKING | Generated type shapes change substantially. |
+| Change composition (`allOf` -> `oneOf`) | BREAKING | Both HTTP semantics and generated SDK types change. |
+
+### Parameters and request bodies in the spec
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Change the name of a parameter | BREAKING (HTTP + SDK) | The wire contract changes, and generated function argument names change. |
+| Change the `in` location of a parameter (`query` -> `header`) | BREAKING | Both HTTP behavior and SDK call signatures change. |
+| Change `style` or `explode` on a parameter | BREAKING | Array and object serialization changes on the wire. |
+| Change `required: false` to `required: true` on a parameter | BREAKING | Generated function signatures and runtime validation become stricter. |
+| Add a new parameter | Conditional | Non-breaking if optional at HTTP layer, but may still break some positional-argument SDK generators. |
+
+### Spec-level metadata
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Change `info.version` | Intentional; not breaking on its own | This is the canonical version field, but the change itself does not break clients. |
+| Change `servers[].url` | BREAKING | Base URL changes and clients targeting the old server fail. |
+| Add a server URL | Non-breaking | Additive. |
+| Remove a server URL | BREAKING | Clients pinned to that server lose a valid target. |
+| Change `securitySchemes` | Conditional | Depends on whether old schemes still function. |
+| Remove a security scheme | BREAKING | Clients using that scheme break. |
+| Change shared `components/headers` | Conditional | Impact depends on whether the header is additive, required, request-side, or response-side. |
+
+## Layer 3: SDK-Specific Breaking Changes
+
+These are cases where generated SDKs break even if the HTTP API still behaves the same way.
+
+| Change | Breaking in | Reasoning |
+| --- | --- | --- |
+| `operationId` rename | All SDKs | Function name changes at every call site. |
+| Schema name rename | All SDKs | Type name changes at every reference. |
+| Tag change on operation | All SDKs | Package or module path changes for that operation. |
+| `nullable` added to property | Go specifically | `string` often becomes `*string`, forcing nil handling. |
+| New required parameter added | All SDKs | Function signatures change and existing code may not compile. |
+| Parameter renamed | All SDKs | Named or positional call sites need updates. |
+| Response type changed | All SDKs | Return type changes and consumers must update usage. |
+| Required array changed | Go specifically | Struct tags and omit-empty behavior may change. |
+| `additionalProperties` changed | All SDKs | Map fields may appear, disappear, or change type. |
+| New enum value added | Typed-language SDKs | Exhaustive switch or match logic becomes incomplete. |
+| Response field type changed (`string` -> `int`) | All SDKs | Compile-time or runtime deserialization breaks. |
+| `oneOf` or `anyOf` introduced | All SDKs | Generated interface or union types replace concrete structs. |
+| Path parameter type changed | All SDKs | Function argument types change. |
+| Format change (`date` -> `date-time`) | All SDKs | Generated SDK types may change significantly, for example `string` -> `time.Time`. |
+
+## Layer 4: Documentation Breaking Changes
+
+These do not necessarily break code, but they do break the developer experience contract and should still be tracked.
+
+| Change | Classification | Reasoning |
+| --- | --- | --- |
+| Remove a documented guide or tutorial | Doc breaking | Linked content disappears, breaking bookmarks, SEO, and external references. |
+| Change a portal URL slug | Doc breaking | Existing links and bookmarks stop working. |
+| Remove a code example | Doc breaking | Developers lose working reference material they may rely on. |
+| Change a code example to use a renamed field or parameter | Doc breaking | The example no longer matches the API shape readers expect. |
+| Change a description in a way that changes semantic meaning | Doc breaking | Consumers built against the prior documented meaning may now be wrong. |
+| Remove changelog entries | Doc breaking | The audit trail for contract evolution disappears. |
+
+## Quick reference matrix
+
+| Change | HTTP | SDK | Docs |
+| --- | --- | --- | --- |
+| Remove path | BREAK | BREAK | BREAK |
+| Rename `operationId` | safe | BREAK | BREAK |
+| Change schema name | safe | BREAK | BREAK |
+| Change tag on operation | safe | BREAK | BREAK |
+| Add optional field (response) | safe | safe | safe |
+| Add enum value | safe | BREAK | warn |
+| Remove enum value | BREAK | BREAK | BREAK |
+| Rename field | BREAK | BREAK | BREAK |
+| Add required parameter | BREAK | BREAK | BREAK |
+| Add optional parameter | safe | COND* | safe |
+| `nullable` added | safe | BREAK | warn |
+| Change format | BREAK | BREAK | warn |
+| Change `servers[].url` | BREAK | BREAK | BREAK |
+
+`COND*` = breaking in positional-argument SDK generators.
+
+## Related rules
+
+- [#200] Do Not Break Compatibility
+- [#206] Avoid Breaking Changes as the Default Strategy
+- [#208] Use Year-Based API Versioning (YYYY.Revision)
+- [#209] Reflect Deprecation in OpenAPI

@@ -11,12 +11,14 @@ short—use it to find the right area, then dive into the relevant Rule category
 ## Contract and docs
 
 - Is OpenAPI complete (parameters, request/response schemas, and examples)?
+- Does the API description explain audience, auth model, core workflows, and major edge cases?
 - Are error responses documented and consistent?
 - Are breaking changes avoided or explicitly handled?
 
 ## Security
 
 - Are authentication and authorization requirements clearly documented per operation?
+- Are unauthenticated or unauthorized requests rejected before payload parsing or semantic validation?
 - Are least-privilege scopes/permissions used?
 - Are sensitive details avoided in logs and error payloads?
 
@@ -35,6 +37,7 @@ short—use it to find the right area, then dive into the relevant Rule category
 
 - Is default ordering stable?
 - Are pagination defaults and limits documented?
+- Do list endpoints implement `limit` + `offset` and return an empty page rather than `404` when the offset is out of range?
 - Are filtering/search parameters documented with examples?
 
 ## Payload conventions and common objects
@@ -42,6 +45,11 @@ short—use it to find the right area, then dive into the relevant Rule category
 - Are timestamps and formats consistent (RFC 3339, etc.)?
 - Are enums and optional fields handled consistently?
 - Are null/empty semantics clear?
+
+## Lifecycle and rollout
+
+- If something is beta or preview, is it clearly labeled and does it have an exit path?
+- If something is experimental, is the opt-in marker documented with an owner and expiration date?
 
 ## Helpful references
 

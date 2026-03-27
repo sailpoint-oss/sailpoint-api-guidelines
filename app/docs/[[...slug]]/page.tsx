@@ -1,14 +1,28 @@
-import { getPageImage, source } from "lib/source";
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
 } from "fumadocs-ui/layouts/docs/page";
-import { notFound } from "next/navigation";
+import { createRelativeLink } from "fumadocs-ui/mdx";
+import { getPageImage, source } from "lib/source";
 import { getMDXComponents } from "mdx-components";
 import type { Metadata } from "next";
-import { createRelativeLink } from "fumadocs-ui/mdx";
+import { notFound } from "next/navigation";
+import type { ComponentPropsWithoutRef } from "react";
+
+import rulesData from "@/public/rules.json";
+
+const ruleUrlById = new Map(
+  rulesData.rules.map((rule) => [rule.id, rule.url] as const),
+);
+
+function resolveRuleHref(href?: string) {
+  if (!href) return href;
+  const match = href.match(/^#(\d+)$/);
+  if (!match) return href;
+  return ruleUrlById.get(match[1]) ?? href;
+}
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
@@ -16,6 +30,13 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   if (!page) notFound();
 
   const MDX = page.data.body;
+  const RelativeLink = createRelativeLink(source, page);
+
+  const RuleAwareLink = (props: ComponentPropsWithoutRef<"a">) => {
+    const href =
+      typeof props.href === "string" ? resolveRuleHref(props.href) : props.href;
+    return <RelativeLink {...props} href={href} />;
+  };
 
   return (
     <DocsPage
@@ -30,8 +51,8 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
       <DocsBody>
         <MDX
           components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(source, page),
+            // Support both relative doc links and stable rule-id links like [#602].
+            a: RuleAwareLink,
           })}
         />
       </DocsBody>

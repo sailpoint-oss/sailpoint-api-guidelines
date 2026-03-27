@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "903",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#903",
+    "url": "/docs/rules/operations-and-quality#903"
+  },
+  "currentTitle": "Return a Request ID on Every Response",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

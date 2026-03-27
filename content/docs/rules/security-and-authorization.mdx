@@ -3,30 +3,15 @@ title: "Security & Authorization"
 description: Rules for OAuth, scopes, licensing/entitlements, and secure-by-default API behavior.
 ---
 
-These rules define baseline authentication and authorization expectations and how to document them for consumers.
+These rules define the baseline for protected APIs: how callers authenticate, how authorization is documented, and what must happen before request processing begins.
 
-## Authentication and Scope Design Context
+## Security Design Context
 
-Security needs to be consistent and clearly documented: clients should know what credentials are
-required, what scopes are needed, and what failures look like.
+For each protected endpoint, a reader should be able to answer:
 
-**Recommendations:**
-
-- Authenticate and authorize **before** doing expensive work.
-- Document security requirements per operation in OpenAPI.
-- Make authorization failures predictable (status code + error contract).
-
-**Scope design guidance:**
-
-- Prefer scopes that match **capabilities** (read/write/admin) for a resource domain.
-- Avoid overly granular scopes that explode in number unless there is a clear governance need.
-- Document what each scope grants and any important constraints.
-
-**OpenAPI documentation tips:**
-
-- Define `securitySchemes` once and reuse.
-- Add operation-level `security` requirements.
-- Provide error examples for auth failures.
+- What credential types are accepted?
+- What scopes, roles, or capabilities are required?
+- Does the service reject unauthenticated or unauthorized requests before parsing the payload?
 
 **Reference**: [Review checklist](/docs/appendices/review-checklist)
 
@@ -116,10 +101,11 @@ URLs appear in browser history, server logs, proxy logs, and `Referer` headers â
 ### #306 - Authenticate and Authorize Before Processing Payloads
 <RuleHeader id="306" level="MUST" title="Authenticate and Authorize Before Processing Payloads" externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]} />
 
-- The API gateway or service MUST verify the caller's identity (authentication) before reading or deserializing the request body.
-- After authentication, the service MUST confirm the caller has the required scopes, roles, or capabilities (authorization) before processing the payload.
-- If authentication fails, return `401 Unauthorized` without processing the body.
-- If authorization fails, return `403 Forbidden` without processing the body.
+- The API gateway or service MUST verify the caller's identity before reading, deserializing, or semantically validating the request body.
+- After authentication, the service MUST confirm the caller has the required scopes, roles, or capabilities before processing the payload.
+- If authentication fails, return `401 Unauthorized` before payload validation or business logic runs.
+- If authorization fails, return `403 Forbidden` before payload validation or business logic runs.
+- If both authentication and payload validity are wrong, the API MUST return the authentication or authorization error first.
 - Deserialization of untrusted input (JSON, XML, multipart) MUST NOT occur until the request is authenticated and authorized.
 - Enforce this ordering at the framework or middleware layer (API gateway policies, authentication filters) rather than in individual handler code.
 - For endpoints that accept large uploads or streaming bodies, authentication and authorization checks SHOULD occur before the server begins buffering the stream.
@@ -212,7 +198,7 @@ APIs SHOULD validate and sanitize all client-provided input beyond schema confor
 
 - SHOULD enforce maximum lengths on all string fields (document them in the schema via `maxLength`).
 - SHOULD validate that enumerated fields contain only documented values.
-- SHOULD reject request bodies that contain unknown properties when the schema doesn't allow additional properties (see [#709]).
+- SHOULD reject request bodies that contain unknown properties when the schema forbids additional properties.
 - For file upload endpoints, SHOULD validate content type, file size, and filename.
 
 **Related rules**: [#306] authenticate before processing, [#120] filter parameter format, [#404] error responses for rejected input.
@@ -242,9 +228,5 @@ cache_key = f"{tenant_id}:{resource_type}:{resource_id}"
 #### Implicit scoping on list endpoints
 
 List and search endpoints MUST implicitly scope results to the authenticated tenant (see [#603]). Clients MUST NOT need to pass a `tenantId` filter to avoid seeing other tenants' data.
-
-#### Testing and verification
-
-Teams SHOULD include cross-tenant isolation in their integration test suites: create resources as tenant A, then verify tenant B cannot read, list, or infer their existence.
 
 **Related rules**: [#300] OAuth security, [#306] authenticate before processing, [#408] no internal details in errors, [#413] caching behavior, [#513] use UUIDs (prevents enumeration), [#603] implicit filters.

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "606",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#606",
+    "url": "/docs/rules/requests-and-querying#606"
+  },
+  "currentTitle": "Include Pagination Links in Collection Responses",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

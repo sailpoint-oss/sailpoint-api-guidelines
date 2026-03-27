@@ -130,8 +130,8 @@
     },
     {
       "id": "116",
-      "title": "Provide Examples for Every Parameter and Property",
-      "level": "MUST",
+      "title": "Provide Examples for Operations and Key Fields",
+      "level": "SHOULD",
       "category": "API Contract & Documentation",
       "categorySlug": "api-contract-and-documentation",
       "url": "/docs/rules/api-contract-and-documentation#116"
@@ -359,6 +359,14 @@
       "category": "Lifecycle & Compatibility",
       "categorySlug": "lifecycle-and-compatibility",
       "url": "/docs/rules/lifecycle-and-compatibility#219"
+    },
+    {
+      "id": "220",
+      "title": "Time-Box Experimental APIs",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#220"
     },
     {
       "id": "300",

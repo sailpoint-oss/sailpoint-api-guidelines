@@ -3,8 +3,8 @@ title: "API Contract & Documentation"
 description: Rules for API-first design, OpenAPI quality, and publishable documentation.
 ---
 
-These rules explain how to specify, document, and publish APIs. The goal is clear, consistent
-contracts and docs that customers and partners can actually use.
+These rules explain what to put in the contract, what to explain in docs, and what naming
+choices keep an API easy to consume.
 
 **Related guides**:
 - [Design & review workflow](/docs/guides/design-and-review-workflow)
@@ -15,31 +15,45 @@ contracts and docs that customers and partners can actually use.
 - [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
 - [Review checklist](/docs/appendices/review-checklist)
 
+Use this section to answer:
+
+- What MUST be present in the OpenAPI contract?
+- What does a caller need in docs beyond the raw schema?
+- Which naming and example conventions should be used everywhere?
+
+## Quick Reference
+
+| If you need to... | Start here |
+| --- | --- |
+| Publish the minimum acceptable contract | [#101] and [#902] |
+| Explain the API to a new consumer | [#102] and [#114] |
+| Pick standard naming conventions | [#104], [#107], [#108], and [#112] |
+| Document operation metadata consistently | [#116], [#117], [#122], and [#123] |
+
 ## API Design & Documentation
 
 ### #100 - Follow API-First
 <RuleHeader id="100" level="SHOULD" title="Follow API-First" externalDocs={[{ href: "https://www.postman.com/api-first/", label: "Postman API-first" }, { href: "https://swagger.io/resources/articles/adopting-an-api-first-approach/", label: "Swagger: API Design-First" }]} />
 
-- Teams SHOULD draft the OpenAPI spec early — paths, schemas, errors, auth, pagination, filtering — and review it with stakeholders before writing production code.
-- The spec and code SHOULD stay in lockstep in version control, with the spec treated as a first-class artifact.
-- Use contract tests or spec validation in CI so changes are visible and reviewable.
-- Every operation SHOULD have `summary`, `description`, `operationId`, tags, request/response schemas, error responses, security requirements, and examples for key request/response bodies.
-- Backward-compatibility SHOULD be evaluated for changes within the same major version.
+- Teams SHOULD draft and review the OpenAPI contract before or alongside implementation.
+- Review paths, schemas, auth, errors, pagination, filtering, and primary examples before production code is finalized.
+- Keep the spec in version control next to the service code and validate it in CI.
+- Check backward compatibility for changes within the same major version.
 
 ### #101 - Provide an OpenAPI Specification
 <RuleHeader id="101" level="MUST" title="Provide an OpenAPI Specification" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-- Every API MUST have an OpenAPI Specification, stored in version control alongside the service code and published for consumers.
-- The OpenAPI document MUST be validated in CI so invalid specs cannot be released.
-- Use a changelog or release notes that reference spec changes, and keep examples accurate — no secrets or real customer data.
-- Prefer OpenAPI 3.0.3 for maximum tooling compatibility. OpenAPI 3.1.x is allowed when JSON Schema features (e.g., `type` arrays for nullable) are needed.
+- Every API MUST publish an OpenAPI specification stored in version control next to the service code.
+- The spec MUST be validated in CI so invalid contracts cannot be released.
+- Keep examples accurate and sanitized. Never publish secrets or real customer data.
+- Prefer OpenAPI 3.0.3 for broad tooling compatibility. Use OpenAPI 3.1.x when its JSON Schema features are required.
 
 For documentation quality levels (Level 1/Level 2 requirements), see [#902].
 
 ### #102 - Provide an API User Manual
 <RuleHeader id="102" level="SHOULD" title="Provide an API User Manual" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
 
-Teams SHOULD provide an API user manual that complements the OpenAPI spec, covering at minimum:
+If a new consumer cannot succeed from OpenAPI alone, teams SHOULD provide a short user manual that covers:
 
 - **Getting started** — authentication approach, base URLs/environments, common headers.
 - **Core workflows** — step-by-step guides per use case (create, update, search, pagination).
@@ -47,11 +61,19 @@ Teams SHOULD provide an API user manual that complements the OpenAPI spec, cover
 - **Error handling** — common errors and recommended client behavior for retry vs no-retry.
 - **Performance** — pagination guidance, filtering/sorting limitations, rate limits (see [#307]), expected latency, recommended client timeout values.
 
-Link the manual from OpenAPI using `externalDocs` (root-level and/or per-tag/per-operation). Include at least one end-to-end example per primary workflow.
+Link the manual from OpenAPI using `externalDocs`. Include at least one end-to-end example for each primary workflow.
 
 ---
 
 ## Text Formatting & Naming Conventions
+
+If you only need the naming defaults, use this shortcut:
+
+- JSON properties and query parameters: camelCase
+- Path segments: lowercase-hyphenated
+- Path parameters: camelCase
+- Enum values: UPPER_SNAKE_CASE
+
 ### #103 - Write in U.S. English
 <RuleHeader id="103" level="MUST" title="Write in U.S. English" externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]} />
 
@@ -125,7 +147,7 @@ Prefer `oauthClientId` over `OAuthClientID`. Be consistent across the entire API
 - Query parameter names MUST use camelCase.
 - Prefer conventional query parameter names for pagination, filtering, and sorting (see [#600]). Be consistent across endpoints.
 
-- ✅ `?sortOrder=asc&maxResults=50`
+- ✅ `?sortOrder=asc&includeDisabled=true`
 - ✅ `?includeDisabled=true`
 - ✅ `?createdAfter=2026-01-01T00:00:00Z`
 
@@ -182,7 +204,7 @@ Scopes MUST follow the canonical format:
 
 #### Endpoint documentation
 
-- OpenAPI `security` requirements MUST list the full set of scopes accepted for the operation (see [#300]/[#206]).
+- OpenAPI `security` requirements MUST list the full set of scopes accepted for the operation (see [#300] and [#301]).
 - If an endpoint supports multiple privilege modes, document them explicitly.
 
 #### Anti-examples
@@ -215,9 +237,9 @@ status:
 ### #113 - Follow SailPoint API Guidelines
 <RuleHeader id="113" level="MUST" title="Follow SailPoint API Guidelines" externalDocs={[{ href: "https://opensource.zalando.com/restful-api-guidelines/", label: "Zalando RESTful API Guidelines" }]} />
 
-- APIs MUST follow these guidelines. Treat the OpenAPI spec as the contract and review guideline compliance as part of API review.
-- Use automated checks where possible — linting, OpenAPI validation, compatibility checks, contract tests.
-- Any deliberate exception MUST be documented with rationale (and a remediation plan where applicable) using the review ledger.
+- APIs MUST treat these rules as part of the contract review bar, not optional style advice.
+- Use automation where possible: OpenAPI validation, compatibility checks, and linting.
+- Any exception MUST be documented with rationale and an owner.
 
 ### #114 - Provide a Detailed API Description
 <RuleHeader id="114" level="MUST" title="Provide a Detailed API Description" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
@@ -225,8 +247,8 @@ status:
 APIs MUST provide a detailed description covering what the API does and how consumers should use it. At minimum include:
 
 - Purpose and scope (in-scope vs out-of-scope).
-- Intended audience (internal vs external) and required licensing/entitlements (see [#115]).
-- Authentication model and high-level authorization expectations (see [#300], [#206]).
+- Intended audience and required licenses or entitlements (see [#215], [#302]).
+- Authentication model and high-level authorization expectations (see [#300], [#301], [#303]).
 - Primary workflows and "happy path" usage (link to guides/user manual; see [#102]).
 - Major edge cases affecting client correctness: pagination defaults, filtering/sorting constraints, idempotency/retry guidance, consistency expectations.
 - Versioning/deprecation model and how changes are communicated (see [#208], [#209]).
@@ -238,21 +260,20 @@ Put this in OpenAPI `info.description` and/or tag-level descriptions, and link t
 
 Every query parameter, path parameter, request property, and response property MUST have a clear description covering (as applicable):
 
-- Meaning/semantics — what it represents, not just its data type.
-- Constraints — allowed values, ranges, patterns, maximum lengths.
-- Default behavior when omitted (see [#709]).
-- Null/omission behavior where relevant (see [#700]).
-- Security/privacy implications (e.g., whether values are tenant-scoped, PII).
+- What the field means, not just its data type.
+- Important constraints such as allowed values, ranges, patterns, and maximum lengths.
+- Default or omission behavior when callers leave it out (see [#709], [#700]).
+- Security or privacy considerations when relevant.
 
 Empty descriptions are not acceptable. Neither are descriptions that restate the property name (e.g., "The status.").
 
-### #116 - Provide Examples for Every Parameter and Property
-<RuleHeader id="116" level="MUST" title="Provide Examples for Every Parameter and Property" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+### #116 - Provide Examples for Operations and Key Fields
+<RuleHeader id="116" level="SHOULD" title="Provide Examples for Operations and Key Fields" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
 
-- Every query parameter, path parameter, request property, and response property MUST include at least one accurate example.
+- Every operation SHOULD include realistic success and error examples (see [#404], [#412]).
+- Add field-level examples when format, defaults, or allowed values would otherwise be unclear.
 - Examples MUST conform to the declared schema and formats.
-- Prefer OpenAPI `example`/`examples` so tooling can render them.
-- Provide examples for both success and error responses (see [#404]).
+- Prefer OpenAPI `example` or `examples` so tooling can render them.
 - Never include secrets or real customer data.
 
 ### #117 - Keep Operation Summaries to 5 Words or Fewer
@@ -288,10 +309,27 @@ Empty descriptions are not acceptable. Neither are descriptions that restate the
 ---
 
 ## Operation & Parameter Documentation
+
+For most endpoints, the minimum documentation bar is:
+
+- Explain what the operation does and who can use it.
+- Describe every public parameter and property.
+- Include realistic success and error examples.
+- Reuse the standard `filters` and `sorters` wording where applicable.
+
 ### #120 - Describe the Filters Parameter (Standard Format)
 <RuleHeader id="120" level="MUST" title="Describe the Filters Parameter (Standard Format)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
-When an endpoint supports the `filters` parameter, APIs MUST use the prescribed description template below. Customize the supported-field list per endpoint, but keep the structure consistent.
+When an endpoint supports `filters`, keep the parameter name, grammar, and description structure consistent across the API.
+
+At minimum, document:
+
+- the syntax,
+- the supported fields,
+- the supported operators,
+- and at least one realistic example.
+
+Use the template below as the default wording:
 
 ```text
 Filters results using the standard expression language.
@@ -323,7 +361,16 @@ Examples:
 ### #121 - Describe the Sorters Parameter (Standard Format)
 <RuleHeader id="121" level="MUST" title="Describe the Sorters Parameter (Standard Format)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
 
-When an endpoint supports the `sorters` parameter, APIs MUST use the prescribed description template below. Customize the supported-field list per endpoint.
+When an endpoint supports `sorters`, keep the parameter name, grammar, and description structure consistent across the API.
+
+At minimum, document:
+
+- the syntax,
+- the supported sort fields,
+- the direction values,
+- and the default ordering when `sorters` is omitted.
+
+Use the template below as the default wording:
 
 ```text
 Sorts results by one or more fields.

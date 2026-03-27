@@ -8,7 +8,7 @@ description: Copy/paste snippets for common patterns (errors, pagination, header
 This page provides copy/paste snippets you can adapt into your OpenAPI spec. Treat these as starting
 points: align naming and details with your API’s domain and Rules.
 
-## Problem Details (RFC 7807) schema (example)
+## Problem Details (RFC 9457) schema (example)
 
 ```yaml
 components:
@@ -60,7 +60,7 @@ components:
         count:
           type: integer
           minimum: 0
-          description: Optional total count when supported.
+          description: Optional total count for the current filter set when requested.
 ```
 
 ## ETag and optimistic locking (documentation hint)

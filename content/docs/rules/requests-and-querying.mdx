@@ -3,7 +3,7 @@ title: "Requests & Querying"
 description: Rules for query parameters, filtering, sorting, pagination, and request patterns.
 ---
 
-These rules define request/query conventions (filtering, sorting, pagination) so list/search endpoints are consistent across APIs.
+These rules define the minimum query, filter, and pagination behavior that every list or search endpoint should document and implement.
 
 ## Pagination and Filtering Context
 
@@ -28,6 +28,12 @@ filtering shape the client experience.
 - Avoid breaking changes: adding filters is typically safe; changing semantics is not.
 
 **Reference**: [Pagination recipes](/docs/appendices/pagination-recipes) | [Review checklist](/docs/appendices/review-checklist)
+
+Every list endpoint should make these answers obvious:
+
+- How do I page through results?
+- What ordering is used when I do not specify one?
+- Which filters and sort fields are actually supported?
 
 ---
 
@@ -87,10 +93,11 @@ parameters:
 ### #602 - Support Offset Pagination for List Endpoints
 <RuleHeader id="602" level="MUST" title="Support Offset Pagination for List Endpoints" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }, { href: "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api", label: "GitHub REST API Pagination" }]} />
 
+- List endpoints MUST support `limit` and `offset`. Do not ship an unpaginated list endpoint when the result set can grow beyond a trivial size.
 - List endpoints MUST support **offset-based pagination** using `limit` and `offset`:
   - `limit` (integer): number of items to return. MUST document default and max.
   - `offset` (integer): number of items to skip (default 0).
-  - `count` (boolean, optional): whether to include total count.
+  - `count` (boolean, optional): whether to include the total count when the caller asks for it.
 - Responses MUST use an object wrapper with metadata:
 
 ```json
@@ -103,13 +110,16 @@ parameters:
 ```
 
 - MUST define a stable, deterministic default sort order — otherwise pagination produces duplicates or missed records.
+- If `offset` is beyond the available result set, return `200 OK` with an empty `items` array rather than `404`.
+- If `count` is omitted or `false`, the response MAY omit the `count` field. If included, `count` MUST represent the total result size for the current filter set.
 - SHOULD document performance characteristics (maximum supported `offset`, cost of `count=true`).
 
 #### Cursor-based pagination (optional complement)
 
 - APIs MAY additionally offer cursor-based pagination for endpoints where offset performance degrades at scale or data is highly mutable.
 - If cursor pagination is offered, **offset+limit MUST still be supported on the same endpoint** — cursor is an addition, never a replacement.
-- Use `cursor` (opaque string token) in requests and `nextCursor` (opaque string, present when more results exist) in responses:
+- Use `cursor` (opaque string token) in requests and `nextCursor` (opaque string, present when more results exist) in responses.
+- Cursor tokens MUST be opaque, tied to the same filter and sorter context, and treated as short-lived pagination state rather than a public contract:
 
 ```json
 {
@@ -167,7 +177,7 @@ GET /accounts?filters=status eq "ACTIVE"&sorters=createdAt:desc&limit=50&offset=
 
 #### Complex queries via POST search endpoint
 
-When queries exceed practical URL length/complexity, use `POST /{resource}/search` with **GET-like semantics** (no resource creation).
+When queries exceed practical URL length or complexity, use `POST /{resource}/search` with read-only search semantics.
 
 - MUST clearly document "search semantics; no creation."
 - MUST be safe to retry (see [#409], [#410]).
@@ -292,8 +302,6 @@ GET /accounts?limit=2&offset=2
   }
 }
 ```
-
-#### Implementation notes
 
 - Links MUST be absolute URLs (not relative paths).
 - MUST preserve all original query parameters (filters, sorters) in link URLs — only change the pagination parameter.

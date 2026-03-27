@@ -3,9 +3,15 @@ title: "Resource Modeling & URLs"
 description: Rules for resource naming, URL structure, identifiers, and modeling API concepts cleanly.
 ---
 
-These rules explain how to model domain concepts as resources and expose them with stable URLs.
+These rules explain how to choose resource boundaries and URLs that stay understandable as the API grows.
 
 **Reference**: [Glossary](/docs/appendices/glossary) | [Review checklist](/docs/appendices/review-checklist)
+
+Use this section to answer:
+
+- Is this concept a resource, a workflow resource, or just an action?
+- Should this relationship be nested or represented with filters?
+- Will this URL still make sense to an external consumer a year from now?
 
 ---
 
@@ -54,7 +60,7 @@ If a non-canonical form is received, either normalize internally, redirect to th
 
 #### When you need an action
 
-When an operation doesn't map to a standard CRUD verb, create a noun-like command or request resource:
+When an operation does not map to a standard CRUD verb, create a noun-like request resource:
 
 - ✅ `POST /accounts/{accountId}/disable-requests`
 - ✅ `POST /access-requests` (request resource)
@@ -87,7 +93,7 @@ Resources SHOULD be designed around common workflows and support efficient retri
 - ✅ `GET /accounts?filters=status eq "ACTIVE"&sorters=name:asc&limit=50&offset=0`
 - ✅ `GET /accounts/{id}?fields=(id,name,status)`
 
-Avoid exposing many near-duplicate resources or designs that require N additional calls for the common case.
+Avoid exposing many near-duplicate resources or designs that require extra round-trips for the common case.
 
 ### #505 - Keep URLs Verb-Free
 <RuleHeader id="505" level="SHOULD" title="Keep URLs Verb-Free" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
@@ -157,11 +163,11 @@ Sub-resources MUST only be nested under a parent when they are tightly coupled �
 
 APIs MUST target at least RMM Level 2:
 
-- MUST use resource URLs (nouns), not action/RPC endpoints.
-- MUST use HTTP methods correctly (see [#401]) and respect method properties (see [#402]).
-- MUST use standard, semantically correct status codes (see [#403]).
-- MUST use standard content negotiation and media types (see [#705]).
-- MUST use a standardized error contract (Problem Details) (see [#404]).
+- Use resource URLs (nouns), not action/RPC endpoints.
+- Use HTTP methods correctly (see [#401]) and respect method properties (see [#402]).
+- Use standard, semantically correct status codes (see [#403]).
+- Use standard content negotiation and media types (see [#705]).
+- Use a standardized error contract (Problem Details) (see [#404]).
 
 Hypermedia controls (RMM Level 3) are not required. Do not mandate HAL or JSON:API link schemas.
 
@@ -197,7 +203,7 @@ If an ID can include unsafe characters (e.g., legacy or natural keys), it MUST b
 
 Internal-only administrative APIs may have different constraints; this rule applies to public, customer-facing APIs.
 
-**Related rules**: [#300], [#206]
+**Related rules**: [#300], [#310]
 
 ---
 

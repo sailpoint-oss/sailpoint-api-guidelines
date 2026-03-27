@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "219",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#219",
+    "url": "/docs/rules/lifecycle-and-compatibility#219"
+  },
+  "currentTitle": "Annotate Enum Extensibility (Open vs Closed)",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

@@ -3,9 +3,15 @@ title: "Operations & Quality"
 description: Rules for operational quality, performance patterns, and observability expectations.
 ---
 
-These rules cover operational concerns like performance patterns, documentation quality, and publishing expectations.
+These rules cover the supporting quality bar around docs, observability, performance patterns, and operational endpoints.
 
 **Reference**: [Review checklist](/docs/appendices/review-checklist)
+
+Use this section to answer:
+
+- What publishing quality bar must the OpenAPI meet?
+- Which operational behaviors should be standardized across APIs?
+- Which optional performance features are worth supporting consistently?
 
 ---
 
@@ -44,7 +50,7 @@ These rules cover operational concerns like performance patterns, documentation 
 
 - All APIs MUST publish an OpenAPI specification accessible to intended consumers (public docs for public APIs, internal portal for internal-only).
 - The published spec MUST be versioned and aligned with the documented API version (see [#208]).
-- The spec should be the source for generated docs, SDKs, and contract validation where feasible.
+- The spec SHOULD be the source for generated docs, SDKs, and contract validation where feasible.
 - While [#101] requires that an OAS exists and is valid, this rule defines the quality bar.
 
 #### Documentation quality levels
@@ -54,15 +60,15 @@ These rules cover operational concerns like performance patterns, documentation 
   - Every operation has `summary` + `description`.
   - Every operation defines success responses and expected error responses (see [#404]).
   - Request/response schemas are defined (no `any`/untyped objects).
-  - `security` is declared with required scopes (see [#300], [#206]).
-  - At least one realistic example is provided for success and for errors.
+  - `security` is declared with required scopes (see [#300], [#301]).
+  - At least one realistic example is provided for the primary success and error paths.
 - **Level 2 (required for external APIs; strongly recommended for internal)**:
   - Consistent tagging and `operationId` conventions.
-  - Pagination/filtering/sorting parameters are documented (where applicable) including supported field lists (see [#600]).
+  - Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#600]).
   - Deprecations are marked with `deprecated: true` and migration guidance (see [#209]).
   - Changelog/revision info is maintained for contract changes (see [#208]).
 
-Teams MUST have a quality checklist and review gates so new/changed endpoints meet the required level.
+Teams MUST have a checklist or review gate so new and changed endpoints meet the required level.
 
 ### #903 - Return a Request ID on Every Response
 <RuleHeader id="903" level="MUST" title="Return a Request ID on Every Response" externalDocs={[{ href: "https://www.w3.org/TR/trace-context/", label: "W3C Trace Context" }, { href: "https://opensource.zalando.com/restful-api-guidelines/#233", label: "Zalando: X-Flow-ID" }]} />
@@ -109,13 +115,13 @@ components:
 <RuleHeader id="904" level="SHOULD" title="Design Webhooks and Event Notifications" externalDocs={[{ href: "https://docs.stripe.com/webhooks", label: "Stripe: Webhooks" }, { href: "https://docs.github.com/en/webhooks", label: "GitHub: Webhooks" }]} />
 
 - APIs with meaningful state transitions SHOULD offer webhook notifications.
-- The event payload envelope MUST follow a standard shape (see example below).
-- Every event MUST include: `id` (UUID, for deduplication), `type` (dot-separated, lowercase, past-tense), `timestamp` (RFC 3339 UTC), `data`, and `tenantId`.
-- Document delivery guarantees explicitly — at-least-once is recommended.
-- Failed deliveries MUST be retried with exponential backoff; document the retry schedule and how failures are surfaced.
-- Include an `X-Webhook-Signature` header with an HMAC-SHA256 signature of the timestamp and request body, and document verification steps for consumers.
-- The event `id` MUST be stable across retries. Consumers SHOULD track event `id` values to skip duplicates.
-- Provide a CRUD API for webhook subscriptions (e.g., `POST /webhook-subscriptions`, `GET /webhook-subscriptions/{id}`, `DELETE /webhook-subscriptions/{id}`) with filtering by event type.
+- Use one standard event envelope shape across the API.
+- Every event MUST include `id`, `type`, `timestamp`, `data`, and `tenantId`.
+- Document delivery guarantees explicitly. At-least-once delivery is recommended.
+- Failed deliveries MUST be retried with exponential backoff, and docs MUST explain the retry behavior.
+- Include an `X-Webhook-Signature` header with an HMAC-SHA256 signature and document how consumers verify it.
+- The event `id` MUST be stable across retries so consumers can deduplicate.
+- Provide a CRUD API for webhook subscriptions with filtering by event type.
 
 ```json
 {
