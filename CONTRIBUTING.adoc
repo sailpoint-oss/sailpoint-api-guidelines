@@ -26,7 +26,7 @@ To validate uniqueness and generate the rule index:
 
 [source,bash]
 ----
-npm run generate:rules
+pnpm rules:generate
 ----
 
 To generate a new unique Rule ID, run:

@@ -9,15 +9,15 @@ A documentation site for SailPoint's API design guidelines, built with FumaDocs 
 ## Commands
 
 ```bash
-npm install          # install deps (uses pnpm under the hood)
-npm run dev          # local dev server
-npm run build        # production build
-npm run lint         # biome check (linting + formatting check)
-npm run format       # biome format --write
-npm run types:check  # fumadocs-mdx && next typegen && tsc --noEmit
-npm run rules:generate   # bun run scripts/generate-rules-json.ts → public/rules.json
-npm run reviews:stubs    # bun run scripts/generate-rule-review-stubs.ts
-npm run reviews:validate # bun run scripts/validate-reviews.ts
+pnpm install         # install deps (CI uses pnpm install --frozen-lockfile)
+pnpm dev             # local dev server
+pnpm build           # production build
+pnpm lint            # biome check (linting + formatting check)
+pnpm format          # biome format --write
+pnpm types:check     # fumadocs-mdx && next typegen && tsc --noEmit
+pnpm rules:generate  # bun run scripts/generate-rules-json.ts → public/rules.json
+pnpm reviews:stubs   # bun run scripts/generate-rule-review-stubs.ts
+pnpm reviews:validate # bun run scripts/validate-reviews.ts
 ```
 
 Scripts in `scripts/` require **bun** to execute.
@@ -63,7 +63,7 @@ The `RuleHeader` component is split across: `components/rule-header.tsx` (server
 
 ### Data Pipeline
 
-`scripts/generate-rules-json.ts` parses all `<RuleHeader>` components from rule MDX files and produces `public/rules.json` — a flat index of all rules with id, title, and URL. Run `npm run rules:generate` after adding/renaming rules.
+`scripts/generate-rules-json.ts` parses all `<RuleHeader>` components from rule MDX files and produces `public/rules.json` — a flat index of all rules with id, title, and URL. Run `pnpm rules:generate` after adding/renaming rules.
 
 ### Source Configuration
 

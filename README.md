@@ -29,6 +29,8 @@ The site is deployed from `main` to **GitHub Pages** with base path `/sailpoint-
 
    On install, **`postinstall`** runs `fumadocs-mdx` to generate MDX-related build inputs.
 
+   Continuous integration uses **`pnpm install --frozen-lockfile`** so installs match `pnpm-lock.yaml` exactly; use that locally when you want the same behavior as CI.
+
 3. Start the dev server:
 
    ```bash
