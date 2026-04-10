@@ -38,16 +38,17 @@ export function RulesIndex() {
   const [levelFilter, setLevelFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [loading, setLoading] = useState(true);
+  const rulesIndexURL = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/rules.json`;
 
   useEffect(() => {
-    fetch("/rules.json")
+    fetch(rulesIndexURL)
       .then((r) => r.json())
       .then((data: RulesData) => {
         setRules(data.rules);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [rulesIndexURL]);
 
   const categories = useMemo(
     () => [...new Set(rules.map((r) => r.category))].sort(),

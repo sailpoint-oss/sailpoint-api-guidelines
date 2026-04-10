@@ -78,12 +78,20 @@ async function main(): Promise<void> {
     const id = parsed.ruleId ?? name.replace(/\.yaml$/, "");
     reviewIds.add(id);
 
+    if (`${id}.yaml` !== name) {
+      errors.push(`Review filename does not match ruleId: ${path.join("reviews", "rules", name)} expected ${id}.yaml`);
+    }
+
     if (!ruleIds.has(id)) {
       errors.push(`Review has no matching rule id in public/rules.json: ${path.join("reviews", "rules", name)} (ruleId=${id})`);
       continue;
     }
 
-    const rule = ruleById.get(id)!;
+    const rule = ruleById.get(id);
+    if (!rule) {
+      errors.push(`Review has no matching rule metadata: ${path.join("reviews", "rules", name)} (ruleId=${id})`);
+      continue;
+    }
     const expectedUrl = rule.url;
     const expectedAnchor = `#${id}`;
 
@@ -97,11 +105,21 @@ async function main(): Promise<void> {
         `Review source.anchor mismatch for ${id}: ${path.join("reviews", "rules", name)} expected ${expectedAnchor} got ${parsed.source.anchor}`,
       );
     }
+    if (parsed.source?.doc) {
+      try {
+        await readFile(path.join(REPO_ROOT, parsed.source.doc), "utf8");
+      } catch {
+        errors.push(
+          `Review source.doc does not exist for ${id}: ${path.join("reviews", "rules", name)} references ${parsed.source.doc}`,
+        );
+      }
+    }
   }
 
   for (const id of ruleIds) {
     if (!reviewIds.has(id)) {
-      errors.push(`Missing review entry for rule [#${id}] (${ruleById.get(id)!.url})`);
+      const rule = ruleById.get(id);
+      errors.push(`Missing review entry for rule [#${id}] (${rule?.url ?? "unknown URL"})`);
     }
   }
 

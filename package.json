@@ -13,7 +13,8 @@
     "rules:generate": "bun run ./scripts/generate-rules-json.ts",
     "rule-links:validate": "bun run ./scripts/validate-rule-links.ts",
     "reviews:stubs": "bun run ./scripts/generate-rule-review-stubs.ts",
-    "reviews:validate": "bun run ./scripts/validate-reviews.ts"
+    "reviews:validate": "bun run ./scripts/validate-reviews.ts",
+    "verify": "npm run rules:generate && git diff --exit-code -- public/rules.json && npm run reviews:validate && npm run rule-links:validate"
   },
   "dependencies": {
     "@base-ui/react": "1.0.0",

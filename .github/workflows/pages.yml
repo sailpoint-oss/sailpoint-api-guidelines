@@ -27,12 +27,18 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
       - name: Install
         run: npm ci
 
+      - name: Verify generated rule metadata
+        run: npm run verify
+
       - name: Build
         env:
-          # Used by next.config.mjs to set basePath/assetPrefix for GitHub Pages.
+          # Enables static export plus the project-site base path for GitHub Pages.
           GITHUB_PAGES: "true"
         run: npm run build
 

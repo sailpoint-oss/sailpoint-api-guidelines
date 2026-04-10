@@ -7,12 +7,18 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const searchAPI = `${basePath}/api/search`;
+const searchType = process.env.GITHUB_PAGES === "true" ? "static" : "fetch";
+
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={poppins.className} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+        <RootProvider search={{ options: { api: searchAPI, type: searchType } }}>
+          {children}
+        </RootProvider>
       </body>
     </html>
   );
