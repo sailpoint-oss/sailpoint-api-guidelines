@@ -134,31 +134,71 @@ export function RulesIndex() {
             <h3 className="mb-2 text-sm font-semibold text-fd-foreground">
               {category}
             </h3>
-            <div className="space-y-1">
-              {categoryRules.map((rule) => {
-                const config =
-                  levelConfig[rule.level as keyof typeof levelConfig];
-                return (
-                  <Link
-                    key={rule.id}
-                    href={rule.url}
-                    className="flex items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-fd-accent"
-                  >
-                    <span className="font-mono text-fd-muted-foreground">
-                      {rule.id}
-                    </span>
-                    <span
-                      className={cn(
-                        "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold",
-                        config?.className,
-                      )}
+            <div className="overflow-x-auto rounded-md border border-fd-border">
+              <table className="w-full min-w-lg border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-fd-border bg-fd-muted/40">
+                    <th
+                      scope="col"
+                      className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-fd-muted-foreground"
                     >
-                      {rule.level}
-                    </span>
-                    <span className="text-fd-foreground">{rule.title}</span>
-                  </Link>
-                );
-              })}
+                      ID
+                    </th>
+                    <th
+                      scope="col"
+                      className="w-24 whitespace-nowrap px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-fd-muted-foreground"
+                    >
+                      Level
+                    </th>
+                    <th
+                      scope="col"
+                      className="min-w-48 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-fd-muted-foreground"
+                    >
+                      Rule
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categoryRules.map((rule) => {
+                    const config =
+                      levelConfig[rule.level as keyof typeof levelConfig];
+                    return (
+                      <tr
+                        key={rule.id}
+                        className="border-b border-fd-border last:border-b-0 transition-colors hover:bg-fd-accent"
+                      >
+                        <td className="max-w-56 px-3 py-2 align-middle">
+                          <Link
+                            href={rule.url}
+                            className="block truncate font-mono text-fd-muted-foreground underline decoration-fd-border underline-offset-2 transition-colors hover:text-fd-foreground"
+                            title={rule.id}
+                          >
+                            {rule.id}
+                          </Link>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2 align-middle">
+                          <span
+                            className={cn(
+                              "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold",
+                              config?.className,
+                            )}
+                          >
+                            {rule.level}
+                          </span>
+                        </td>
+                        <td className="min-w-0 px-3 py-2 align-middle">
+                          <Link
+                            href={rule.url}
+                            className="text-fd-foreground underline decoration-fd-border underline-offset-2 transition-colors hover:decoration-fd-foreground"
+                          >
+                            {rule.title}
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         ))}
