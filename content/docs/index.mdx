@@ -1,80 +1,32 @@
 ---
 title: SailPoint API Guidelines
-description: Start here—how to use the Rules to design consistent, secure, evolvable APIs.
+description: The rules SailPoint uses to design consistent, secure, and evolvable APIs.
 ---
 
-This site is a public hub for SailPoint's API style and design guidelines—built to help teams ship
-consistent, secure, evolvable APIs for customers and partners.
+These guidelines are the rules SailPoint uses to design consistent, secure, and evolvable APIs. Use them when designing a new API, reviewing a pull request, or integrating against SailPoint APIs. The rules are the source of truth — every requirement, example, and anti-pattern lives in a rule.
 
-## Start here
+## How to read a rule
 
-If you're new, begin with this page, then choose a path:
+Each rule has a stable kebab-case ID, a level badge, and a canonical example shown directly below the badge. Cite rules by ID in reviews and design docs, e.g. `[#define-a-standard-error-contract-in-openapi-problem-details]`.
 
-- **Designing a new API**: read the core [Principles](/docs/principles), then work through the Rules
-  categories as you model resources, errors, pagination, and security.
-- **Reviewing an API**: use the Rules as a checklist (each rule has a stable ID you can cite in review
-  comments and docs).
-- **Implementing an API**: follow the Rules for the normative requirements; use the Reference section
-  for checklists and recipes.
-- **Integrating with SailPoint APIs**: use the Rules as a contract checklist for practical patterns
-  (pagination, errors, retries) and terminology.
+Rules use RFC 2119 language:
 
-## Reading this documentation
+- **MUST** — required.
+- **SHOULD** — strongly recommended; exceptions need to be justified and documented.
+- **MAY** — optional; use when it improves client experience or operational safety.
 
-### Normative language (RFC 2119)
-
-These guidelines use RFC 2119 keywords:
-
-- **MUST**: required for compliance.
-- **SHOULD**: strongly recommended; exceptions must be justified and documented.
-- **MAY**: optional; use when it improves client experience or operational safety.
-
-### Rule IDs and stable references
-
-Each rule heading includes a stable numeric ID, e.g. `[#401]`. Rule IDs exist so you can:
-
-- Reference rules in reviews and design docs ("violates [#404]").
-- Deep-link to a specific requirement.
-- Automate checks (linters) against durable anchors.
-
-## What's in this hub?
-
-### Rules (normative)
-
-Rules are the authoritative guard rails. They use RFC 2119 language (MUST/SHOULD/MAY) and preserve
-stable numeric IDs for durable references.
+## Start with the rules
 
 - [Browse all Rules](/docs/rules)
 
-### Reference
-
-Reference material provides reusable checklists, recipes, and copy-paste patterns.
-
-- [Browse Reference](/docs/appendices)
-
-## Quick links
+Common entry points:
 
 - [Resource modeling & URLs](/docs/rules/resource-modeling-and-urls)
-- [Security & Authorization](/docs/rules/security-and-authorization)
 - [HTTP semantics](/docs/rules/http-semantics)
-- [Lifecycle & compatibility](/docs/rules/lifecycle-and-compatibility)
 - [Requests & querying](/docs/rules/requests-and-querying)
+- [Security & authorization](/docs/rules/security-and-authorization)
+- [Lifecycle & compatibility](/docs/rules/lifecycle-and-compatibility)
 - [Payload conventions](/docs/rules/payload-conventions)
 - [Data types & common objects](/docs/rules/data-types-and-common-objects)
-
-## Recommended workflow
-
-### For external readers (integrators)
-
-- Treat the Rules as a **public checklist**: URL design, error handling, pagination, auth.
-- Include **the rule ID** in feedback ("this violates [#404]") and link to the relevant rule section.
-
-### For internal teams (designers/implementers/reviewers)
-
-1. **Start with a resource model** — identify primary resources, identifiers, and relationships.
-2. **Write the OpenAPI contract first** — keep OpenAPI as the single source of truth for contract + docs.
-3. **Run a structured review** — review against the Rules category-by-category (URLs, payloads, errors, pagination, security).
-4. **Implement and validate** — ensure runtime behavior matches OpenAPI examples and descriptions.
-5. **Publish and maintain** — document non-obvious decisions; include compatibility notes for changes.
-
-See: [Review checklist](/docs/appendices/review-checklist)
+- [API contract & documentation](/docs/rules/api-contract-and-documentation)
+- [Operations & quality](/docs/rules/operations-and-quality)

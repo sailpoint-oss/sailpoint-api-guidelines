@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "time-box-experimental-apis",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#time-box-experimental-apis",
+    "url": "/docs/rules/lifecycle-and-compatibility#time-box-experimental-apis"
+  },
+  "currentTitle": "Time-Box Experimental APIs",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

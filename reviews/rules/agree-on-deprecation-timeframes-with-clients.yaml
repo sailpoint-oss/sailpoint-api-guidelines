@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "agree-on-deprecation-timeframes-with-clients",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#agree-on-deprecation-timeframes-with-clients",
+    "url": "/docs/rules/lifecycle-and-compatibility#agree-on-deprecation-timeframes-with-clients"
+  },
+  "currentTitle": "SHOULD agree on deprecation timeframes with clients",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: choose deprecation windows that are realistic for consumers.\n\nWhen planning to deprecate API features, versions, or behaviors, teams SHOULD collaborate with known clients to agree on reasonable deprecation timeframes.\n\n**Guidance**:\n\n- Prefer longer windows for external/public APIs than for internal-only APIs.\n- If client coordination is not possible, publish a conservative default window and provide an escalation path.\n- Always publish the sunset date and migration guidance (see [#reflect-deprecation-in-openapi]).\n",
+    "rationale": "Client migrations take time; collaborating early reduces surprise outages and support burden.",
+    "compatNotes": "Documentation/process guidance."
+  },
+  "reviewNotes": []
+}

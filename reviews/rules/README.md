@@ -12,9 +12,9 @@ Required top-level fields:
 - `schemaVersion`: number (currently `1`)
 - `ruleId`: string (e.g. `"151"`)
 - `source`:
-  - `doc`: string (MDX path, e.g. `"content/docs/rules/http-status-codes-and-error-handling.mdx"`)
-  - `anchor`: string (e.g. `"#151"`)
-  - `url`: string (site URL, e.g. `"/docs/rules/http-status-codes-and-error-handling#151"`)
+  - `doc`: string (MDX path, e.g. `"content/docs/rules/http-semantics.mdx"`)
+  - `anchor`: string (e.g. `"#define-a-standard-error-contract-in-openapi-problem-details"`)
+  - `url`: string (site URL, e.g. `"/docs/rules/http-semantics#define-a-standard-error-contract-in-openapi-problem-details"`)
 - `currentTitle`: string
 - `status`: one of:
   - `"pending"`

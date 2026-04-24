@@ -20,7 +20,8 @@ doesn't change until the content of the rule changes significantly so that
 it does not make sense to identify it with the old Rule ID.
 
 Rules are authored as Markdown/MDX under `content/docs/rules/`.
-Each rule heading must end with a numeric ID (e.g. `[#148]`).
+Each rule uses a stable **kebab-case** id (same string as the level-3 heading and the `RuleHeader` `id`), for example `use-http-methods-correctly`.
+Cross-links in docs use the shorthand `[#use-http-methods-correctly]`, which resolves to the rule’s canonical URL.
 
 To validate uniqueness and generate the rule index:
 
@@ -29,9 +30,4 @@ To validate uniqueness and generate the rule index:
 pnpm rules:generate
 ----
 
-To generate a new unique Rule ID, run:
-
-[source,bash]
-----
-./scripts/new-rule-id.sh
-----
+When adding a rule, pick a descriptive kebab-case `id` that matches the heading, ensure it is unique across all rules, then run `pnpm rules:generate` and `pnpm reviews:stubs` if you need a new review file.

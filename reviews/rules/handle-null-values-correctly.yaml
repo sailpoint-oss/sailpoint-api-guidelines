@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "handle-null-values-correctly",
+  "source": {
+    "doc": "content/docs/rules/payload-conventions.mdx",
+    "anchor": "#handle-null-values-correctly",
+    "url": "/docs/rules/payload-conventions#handle-null-values-correctly"
+  },
+  "currentTitle": "not use null for boolean properties",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

@@ -38,7 +38,10 @@ type ReviewEntryV1 = {
 };
 
 // Works in Bun and Node.
-const REPO_ROOT = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
+const REPO_ROOT = path.resolve(
+  fileURLToPath(new URL(".", import.meta.url)),
+  "..",
+);
 const RULES_JSON_PATH = path.join(REPO_ROOT, "public", "rules.json");
 const OUTPUT_DIR = path.join(REPO_ROOT, "reviews", "rules");
 
@@ -52,7 +55,7 @@ async function exists(p: string): Promise<boolean> {
 }
 
 function guessDocPathFromUrl(url: string): string | null {
-  // url example: /docs/rules/http-status-codes-and-error-handling#151
+  // url example: /docs/rules/http-semantics#define-a-standard-error-contract-in-openapi-problem-details
   const [pathPart] = url.split("#");
   if (!pathPart) return null;
   if (!pathPart.startsWith("/docs/")) return null;
@@ -109,5 +112,3 @@ async function main() {
 }
 
 await main();
-
-

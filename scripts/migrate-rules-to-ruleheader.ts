@@ -3,10 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Converts rule headings of the form:
-//   ### MUST do something [#123]
+//   ### must-do-something
 // into:
 //   ### MUST do something
-//   <RuleHeader id="123" level="MUST" title="do something" />
+//   <RuleHeader id="must-do-something" level="MUST" title="do something" />
 //
 // And then normalizes order to:
 //   <RuleHeader ... />
@@ -19,7 +19,8 @@ import { fileURLToPath } from "node:url";
 const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const RULES_DIR = path.join(REPO_ROOT, "content", "docs", "rules");
 
-const RULE_HEADING_RE = /^(#{2,6})\s+(MUST|SHOULD|MAY)\s+(.*?)\s+\[#(\d+)\]\s*$/;
+const RULE_HEADING_RE =
+  /^(#{2,6})\s+(MUST|SHOULD|MAY)\s+(.*?)\s+\[#(\d+)\]\s*$/;
 const MERGED_HEADING_RE = /^(#{2,6})\s+(MERGED\s+into\s+.*)\s+\[#(\d+)\]\s*$/;
 const CURRENT_RULE_HEADING_RE = /^(#{2,6})\s+(MUST|SHOULD|MAY)\s+(.+?)\s*$/;
 const CURRENT_MERGED_HEADING_RE = /^(#{2,6})\s+(MERGED\s+into\s+.*)\s*$/;
@@ -49,7 +50,10 @@ async function main(): Promise<void> {
       const nextLine = lines[i + 1] ?? "";
       const currentRule = line.match(CURRENT_RULE_HEADING_RE);
       const currentMerged = line.match(CURRENT_MERGED_HEADING_RE);
-      if ((currentRule || currentMerged) && nextLine.match(RULEHEADER_LINE_RE)) {
+      if (
+        (currentRule || currentMerged) &&
+        nextLine.match(RULEHEADER_LINE_RE)
+      ) {
         out.push(nextLine);
         out.push(line);
         i += 1;
@@ -68,7 +72,9 @@ async function main(): Promise<void> {
         const title = merged[2]!.trim(); // keep as-is (may contain [#...] refs inside)
         const id = merged[3]!;
 
-        out.push(`<RuleHeader id="${id}" level="MUST" title="${escapeAttr(title)}" />`);
+        out.push(
+          `<RuleHeader id="${id}" level="MUST" title="${escapeAttr(title)}" />`,
+        );
         out.push(`${hashes} ${title}`);
         continue;
       }
@@ -79,7 +85,9 @@ async function main(): Promise<void> {
       const id = m[4]!;
 
       // Insert canonical RuleHeader first (H2 anchor/header is rendered by the component).
-      out.push(`<RuleHeader id="${id}" level="${level}" title="${escapeAttr(title)}" />`);
+      out.push(
+        `<RuleHeader id="${id}" level="${level}" title="${escapeAttr(title)}" />`,
+      );
 
       // Then keep the textual rule header as an H3 (for TOC/reading flow).
       // We purposely omit the legacy [#id] suffix.
@@ -94,5 +102,3 @@ async function main(): Promise<void> {
 }
 
 await main();
-
-

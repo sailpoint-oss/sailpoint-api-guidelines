@@ -20,25 +20,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## API Contract & Documentation (100-series)
 
-### #100 - Follow API-First
+### follow-api-first
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | process |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#100](/docs/rules/api-contract-and-documentation#100) |
+| **URL** | [/docs/rules/api-contract-and-documentation#follow-api-first](/docs/rules/api-contract-and-documentation#follow-api-first) |
 
 **What to Check**: Not directly testable. Process rule about designing API-first.
 
 ---
 
-### #101 - Provide an OpenAPI Specification
+### provide-an-openapi-specification
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#101](/docs/rules/api-contract-and-documentation#101) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-an-openapi-specification](/docs/rules/api-contract-and-documentation#provide-an-openapi-specification) |
 
 **What to Check**:
 - [ ] OpenAPI document exists and is valid (parseable, no schema errors)
@@ -47,13 +47,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #102 - Provide an API User Manual
+### provide-an-api-user-manual
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#102](/docs/rules/api-contract-and-documentation#102) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-an-api-user-manual](/docs/rules/api-contract-and-documentation#provide-an-api-user-manual) |
 
 **What to Check**:
 - [ ] `externalDocs` is present at root level or on tags/operations
@@ -61,13 +61,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #103 - Write in U.S. English
+### write-in-u-s-english
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#103](/docs/rules/api-contract-and-documentation#103) |
+| **URL** | [/docs/rules/api-contract-and-documentation#write-in-u-s-english](/docs/rules/api-contract-and-documentation#write-in-u-s-english) |
 
 **What to Check**:
 - [ ] Scan `description`, `summary`, `title` fields for common British spellings (colour, authorisation, behaviour, catalogue, etc.)
@@ -75,13 +75,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #104 - Use camelCase for JSON Properties
+### use-camelcase-for-json-properties
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#104](/docs/rules/api-contract-and-documentation#104) |
+| **URL** | [/docs/rules/api-contract-and-documentation#use-camelcase-for-json-properties](/docs/rules/api-contract-and-documentation#use-camelcase-for-json-properties) |
 
 **What to Check**:
 - [ ] Every property name in every schema matches `^[a-z][a-zA-Z0-9]*$` (camelCase)
@@ -90,13 +90,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #105 - Use ASCII for API Identifiers
+### use-ascii-for-api-identifiers
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#105](/docs/rules/api-contract-and-documentation#105) |
+| **URL** | [/docs/rules/api-contract-and-documentation#use-ascii-for-api-identifiers](/docs/rules/api-contract-and-documentation#use-ascii-for-api-identifiers) |
 
 **What to Check**:
 - [ ] All path segments contain only ASCII characters
@@ -107,13 +107,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #106 - Pluralize Array Property Names
+### pluralize-array-property-names
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#106](/docs/rules/api-contract-and-documentation#106) |
+| **URL** | [/docs/rules/api-contract-and-documentation#pluralize-array-property-names](/docs/rules/api-contract-and-documentation#pluralize-array-property-names) |
 
 **What to Check**:
 - [ ] Properties with `type: array` have plural names (heuristic: ends in `s`, `es`, `ies`, `ren`, or is in a known exceptions list like `data`, `metadata`)
@@ -121,13 +121,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #107 - Use Lowercase Hyphenated Path Segments and camelCase Path Parameters
+### use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#107](/docs/rules/api-contract-and-documentation#107) |
+| **URL** | [/docs/rules/api-contract-and-documentation#use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters](/docs/rules/api-contract-and-documentation#use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters) |
 
 **What to Check**:
 - [ ] All path segments (non-parameter parts) match `^[a-z][a-z0-9]*(-[a-z0-9]+)*$`
@@ -136,13 +136,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #108 - Use camelCase for Query Parameters
+### use-camelcase-for-query-parameters
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#108](/docs/rules/api-contract-and-documentation#108) |
+| **URL** | [/docs/rules/api-contract-and-documentation#use-camelcase-for-query-parameters](/docs/rules/api-contract-and-documentation#use-camelcase-for-query-parameters) |
 
 **What to Check**:
 - [ ] All query parameter names (`in: query`) match `^[a-z][a-zA-Z0-9]*$` (camelCase)
@@ -150,13 +150,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #109 - Use Upper-Case Words with Hyphens
+### use-upper-case-words-with-hyphens
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#109](/docs/rules/api-contract-and-documentation#109) |
+| **URL** | [/docs/rules/api-contract-and-documentation#use-upper-case-words-with-hyphens](/docs/rules/api-contract-and-documentation#use-upper-case-words-with-hyphens) |
 
 **What to Check**:
 - [ ] Header parameter names (`in: header`) match `^[A-Z][a-z0-9]*(-[A-Z][a-z0-9]*)*$` pattern (e.g., `Content-Type`, `X-Request-Id`)
@@ -164,13 +164,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #110 - Pluralize Collection Resource Names
+### pluralize-collection-resource-names
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#110](/docs/rules/api-contract-and-documentation#110) |
+| **URL** | [/docs/rules/api-contract-and-documentation#pluralize-collection-resource-names](/docs/rules/api-contract-and-documentation#pluralize-collection-resource-names) |
 
 **What to Check**:
 - [ ] Collection paths (paths that support GET returning a list) use plural resource names
@@ -179,13 +179,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #111 - Follow Naming Convention for Permissions (Scopes)
+### follow-naming-convention-for-permissions-scopes
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#111](/docs/rules/api-contract-and-documentation#111) |
+| **URL** | [/docs/rules/api-contract-and-documentation#follow-naming-convention-for-permissions-scopes](/docs/rules/api-contract-and-documentation#follow-naming-convention-for-permissions-scopes) |
 
 **What to Check**:
 - [ ] All scopes in `securitySchemes` and `security` match `^[a-z]+:[a-z]+(-[a-z]+)*:(read|write|admin)$` (or documented custom actions)
@@ -194,13 +194,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #112 - Declare Enum Values in UPPER_SNAKE_CASE Strings
+### declare-enum-values-in-upper-snake-case-strings
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#112](/docs/rules/api-contract-and-documentation#112) |
+| **URL** | [/docs/rules/api-contract-and-documentation#declare-enum-values-in-upper-snake-case-strings](/docs/rules/api-contract-and-documentation#declare-enum-values-in-upper-snake-case-strings) |
 
 **What to Check**:
 - [ ] All `enum` values of type `string` match `^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$`
@@ -208,25 +208,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #113 - Follow SailPoint API Guidelines
+### follow-sailpoint-api-guidelines
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#113](/docs/rules/api-contract-and-documentation#113) |
+| **URL** | [/docs/rules/api-contract-and-documentation#follow-sailpoint-api-guidelines](/docs/rules/api-contract-and-documentation#follow-sailpoint-api-guidelines) |
 
 **What to Check**: Meta-rule. Testable only by running all other rule checks.
 
 ---
 
-### #114 - Provide a Detailed API Description
+### provide-a-detailed-api-description
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#114](/docs/rules/api-contract-and-documentation#114) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-a-detailed-api-description](/docs/rules/api-contract-and-documentation#provide-a-detailed-api-description) |
 
 **What to Check**:
 - [ ] `info.description` is present and non-empty
@@ -235,13 +235,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #115 - Describe Every Parameter and Property
+### describe-every-parameter-and-property
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#115](/docs/rules/api-contract-and-documentation#115) |
+| **URL** | [/docs/rules/api-contract-and-documentation#describe-every-parameter-and-property](/docs/rules/api-contract-and-documentation#describe-every-parameter-and-property) |
 
 **What to Check**:
 - [ ] Every parameter (path, query, header) has a non-empty `description`
@@ -251,13 +251,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #116 - Provide Examples for Every Parameter and Property
+### provide-examples-for-operations-and-key-fields
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#116](/docs/rules/api-contract-and-documentation#116) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-examples-for-operations-and-key-fields](/docs/rules/api-contract-and-documentation#provide-examples-for-operations-and-key-fields) |
 
 **What to Check**:
 - [ ] Every parameter has an `example` or `examples` field
@@ -267,13 +267,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #117 - Keep Operation Summaries to 5 Words or Fewer
+### keep-operation-summaries-to-5-words-or-fewer
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#117](/docs/rules/api-contract-and-documentation#117) |
+| **URL** | [/docs/rules/api-contract-and-documentation#keep-operation-summaries-to-5-words-or-fewer](/docs/rules/api-contract-and-documentation#keep-operation-summaries-to-5-words-or-fewer) |
 
 **What to Check**:
 - [ ] Every operation has a `summary`
@@ -281,13 +281,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #118 - Avoid Qualifying Verbs
+### avoid-qualifying-verbs
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#118](/docs/rules/api-contract-and-documentation#118) |
+| **URL** | [/docs/rules/api-contract-and-documentation#avoid-qualifying-verbs](/docs/rules/api-contract-and-documentation#avoid-qualifying-verbs) |
 
 **What to Check**:
 - [ ] Boolean properties do not start with `is`, `has`, `can`, `was`, `will` (flag for review)
@@ -295,13 +295,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #119 - Use Positive Semantics for Boolean Fields
+### use-positive-semantics-for-boolean-fields
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#119](/docs/rules/api-contract-and-documentation#119) |
+| **URL** | [/docs/rules/api-contract-and-documentation#use-positive-semantics-for-boolean-fields](/docs/rules/api-contract-and-documentation#use-positive-semantics-for-boolean-fields) |
 
 **What to Check**:
 - [ ] Boolean property names do not use negative prefixes/words: `disabled`, `excluded`, `unverified`, `hidden`, `inactive`, `denied`, `blocked`, `unavailable`
@@ -309,41 +309,43 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #120 - Describe the Filters Parameter (Standard Format)
+### describe-the-filters-parameter-standard-format
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#120](/docs/rules/api-contract-and-documentation#120) |
+| **URL** | [/docs/rules/api-contract-and-documentation#describe-the-filters-parameter-standard-format](/docs/rules/api-contract-and-documentation#describe-the-filters-parameter-standard-format) |
 
 **What to Check**:
 - [ ] If a `filters` query parameter exists, check that its `description` contains: "Syntax:", "Operators:", "Supported fields:", and "Examples:"
 - [ ] Flag `filters` parameters with empty or minimal descriptions
+- [ ] Spectral (or equivalent) rules that validate `filters` grammar stay aligned with the documented operators and structure in this guideline
 
 ---
 
-### #121 - Describe the Sorters Parameter (Standard Format)
+### describe-the-sorters-parameter-standard-format
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#121](/docs/rules/api-contract-and-documentation#121) |
+| **URL** | [/docs/rules/api-contract-and-documentation#describe-the-sorters-parameter-standard-format](/docs/rules/api-contract-and-documentation#describe-the-sorters-parameter-standard-format) |
 
 **What to Check**:
 - [ ] If a `sorters` query parameter exists, check that its `description` contains: "Syntax:", "Direction:", "Supported fields:", "Default ordering:", and "Examples:"
 - [ ] Flag `sorters` parameters with empty or minimal descriptions
+- [ ] Spectral (or equivalent) rules that validate `sorters` grammar stay aligned with the documented structure in this guideline
 
 ---
 
-### #122 - Provide a camelCase operationId for Every Operation
+### provide-a-camelcase-operationid-for-every-operation
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#122](/docs/rules/api-contract-and-documentation#122) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-a-camelcase-operationid-for-every-operation](/docs/rules/api-contract-and-documentation#provide-a-camelcase-operationid-for-every-operation) |
 
 **What to Check**:
 - [ ] Every operation has an `operationId`
@@ -355,13 +357,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #123 - Provide a Tag for Every Operation
+### provide-a-tag-for-every-operation
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#123](/docs/rules/api-contract-and-documentation#123) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-a-tag-for-every-operation](/docs/rules/api-contract-and-documentation#provide-a-tag-for-every-operation) |
 
 **What to Check**:
 - [ ] Every operation has a `tags` array with exactly one tag
@@ -370,13 +372,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #124 - Provide x-sailpoint-resource-operation-id for Path Parameters
+### provide-x-sailpoint-resource-operation-id-for-path-parameters
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | API Contract & Documentation |
-| **URL** | [/docs/rules/api-contract-and-documentation#124](/docs/rules/api-contract-and-documentation#124) |
+| **URL** | [/docs/rules/api-contract-and-documentation#provide-x-sailpoint-resource-operation-id-for-path-parameters](/docs/rules/api-contract-and-documentation#provide-x-sailpoint-resource-operation-id-for-path-parameters) |
 
 **What to Check**:
 - [ ] Every path parameter (`in: path`) has an `x-sailpoint-resource-operation-id` extension
@@ -387,13 +389,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Lifecycle & Compatibility (200-series)
 
-### #200 - Do Not Break Compatibility
+### do-not-break-compatibility
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full (with diff) |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#200](/docs/rules/lifecycle-and-compatibility#200) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#do-not-break-compatibility](/docs/rules/lifecycle-and-compatibility#do-not-break-compatibility) |
 
 **What to Check** (requires comparing two spec versions):
 - [ ] No endpoints removed
@@ -406,13 +408,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #201 - Prefer Compatible Extensions
+### prefer-compatible-extensions
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial (with diff) |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#201](/docs/rules/lifecycle-and-compatibility#201) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#prefer-compatible-extensions](/docs/rules/lifecycle-and-compatibility#prefer-compatible-extensions) |
 
 **What to Check** (requires comparing two spec versions):
 - [ ] New fields are optional (have defaults or are not in `required` array)
@@ -421,25 +423,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #202 - Prepare Clients for Extensions
+### prepare-clients-for-extensions
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#202](/docs/rules/lifecycle-and-compatibility#202) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#prepare-clients-for-extensions](/docs/rules/lifecycle-and-compatibility#prepare-clients-for-extensions) |
 
 **What to Check**: Client-side behavior. Not testable against the spec.
 
 ---
 
-### #203 - Be Conservative with Inputs
+### be-conservative-with-inputs
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#203](/docs/rules/lifecycle-and-compatibility#203) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#be-conservative-with-inputs](/docs/rules/lifecycle-and-compatibility#be-conservative-with-inputs) |
 
 **What to Check**:
 - [ ] String properties have `minLength` and/or `maxLength` constraints
@@ -449,27 +451,28 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #204 - Return Top-Level JSON Objects
+### return-top-level-json-objects
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#204](/docs/rules/lifecycle-and-compatibility#204) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#return-top-level-json-objects](/docs/rules/lifecycle-and-compatibility#return-top-level-json-objects) |
 
 **What to Check**:
-- [ ] All 2xx response schemas have `type: object` at the top level (not `type: array`)
+- [ ] All 2xx response schemas have `type: object` at the top level (not `type: array`) for **new** list endpoints
 - [ ] Collection endpoints wrap arrays in an object (e.g., `items` property)
+- [ ] If a legacy endpoint still documents `type: array` at the root, the spec calls out the grandfathered contract and a migration path
 
 ---
 
-### #205 - Treat OpenAPI Objects as Extensible
+### treat-openapi-objects-as-extensible
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#205](/docs/rules/lifecycle-and-compatibility#205) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#treat-openapi-objects-as-extensible](/docs/rules/lifecycle-and-compatibility#treat-openapi-objects-as-extensible) |
 
 **What to Check**:
 - [ ] Response schemas do not use `additionalProperties: false` (which blocks extension)
@@ -477,25 +480,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #206 - Avoid Breaking Changes as the Default Strategy
+### avoid-breaking-changes-as-the-default-strategy
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#206](/docs/rules/lifecycle-and-compatibility#206) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#avoid-breaking-changes-as-the-default-strategy](/docs/rules/lifecycle-and-compatibility#avoid-breaking-changes-as-the-default-strategy) |
 
 **What to Check**: Design/process rule. Not directly testable.
 
 ---
 
-### #207 - Use Path Versioning When Versions Coexist
+### use-path-versioning-when-versions-coexist
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#207](/docs/rules/lifecycle-and-compatibility#207) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#use-path-versioning-when-versions-coexist](/docs/rules/lifecycle-and-compatibility#use-path-versioning-when-versions-coexist) |
 
 **What to Check**:
 - [ ] If version segments exist in paths, they use path-based format (e.g., `/v2026/...` or `/v3/...`)
@@ -504,13 +507,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #208 - Use Year-Based API Versioning (YYYY.Revision)
+### use-year-based-api-versioning-yyyy-revision
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#208](/docs/rules/lifecycle-and-compatibility#208) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#use-year-based-api-versioning-yyyy-revision](/docs/rules/lifecycle-and-compatibility#use-year-based-api-versioning-yyyy-revision) |
 
 **What to Check**:
 - [ ] `info.version` matches `^\d{4}\.\d+$` pattern (e.g., `2026.1`)
@@ -518,77 +521,77 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #209 - Reflect Deprecation in OpenAPI
+### reflect-deprecation-in-openapi
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#209](/docs/rules/lifecycle-and-compatibility#209) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#reflect-deprecation-in-openapi](/docs/rules/lifecycle-and-compatibility#reflect-deprecation-in-openapi) |
 
 **What to Check**:
-- [ ] Operations with `deprecated: true` have a `description` mentioning the replacement or migration path
+- [ ] Operations with `deprecated: true` use `x-deprecated-description` (or equivalent) for sunset, replacement, and migration narrative; primary `description` still describes current behavior
 - [ ] Deprecated operations have `externalDocs` linking to migration guide
-- [ ] Deprecated operations mention a sunset date in description
+- [ ] Sunset date appears in `x-deprecated-description` (or migration doc linked there), not only in informal prose outside the spec
 
 ---
 
-### #210 - Monitor Deprecated API Usage
+### monitor-deprecated-api-usage
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#210](/docs/rules/lifecycle-and-compatibility#210) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#monitor-deprecated-api-usage](/docs/rules/lifecycle-and-compatibility#monitor-deprecated-api-usage) |
 
 **What to Check**: Operational/runtime process. Not testable against spec.
 
 ---
 
-### #211 - Add Deprecation and Sunset Headers
+### add-deprecation-and-sunset-headers
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#211](/docs/rules/lifecycle-and-compatibility#211) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#add-deprecation-and-sunset-headers](/docs/rules/lifecycle-and-compatibility#add-deprecation-and-sunset-headers) |
 
 **What to Check**:
 - [ ] Deprecated operations define `Deprecation` and `Sunset` response headers in their response objects
 
 ---
 
-### #212 - Have Clients Monitor Deprecation and Sunset Headers
+### have-clients-monitor-deprecation-and-sunset-headers
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#212](/docs/rules/lifecycle-and-compatibility#212) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#have-clients-monitor-deprecation-and-sunset-headers](/docs/rules/lifecycle-and-compatibility#have-clients-monitor-deprecation-and-sunset-headers) |
 
 **What to Check**: Client-side behavior. Not testable against the spec.
 
 ---
 
-### #213 - Do Not Start New Usage of Deprecated APIs or Features
+### do-not-start-new-usage-of-deprecated-apis-or-features
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#213](/docs/rules/lifecycle-and-compatibility#213) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#do-not-start-new-usage-of-deprecated-apis-or-features](/docs/rules/lifecycle-and-compatibility#do-not-start-new-usage-of-deprecated-apis-or-features) |
 
 **What to Check**: Process rule. Not directly testable against a single spec.
 
 ---
 
-### #214 - Include API Metadata
+### include-api-metadata
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#214](/docs/rules/lifecycle-and-compatibility#214) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#include-api-metadata](/docs/rules/lifecycle-and-compatibility#include-api-metadata) |
 
 **What to Check**:
 - [ ] `info.title` is present and non-empty
@@ -601,13 +604,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #215 - Specify API Audience
+### specify-api-audience
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#215](/docs/rules/lifecycle-and-compatibility#215) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#specify-api-audience](/docs/rules/lifecycle-and-compatibility#specify-api-audience) |
 
 **What to Check**:
 - [ ] `info.x-audience` is present
@@ -615,51 +618,51 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #216 - Follow Version Requirements
+### follow-version-requirements
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#216](/docs/rules/lifecycle-and-compatibility#216) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#follow-version-requirements](/docs/rules/lifecycle-and-compatibility#follow-version-requirements) |
 
 **What to Check**: Process/runtime rule about support windows. Not directly testable.
 
 ---
 
-### #217 - Follow Beta Requirements When Applicable
+### follow-experimental-requirements-when-applicable
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#217](/docs/rules/lifecycle-and-compatibility#217) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#follow-experimental-requirements-when-applicable](/docs/rules/lifecycle-and-compatibility#follow-experimental-requirements-when-applicable) |
 
 **What to Check**:
-- [ ] If `info.x-stability` is `beta`, verify beta-specific documentation exists
-- [ ] Check that beta operations/schemas use `x-stability: beta` extension if partial beta
+- [ ] If `info.x-stability` is `experimental`, verify experimental-specific documentation exists
+- [ ] Check that experimental operations/schemas use `x-stability: experimental` (or equivalent) when only part of the API is experimental
 
 ---
 
-### #218 - Agree on Deprecation Timeframes with Clients
+### agree-on-deprecation-timeframes-with-clients
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | process |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#218](/docs/rules/lifecycle-and-compatibility#218) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#agree-on-deprecation-timeframes-with-clients](/docs/rules/lifecycle-and-compatibility#agree-on-deprecation-timeframes-with-clients) |
 
 **What to Check**: Process rule. Not testable against spec.
 
 ---
 
-### #219 - Annotate Enum Extensibility (Open vs Closed)
+### annotate-enum-extensibility-open-vs-closed
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | Lifecycle & Compatibility |
-| **URL** | [/docs/rules/lifecycle-and-compatibility#219](/docs/rules/lifecycle-and-compatibility#219) |
+| **URL** | [/docs/rules/lifecycle-and-compatibility#annotate-enum-extensibility-open-vs-closed](/docs/rules/lifecycle-and-compatibility#annotate-enum-extensibility-open-vs-closed) |
 
 **What to Check**:
 - [ ] Enum properties have `x-extensible: true` or `x-extensible: false`
@@ -670,13 +673,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Security & Authorization (300-series)
 
-### #300 - Secure Endpoints with OAuth 2.0
+### secure-endpoints-with-oauth-2-0
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#300](/docs/rules/security-and-authorization#300) |
+| **URL** | [/docs/rules/security-and-authorization#secure-endpoints-with-oauth-2-0](/docs/rules/security-and-authorization#secure-endpoints-with-oauth-2-0) |
 
 **What to Check**:
 - [ ] Every operation has a `security` field (not just global security)
@@ -685,13 +688,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #301 - Define and Assign Scopes
+### define-and-assign-scopes
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#301](/docs/rules/security-and-authorization#301) |
+| **URL** | [/docs/rules/security-and-authorization#define-and-assign-scopes](/docs/rules/security-and-authorization#define-and-assign-scopes) |
 
 **What to Check**:
 - [ ] Every operation's `security` field lists specific scopes (not empty arrays)
@@ -700,13 +703,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #302 - Document Required Licenses for API Collections
+### document-required-licenses-for-api-collections
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#302](/docs/rules/security-and-authorization#302) |
+| **URL** | [/docs/rules/security-and-authorization#document-required-licenses-for-api-collections](/docs/rules/security-and-authorization#document-required-licenses-for-api-collections) |
 
 **What to Check**:
 - [ ] Tags or operations that require licenses have `x-license-addons` extension
@@ -714,13 +717,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #303 - Define User Capabilities for userAuth Endpoints
+### define-user-capabilities-for-userauth-endpoints
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#303](/docs/rules/security-and-authorization#303) |
+| **URL** | [/docs/rules/security-and-authorization#define-user-capabilities-for-userauth-endpoints](/docs/rules/security-and-authorization#define-user-capabilities-for-userauth-endpoints) |
 
 **What to Check**:
 - [ ] Operations using `userAuth` security scheme have `description` mentioning required user roles/capabilities
@@ -728,13 +731,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #304 - Require HTTPS/TLS for All Endpoints
+### require-https-tls-for-all-endpoints
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#304](/docs/rules/security-and-authorization#304) |
+| **URL** | [/docs/rules/security-and-authorization#require-https-tls-for-all-endpoints](/docs/rules/security-and-authorization#require-https-tls-for-all-endpoints) |
 
 **What to Check**:
 - [ ] All `servers[].url` values start with `https://`
@@ -743,13 +746,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #305 - Never Put Secrets or Credentials in URLs
+### never-put-secrets-or-credentials-in-urls
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#305](/docs/rules/security-and-authorization#305) |
+| **URL** | [/docs/rules/security-and-authorization#never-put-secrets-or-credentials-in-urls](/docs/rules/security-and-authorization#never-put-secrets-or-credentials-in-urls) |
 
 **What to Check**:
 - [ ] No `securitySchemes` with `type: apiKey` and `in: query`
@@ -758,25 +761,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #306 - Authenticate and Authorize Before Processing Payloads
+### authenticate-and-authorize-before-processing-payloads
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#306](/docs/rules/security-and-authorization#306) |
+| **URL** | [/docs/rules/security-and-authorization#authenticate-and-authorize-before-processing-payloads](/docs/rules/security-and-authorization#authenticate-and-authorize-before-processing-payloads) |
 
 **What to Check**: Runtime/implementation behavior. Not testable against spec.
 
 ---
 
-### #307 - Document and Enforce Rate Limits
+### document-and-enforce-rate-limits
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#307](/docs/rules/security-and-authorization#307) |
+| **URL** | [/docs/rules/security-and-authorization#document-and-enforce-rate-limits](/docs/rules/security-and-authorization#document-and-enforce-rate-limits) |
 
 **What to Check**:
 - [ ] Operations define a `429` response
@@ -786,25 +789,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #308 - Support CORS for Browser Clients
+### support-cors-for-browser-clients
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | process |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#308](/docs/rules/security-and-authorization#308) |
+| **URL** | [/docs/rules/security-and-authorization#support-cors-for-browser-clients](/docs/rules/security-and-authorization#support-cors-for-browser-clients) |
 
 **What to Check**: Runtime behavior. Not testable against spec alone.
 
 ---
 
-### #309 - Sanitize Inputs and Prevent Injection
+### sanitize-inputs-and-prevent-injection
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#309](/docs/rules/security-and-authorization#309) |
+| **URL** | [/docs/rules/security-and-authorization#sanitize-inputs-and-prevent-injection](/docs/rules/security-and-authorization#sanitize-inputs-and-prevent-injection) |
 
 **What to Check**:
 - [ ] String properties have `maxLength` defined
@@ -813,13 +816,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #310 - Enforce Tenant Data Isolation in Responses
+### enforce-tenant-data-isolation-in-responses
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Security & Authorization |
-| **URL** | [/docs/rules/security-and-authorization#310](/docs/rules/security-and-authorization#310) |
+| **URL** | [/docs/rules/security-and-authorization#enforce-tenant-data-isolation-in-responses](/docs/rules/security-and-authorization#enforce-tenant-data-isolation-in-responses) |
 
 **What to Check**:
 - [ ] Error response examples do not reference other tenants or tenant-specific identifiers
@@ -830,13 +833,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## HTTP Semantics (400-series)
 
-### #400 - Use Standard HTTP Headers
+### use-standard-http-headers
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#400](/docs/rules/http-semantics#400) |
+| **URL** | [/docs/rules/http-semantics#use-standard-http-headers](/docs/rules/http-semantics#use-standard-http-headers) |
 
 **What to Check**:
 - [ ] Operations with JSON responses declare `Content-Type: application/json`
@@ -846,13 +849,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #401 - Use HTTP Methods Correctly
+### use-http-methods-correctly
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#401](/docs/rules/http-semantics#401) |
+| **URL** | [/docs/rules/http-semantics#use-http-methods-correctly](/docs/rules/http-semantics#use-http-methods-correctly) |
 
 **What to Check**:
 - [ ] GET operations do not define request bodies
@@ -863,13 +866,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #402 - Honor Method Properties
+### honor-method-properties
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#402](/docs/rules/http-semantics#402) |
+| **URL** | [/docs/rules/http-semantics#honor-method-properties](/docs/rules/http-semantics#honor-method-properties) |
 
 **What to Check**:
 - [ ] GET/HEAD/OPTIONS operations do not declare `requestBody`
@@ -877,13 +880,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #403 - Use Standard HTTP Status Codes
+### use-standard-http-status-codes
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#403](/docs/rules/http-semantics#403) |
+| **URL** | [/docs/rules/http-semantics#use-standard-http-status-codes](/docs/rules/http-semantics#use-standard-http-status-codes) |
 
 **What to Check**:
 - [ ] All response status codes are IANA-registered standard codes
@@ -896,13 +899,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #404 - Define a Standard Error Contract in OpenAPI (Problem Details)
+### define-a-standard-error-contract-in-openapi-problem-details
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#404](/docs/rules/http-semantics#404) |
+| **URL** | [/docs/rules/http-semantics#define-a-standard-error-contract-in-openapi-problem-details](/docs/rules/http-semantics#define-a-standard-error-contract-in-openapi-problem-details) |
 
 **What to Check**:
 - [ ] Error responses (4xx, 5xx) use `application/problem+json` content type
@@ -910,16 +913,17 @@ what specifically can be tested, and a link to the full rule on the documentatio
 - [ ] Error responses have `example` or `examples`
 - [ ] A shared `ProblemDetails` component schema exists and is referenced
 - [ ] Error schemas include `correlationId` property
+- [ ] Examples and extension fields match the organization's published API error catalog when it is stricter than this baseline
 
 ---
 
-### #405 - Use 207 (or 200) for Per-Item Batch Results
+### use-207-or-200-for-per-item-batch-results
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#405](/docs/rules/http-semantics#405) |
+| **URL** | [/docs/rules/http-semantics#use-207-or-200-for-per-item-batch-results](/docs/rules/http-semantics#use-207-or-200-for-per-item-batch-results) |
 
 **What to Check**:
 - [ ] Batch endpoints (paths containing `/batch`) define `207` or `200` responses
@@ -927,13 +931,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #406 - Use 429 with Rate-Limit Headers
+### use-429-with-rate-limit-headers
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#406](/docs/rules/http-semantics#406) |
+| **URL** | [/docs/rules/http-semantics#use-429-with-rate-limit-headers](/docs/rules/http-semantics#use-429-with-rate-limit-headers) |
 
 **What to Check**:
 - [ ] Operations that can be rate-limited define `429` response
@@ -942,13 +946,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #407 - Support Long-Running Operations
+### support-long-running-operations
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#407](/docs/rules/http-semantics#407) |
+| **URL** | [/docs/rules/http-semantics#support-long-running-operations](/docs/rules/http-semantics#support-long-running-operations) |
 
 **What to Check**:
 - [ ] Operations returning `202 Accepted` define a `Location` header
@@ -958,13 +962,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #408 - Never Expose Stack Traces or Internal Details
+### never-expose-stack-traces-or-internal-details
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#408](/docs/rules/http-semantics#408) |
+| **URL** | [/docs/rules/http-semantics#never-expose-stack-traces-or-internal-details](/docs/rules/http-semantics#never-expose-stack-traces-or-internal-details) |
 
 **What to Check**:
 - [ ] Error response examples do not contain stack traces, file paths, class names, or SQL
@@ -972,13 +976,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #409 - Prefer Idempotent POST/PATCH Where Possible
+### prefer-idempotent-post-patch-where-possible
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#409](/docs/rules/http-semantics#409) |
+| **URL** | [/docs/rules/http-semantics#prefer-idempotent-post-patch-where-possible](/docs/rules/http-semantics#prefer-idempotent-post-patch-where-possible) |
 
 **What to Check**:
 - [ ] POST operations document retry/idempotency behavior in description
@@ -986,13 +990,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #410 - Support Idempotency-Key
+### support-idempotency-key
 | Field | Value |
 |---|---|
 | **Level** | MAY |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#410](/docs/rules/http-semantics#410) |
+| **URL** | [/docs/rules/http-semantics#support-idempotency-key](/docs/rules/http-semantics#support-idempotency-key) |
 
 **What to Check**:
 - [ ] If `Idempotency-Key` header parameter is defined, it has a description covering scope, format, and retention
@@ -1000,13 +1004,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #411 - Use Secondary Keys for Idempotent POST
+### use-secondary-keys-for-idempotent-post
 | Field | Value |
 |---|---|
 | **Level** | MAY |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#411](/docs/rules/http-semantics#411) |
+| **URL** | [/docs/rules/http-semantics#use-secondary-keys-for-idempotent-post](/docs/rules/http-semantics#use-secondary-keys-for-idempotent-post) |
 
 **What to Check**:
 - [ ] If `externalId` or similar secondary key is in the request schema, it is documented with uniqueness constraints
@@ -1014,13 +1018,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #412 - Provide Accurate Response Examples
+### provide-accurate-response-examples
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#412](/docs/rules/http-semantics#412) |
+| **URL** | [/docs/rules/http-semantics#provide-accurate-response-examples](/docs/rules/http-semantics#provide-accurate-response-examples) |
 
 **What to Check**:
 - [ ] Every operation has at least one 2xx response example
@@ -1028,16 +1032,17 @@ what specifically can be tested, and a link to the full rule on the documentatio
 - [ ] Examples are valid JSON (parseable)
 - [ ] Examples do not contain placeholder patterns like `"string"`, `"TODO"`, `0`
 - [ ] Examples do not contain secrets or obvious test data markers
+- [ ] List success examples use an object envelope (e.g., `items` + pagination fields), not a bare top-level JSON array, unless the operation is explicitly documented as grandfathered
 
 ---
 
-### #413 - Document Caching Behavior
+### document-caching-behavior
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#413](/docs/rules/http-semantics#413) |
+| **URL** | [/docs/rules/http-semantics#document-caching-behavior](/docs/rules/http-semantics#document-caching-behavior) |
 
 **What to Check**:
 - [ ] GET operations mention caching in their description (or explicitly state no caching)
@@ -1046,13 +1051,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #414 - Document Request and Response Size Limits
+### document-request-and-response-size-limits
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#414](/docs/rules/http-semantics#414) |
+| **URL** | [/docs/rules/http-semantics#document-request-and-response-size-limits](/docs/rules/http-semantics#document-request-and-response-size-limits) |
 
 **What to Check**:
 - [ ] Operations that accept request bodies mention size limits in description
@@ -1061,13 +1066,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #415 - Use Optimistic Locking for Concurrent Writes
+### use-optimistic-locking-for-concurrent-writes
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#415](/docs/rules/http-semantics#415) |
+| **URL** | [/docs/rules/http-semantics#use-optimistic-locking-for-concurrent-writes](/docs/rules/http-semantics#use-optimistic-locking-for-concurrent-writes) |
 
 **What to Check**:
 - [ ] PUT/PATCH operations define `If-Match` header parameter
@@ -1077,13 +1082,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #416 - Return 406 for Unsupported Accept Headers
+### return-406-for-unsupported-accept-headers
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#416](/docs/rules/http-semantics#416) |
+| **URL** | [/docs/rules/http-semantics#return-406-for-unsupported-accept-headers](/docs/rules/http-semantics#return-406-for-unsupported-accept-headers) |
 
 **What to Check**:
 - [ ] Operations define a `406` response
@@ -1093,13 +1098,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #417 - Document HEAD and OPTIONS Method Support
+### document-head-and-options-method-support
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#417](/docs/rules/http-semantics#417) |
+| **URL** | [/docs/rules/http-semantics#document-head-and-options-method-support](/docs/rules/http-semantics#document-head-and-options-method-support) |
 
 **What to Check**:
 - [ ] Paths with GET operations also define HEAD operations (or document automatic HEAD support)
@@ -1108,13 +1113,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #418 - Classify Error Retryability
+### classify-error-retryability
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | HTTP Semantics |
-| **URL** | [/docs/rules/http-semantics#418](/docs/rules/http-semantics#418) |
+| **URL** | [/docs/rules/http-semantics#classify-error-retryability](/docs/rules/http-semantics#classify-error-retryability) |
 
 **What to Check**:
 - [ ] `429`, `502`, `503`, `504` responses include `Retry-After` header definition
@@ -1125,13 +1130,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Resource Modeling & URLs (500-series)
 
-### #500 - Do Not Use /api Base Path
+### do-not-use-api-base-path
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#500](/docs/rules/resource-modeling-and-urls#500) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#do-not-use-api-base-path](/docs/rules/resource-modeling-and-urls#do-not-use-api-base-path) |
 
 **What to Check**:
 - [ ] No path starts with `/api/`
@@ -1139,13 +1144,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #501 - Define Canonical URL Forms
+### define-canonical-url-forms
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#501](/docs/rules/resource-modeling-and-urls#501) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#define-canonical-url-forms](/docs/rules/resource-modeling-and-urls#define-canonical-url-forms) |
 
 **What to Check**:
 - [ ] No paths contain `//` (double slashes)
@@ -1155,65 +1160,55 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #502 - Model Resources (Avoid Action Endpoints)
+### use-resource-oriented-urls
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#502](/docs/rules/resource-modeling-and-urls#502) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#use-resource-oriented-urls](/docs/rules/resource-modeling-and-urls#use-resource-oriented-urls) |
 
 **What to Check**:
 - [ ] Flag path segments containing common verbs: `get`, `create`, `update`, `delete`, `fetch`, `set`, `remove`, `start`, `stop`, `execute`, `run`
-- [ ] POST operations with verb-like terminal path segments are flagged for review
+- [ ] Exception: `/search` suffix is acceptable for POST search endpoints
+- [ ] Prefer noun-based request resources (`POST .../disable-requests`) over procedure-style paths (`POST .../disable`) when an action does not map to CRUD
+- [ ] POST operations whose last segment is a verb token are flagged for review against resource modeling guidance
 
 ---
 
-### #503 - Model Business Processes
+### model-business-processes
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | process |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#503](/docs/rules/resource-modeling-and-urls#503) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#model-business-processes](/docs/rules/resource-modeling-and-urls#model-business-processes) |
 
 **What to Check**: Design judgment. Not testable against spec.
 
 ---
 
-### #504 - Define Useful Resources
-| Field | Value |
-|---|---|
-| **Level** | SHOULD |
-| **Testability** | process |
-| **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#504](/docs/rules/resource-modeling-and-urls#504) |
-
-**What to Check**: Design judgment. Not testable against spec.
-
----
-
-### #505 - Keep URLs Verb-Free
+### define-useful-resources
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#505](/docs/rules/resource-modeling-and-urls#505) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#define-useful-resources](/docs/rules/resource-modeling-and-urls#define-useful-resources) |
 
 **What to Check**:
-- [ ] Same as #502 — flag path segments containing common verbs
-- [ ] Exception: `/search` suffix is acceptable for POST search endpoints
+- [ ] Collection GET endpoints that benefit from slimmer payloads document field projection when `POST .../search` is not the only entry point
+- [ ] Advisory: design judgment on resource boundaries — pair with [#use-resource-oriented-urls] and [#support-partial-responses-fields]
 
 ---
 
-### #506 - Use Domain-Specific Resource Names
+### use-domain-specific-resource-names
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#506](/docs/rules/resource-modeling-and-urls#506) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#use-domain-specific-resource-names](/docs/rules/resource-modeling-and-urls#use-domain-specific-resource-names) |
 
 **What to Check**:
 - [ ] Flag path segments containing implementation prefixes: `db`, `tbl`, `internal`, `tmp`, `raw`, `sys`
@@ -1221,25 +1216,25 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #507 - Nest Sub-resources Only When Tightly Coupled
+### nest-sub-resources-only-when-tightly-coupled
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | process |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#507](/docs/rules/resource-modeling-and-urls#507) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#nest-sub-resources-only-when-tightly-coupled](/docs/rules/resource-modeling-and-urls#nest-sub-resources-only-when-tightly-coupled) |
 
 **What to Check**: Design judgment about coupling. Not automatable.
 
 ---
 
-### #508 - Prefer Non-nested URLs for Independent Resources
+### prefer-non-nested-urls-for-independent-resources
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#508](/docs/rules/resource-modeling-and-urls#508) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#prefer-non-nested-urls-for-independent-resources](/docs/rules/resource-modeling-and-urls#prefer-non-nested-urls-for-independent-resources) |
 
 **What to Check**:
 - [ ] Flag deeply nested paths (> 2 resource/parameter pairs) for review
@@ -1247,13 +1242,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #509 - Limit Resource Types
+### limit-resource-types
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#509](/docs/rules/resource-modeling-and-urls#509) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#limit-resource-types](/docs/rules/resource-modeling-and-urls#limit-resource-types) |
 
 **What to Check**:
 - [ ] Count distinct top-level resource paths; warn if exceeding a threshold (e.g., > 20)
@@ -1261,13 +1256,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #510 - Limit Nesting Depth
+### limit-nesting-depth
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#510](/docs/rules/resource-modeling-and-urls#510) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#limit-nesting-depth](/docs/rules/resource-modeling-and-urls#limit-nesting-depth) |
 
 **What to Check**:
 - [ ] Count the number of path parameter segments in each path
@@ -1275,27 +1270,28 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #511 - Use REST Maturity Level 2
+### use-rest-maturity-level-2
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#511](/docs/rules/resource-modeling-and-urls#511) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#use-rest-maturity-level-2](/docs/rules/resource-modeling-and-urls#use-rest-maturity-level-2) |
 
 **What to Check**:
-- [ ] Composite check: passes #401 (methods), #403 (status codes), #404 (error contract), #107 (URL nouns)
+- [ ] **Richardson Level 2**: resources identified by URLs; HTTP methods express operations; status codes express outcomes (hypermedia / Level 3 not required)
+- [ ] Composite check: passes #use-http-methods-correctly (methods), #use-standard-http-status-codes (status codes), #define-a-standard-error-contract-in-openapi-problem-details (error contract), #use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters (URL nouns)
 - [ ] No RPC-style paths (paths that are entirely verbs)
 
 ---
 
-### #512 - Use URL-Friendly IDs
+### use-url-friendly-ids
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#512](/docs/rules/resource-modeling-and-urls#512) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#use-url-friendly-ids](/docs/rules/resource-modeling-and-urls#use-url-friendly-ids) |
 
 **What to Check**:
 - [ ] Path parameter schemas use `type: string` (not integer or number)
@@ -1304,13 +1300,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #513 - Never Include Customer Org Names in Paths
+### never-include-customer-org-names-in-paths
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#513](/docs/rules/resource-modeling-and-urls#513) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#never-include-customer-org-names-in-paths](/docs/rules/resource-modeling-and-urls#never-include-customer-org-names-in-paths) |
 
 **What to Check**:
 - [ ] No paths contain segments like `/customers/`, `/orgs/`, `/tenants/` followed by a parameter
@@ -1318,13 +1314,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #514 - Do Not Use Sequential Numeric IDs
+### do-not-use-sequential-numeric-ids
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#514](/docs/rules/resource-modeling-and-urls#514) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#do-not-use-sequential-numeric-ids](/docs/rules/resource-modeling-and-urls#do-not-use-sequential-numeric-ids) |
 
 **What to Check**:
 - [ ] Path parameter schemas are `type: string`, not `type: integer`
@@ -1333,13 +1329,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #515 - Define Soft Delete Behavior
+### define-soft-delete-behavior
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Resource Modeling & URLs |
-| **URL** | [/docs/rules/resource-modeling-and-urls#515](/docs/rules/resource-modeling-and-urls#515) |
+| **URL** | [/docs/rules/resource-modeling-and-urls#define-soft-delete-behavior](/docs/rules/resource-modeling-and-urls#define-soft-delete-behavior) |
 
 **What to Check**:
 - [ ] DELETE operations document whether hard or soft delete in description
@@ -1350,13 +1346,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Requests & Querying (600-series)
 
-### #600 - Use Conventional Query Parameters
+### use-conventional-query-parameters
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#600](/docs/rules/requests-and-querying#600) |
+| **URL** | [/docs/rules/requests-and-querying#use-conventional-query-parameters](/docs/rules/requests-and-querying#use-conventional-query-parameters) |
 
 **What to Check**:
 - [ ] Pagination parameters are named `limit` and `offset` (not `pageSize`, `page`, `skip`)
@@ -1366,13 +1362,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #601 - Define Collection Formats for Header and Query Parameters
+### define-collection-formats-for-header-and-query-parameters
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#601](/docs/rules/requests-and-querying#601) |
+| **URL** | [/docs/rules/requests-and-querying#define-collection-formats-for-header-and-query-parameters](/docs/rules/requests-and-querying#define-collection-formats-for-header-and-query-parameters) |
 
 **What to Check**:
 - [ ] Array-typed query parameters define `style` and `explode` in their parameter definition
@@ -1381,13 +1377,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #602 - Support Offset Pagination for List Endpoints
+### support-offset-pagination-for-list-endpoints
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#602](/docs/rules/requests-and-querying#602) |
+| **URL** | [/docs/rules/requests-and-querying#support-offset-pagination-for-list-endpoints](/docs/rules/requests-and-querying#support-offset-pagination-for-list-endpoints) |
 
 **What to Check**:
 - [ ] GET operations returning collections define `limit` query parameter
@@ -1395,16 +1391,17 @@ what specifically can be tested, and a link to the full rule on the documentatio
 - [ ] `limit` parameter has documented `default` and `maximum` values
 - [ ] Response schema wraps items in an object with `items` array property
 - [ ] Response schema includes `limit`, `offset`, and `count` properties
+- [ ] Examples and documented response bodies do not show a bare JSON array at the root for list responses
 
 ---
 
-### #603 - Document Implicit Filters and Default Sorting
+### document-implicit-filters-and-default-sorting
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#603](/docs/rules/requests-and-querying#603) |
+| **URL** | [/docs/rules/requests-and-querying#document-implicit-filters-and-default-sorting](/docs/rules/requests-and-querying#document-implicit-filters-and-default-sorting) |
 
 **What to Check**:
 - [ ] List operations mention default sort order in description
@@ -1413,13 +1410,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #604 - Use One Query Format Across the API
+### use-one-query-format-across-the-api
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#604](/docs/rules/requests-and-querying#604) |
+| **URL** | [/docs/rules/requests-and-querying#use-one-query-format-across-the-api](/docs/rules/requests-and-querying#use-one-query-format-across-the-api) |
 
 **What to Check**:
 - [ ] All filter parameters use the same name (`filters`) across all operations
@@ -1429,13 +1426,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #605 - Design Batch Request Endpoints
+### design-batch-request-endpoints
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#605](/docs/rules/requests-and-querying#605) |
+| **URL** | [/docs/rules/requests-and-querying#design-batch-request-endpoints](/docs/rules/requests-and-querying#design-batch-request-endpoints) |
 
 **What to Check**:
 - [ ] Batch endpoints (paths containing `/batch`) accept an `items` array in request body
@@ -1445,13 +1442,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #606 - Include Pagination Links in Collection Responses
+### include-pagination-links-in-collection-responses
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Requests & Querying |
-| **URL** | [/docs/rules/requests-and-querying#606](/docs/rules/requests-and-querying#606) |
+| **URL** | [/docs/rules/requests-and-querying#include-pagination-links-in-collection-responses](/docs/rules/requests-and-querying#include-pagination-links-in-collection-responses) |
 
 **What to Check**:
 - [ ] List endpoint response schemas include a `links` property
@@ -1462,13 +1459,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Payload Conventions (700-series)
 
-### #700 - Handle Null Values Correctly
+### handle-null-values-correctly
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#700](/docs/rules/payload-conventions#700) |
+| **URL** | [/docs/rules/payload-conventions#handle-null-values-correctly](/docs/rules/payload-conventions#handle-null-values-correctly) |
 
 **What to Check**:
 - [ ] Fields that are nullable in examples are marked `nullable: true` in schema (or `type: [string, "null"]` for OAS 3.1)
@@ -1476,13 +1473,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #701 - Use Booleans Correctly
+### use-booleans-correctly
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#701](/docs/rules/payload-conventions#701) |
+| **URL** | [/docs/rules/payload-conventions#use-booleans-correctly](/docs/rules/payload-conventions#use-booleans-correctly) |
 
 **What to Check**:
 - [ ] Boolean properties (`type: boolean`) are not `nullable: true`
@@ -1491,13 +1488,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #702 - Initialize Empty Arrays
+### initialize-empty-arrays
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#702](/docs/rules/payload-conventions#702) |
+| **URL** | [/docs/rules/payload-conventions#initialize-empty-arrays](/docs/rules/payload-conventions#initialize-empty-arrays) |
 
 **What to Check**:
 - [ ] Array properties (`type: array`) are not `nullable: true`
@@ -1506,28 +1503,28 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #703 - Model Nullable Fields in OpenAPI
+### model-nullable-fields-in-openapi
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#703](/docs/rules/payload-conventions#703) |
+| **URL** | [/docs/rules/payload-conventions#model-nullable-fields-in-openapi](/docs/rules/payload-conventions#model-nullable-fields-in-openapi) |
 
 **What to Check**:
 - [ ] Fields with `null` in examples are marked `nullable: true`
-- [ ] Boolean and array properties are NOT nullable (#701, #702)
+- [ ] Boolean and array properties are NOT nullable (#use-booleans-correctly, #initialize-empty-arrays)
 - [ ] Nullable modeling matches OAS version (3.0: `nullable: true`; 3.1: type union)
 
 ---
 
-### #704 - Use Standard Non-JSON Media Types
+### use-standard-non-json-media-types
 | Field | Value |
 |---|---|
 | **Level** | MAY |
 | **Testability** | partial |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#704](/docs/rules/payload-conventions#704) |
+| **URL** | [/docs/rules/payload-conventions#use-standard-non-json-media-types](/docs/rules/payload-conventions#use-standard-non-json-media-types) |
 
 **What to Check**:
 - [ ] Non-JSON response content types are IANA-registered
@@ -1535,13 +1532,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #705 - Use Standard Media Types
+### use-standard-media-types
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#705](/docs/rules/payload-conventions#705) |
+| **URL** | [/docs/rules/payload-conventions#use-standard-media-types](/docs/rules/payload-conventions#use-standard-media-types) |
 
 **What to Check**:
 - [ ] All `content` keys in request/response bodies use IANA-registered media types
@@ -1551,13 +1548,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #706 - Define Maps with additionalProperties
+### define-maps-with-additionalproperties
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | full |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#706](/docs/rules/payload-conventions#706) |
+| **URL** | [/docs/rules/payload-conventions#define-maps-with-additionalproperties](/docs/rules/payload-conventions#define-maps-with-additionalproperties) |
 
 **What to Check**:
 - [ ] Schema objects with `additionalProperties` have a typed value (not just `true`)
@@ -1565,13 +1562,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #708 - Avoid Nested Objects
+### avoid-nested-objects
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#708](/docs/rules/payload-conventions#708) |
+| **URL** | [/docs/rules/payload-conventions#avoid-nested-objects](/docs/rules/payload-conventions#avoid-nested-objects) |
 
 **What to Check**:
 - [ ] Measure maximum object nesting depth in response schemas
@@ -1580,13 +1577,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #709 - Define Defaults for Optional Properties
+### define-defaults-for-optional-properties
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#709](/docs/rules/payload-conventions#709) |
+| **URL** | [/docs/rules/payload-conventions#define-defaults-for-optional-properties](/docs/rules/payload-conventions#define-defaults-for-optional-properties) |
 
 **What to Check**:
 - [ ] Optional properties (not in `required` array) have a `default` value OR description documenting default behavior
@@ -1595,13 +1592,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #710 - Define Required Fields per OpenAPI
+### define-required-fields-per-openapi
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#710](/docs/rules/payload-conventions#710) |
+| **URL** | [/docs/rules/payload-conventions#define-required-fields-per-openapi](/docs/rules/payload-conventions#define-required-fields-per-openapi) |
 
 **What to Check**:
 - [ ] Request body schemas have a `required` array
@@ -1611,13 +1608,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #711 - Specify PATCH Content Type and Null Semantics
+### specify-patch-content-type-and-null-semantics
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Payload Conventions |
-| **URL** | [/docs/rules/payload-conventions#711](/docs/rules/payload-conventions#711) |
+| **URL** | [/docs/rules/payload-conventions#specify-patch-content-type-and-null-semantics](/docs/rules/payload-conventions#specify-patch-content-type-and-null-semantics) |
 
 **What to Check**:
 - [ ] PATCH operations declare a `requestBody` with explicit `content` type (e.g., `application/merge-patch+json`, `application/json-patch+json`, or `application/json`)
@@ -1629,13 +1626,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Data Types & Common Objects (800-series)
 
-### #801 - Use ISO 8601 Durations and Intervals
+### use-iso-8601-durations-and-intervals
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#801](/docs/rules/data-types-and-common-objects#801) |
+| **URL** | [/docs/rules/data-types-and-common-objects#use-iso-8601-durations-and-intervals](/docs/rules/data-types-and-common-objects#use-iso-8601-durations-and-intervals) |
 
 **What to Check**:
 - [ ] Properties with "duration", "interval", "timeout", "ttl", "period" in their name use `type: string` (not integer)
@@ -1644,13 +1641,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #802 - Use Standard Date/Time Formats
+### use-standard-date-time-formats
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#802](/docs/rules/data-types-and-common-objects#802) |
+| **URL** | [/docs/rules/data-types-and-common-objects#use-standard-date-time-formats](/docs/rules/data-types-and-common-objects#use-standard-date-time-formats) |
 
 **What to Check**:
 - [ ] Properties with "date", "time", "At", "timestamp" in their name use `format: date-time` or `format: date`
@@ -1660,13 +1657,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #803 - Use Standard Country, Language, and Currency Codes
+### use-standard-country-language-and-currency-codes
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#803](/docs/rules/data-types-and-common-objects#803) |
+| **URL** | [/docs/rules/data-types-and-common-objects#use-standard-country-language-and-currency-codes](/docs/rules/data-types-and-common-objects#use-standard-country-language-and-currency-codes) |
 
 **What to Check**:
 - [ ] Properties with "country" in name reference ISO 3166-1 in description
@@ -1676,13 +1673,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #804 - Define Numeric Formats
+### define-numeric-formats
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#804](/docs/rules/data-types-and-common-objects#804) |
+| **URL** | [/docs/rules/data-types-and-common-objects#define-numeric-formats](/docs/rules/data-types-and-common-objects#define-numeric-formats) |
 
 **What to Check**:
 - [ ] `type: integer` properties have `format: int32` or `format: int64`
@@ -1692,13 +1689,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #805 - Use Common Field Names
+### use-common-field-names
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#805](/docs/rules/data-types-and-common-objects#805) |
+| **URL** | [/docs/rules/data-types-and-common-objects#use-common-field-names](/docs/rules/data-types-and-common-objects#use-common-field-names) |
 
 **What to Check**:
 - [ ] Flag non-standard variants: `created` (should be `createdAt`), `modified` (should be `modifiedAt`), `lastModified` (should be `modifiedAt`), `updated` (should be `modifiedAt`)
@@ -1710,30 +1707,30 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #806 - Use Standard Property Formats
+### use-standard-property-formats
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#806](/docs/rules/data-types-and-common-objects#806) |
+| **URL** | [/docs/rules/data-types-and-common-objects#use-standard-property-formats](/docs/rules/data-types-and-common-objects#use-standard-property-formats) |
 
 **What to Check**:
 - [ ] Properties named `*email*` use `format: email`
 - [ ] Properties named `*url*`, `*uri*`, `*href*` use `format: uri` or `format: uri-reference`
 - [ ] Properties named `*Id` with UUID values use `format: uuid`
-- [ ] Date/time properties use appropriate format (#802)
+- [ ] Date/time properties use appropriate format (#use-standard-date-time-formats)
 - [ ] IP address properties use `format: ipv4` or `format: ipv6`
 
 ---
 
-### #807 - Encode Embedded Binary Safely
+### encode-embedded-binary-safely
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | partial |
 | **Category** | Data Types & Common Objects |
-| **URL** | [/docs/rules/data-types-and-common-objects#807](/docs/rules/data-types-and-common-objects#807) |
+| **URL** | [/docs/rules/data-types-and-common-objects#encode-embedded-binary-safely](/docs/rules/data-types-and-common-objects#encode-embedded-binary-safely) |
 
 **What to Check**:
 - [ ] Properties with `format: byte` or `format: binary` include `contentType` sibling property
@@ -1744,13 +1741,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ## Operations & Quality (900-series)
 
-### #900 - Support Partial Responses (fields)
+### support-partial-responses-fields
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Operations & Quality |
-| **URL** | [/docs/rules/operations-and-quality#900](/docs/rules/operations-and-quality#900) |
+| **URL** | [/docs/rules/operations-and-quality#support-partial-responses-fields](/docs/rules/operations-and-quality#support-partial-responses-fields) |
 
 **What to Check**:
 - [ ] GET operations have a `fields` query parameter (or document why not)
@@ -1758,13 +1755,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #901 - Allow Optional Embedding
+### allow-optional-embedding
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Operations & Quality |
-| **URL** | [/docs/rules/operations-and-quality#901](/docs/rules/operations-and-quality#901) |
+| **URL** | [/docs/rules/operations-and-quality#allow-optional-embedding](/docs/rules/operations-and-quality#allow-optional-embedding) |
 
 **What to Check**:
 - [ ] GET operations for resources with related entities have an `embed` query parameter
@@ -1772,13 +1769,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #902 - Publish an OpenAPI Specification (Meet Doc Quality Levels)
+### publish-an-openapi-specification-meet-doc-quality-levels
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Operations & Quality |
-| **URL** | [/docs/rules/operations-and-quality#902](/docs/rules/operations-and-quality#902) |
+| **URL** | [/docs/rules/operations-and-quality#publish-an-openapi-specification-meet-doc-quality-levels](/docs/rules/operations-and-quality#publish-an-openapi-specification-meet-doc-quality-levels) |
 
 **What to Check** (Level 1 minimum):
 - [ ] Every operation has `summary` + `description`
@@ -1795,13 +1792,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #903 - Return a Request ID on Every Response
+### return-a-request-id-on-every-response
 | Field | Value |
 |---|---|
 | **Level** | MUST |
 | **Testability** | full |
 | **Category** | Operations & Quality |
-| **URL** | [/docs/rules/operations-and-quality#903](/docs/rules/operations-and-quality#903) |
+| **URL** | [/docs/rules/operations-and-quality#return-a-request-id-on-every-response](/docs/rules/operations-and-quality#return-a-request-id-on-every-response) |
 
 **What to Check**:
 - [ ] All responses define `X-Request-Id` header
@@ -1811,13 +1808,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #904 - Design Webhooks and Event Notifications
+### design-webhooks-and-event-notifications
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Operations & Quality |
-| **URL** | [/docs/rules/operations-and-quality#904](/docs/rules/operations-and-quality#904) |
+| **URL** | [/docs/rules/operations-and-quality#design-webhooks-and-event-notifications](/docs/rules/operations-and-quality#design-webhooks-and-event-notifications) |
 
 **What to Check**:
 - [ ] If webhook schemas exist, they include `id`, `type`, `timestamp`, `data`, `tenantId` fields
@@ -1826,13 +1823,13 @@ what specifically can be tested, and a link to the full rule on the documentatio
 
 ---
 
-### #905 - Provide Health Check Endpoints
+### provide-health-check-endpoints
 | Field | Value |
 |---|---|
 | **Level** | SHOULD |
 | **Testability** | partial |
 | **Category** | Operations & Quality |
-| **URL** | [/docs/rules/operations-and-quality#905](/docs/rules/operations-and-quality#905) |
+| **URL** | [/docs/rules/operations-and-quality#provide-health-check-endpoints](/docs/rules/operations-and-quality#provide-health-check-endpoints) |
 
 **What to Check**:
 - [ ] `/health` or `/health/ready` path exists (note: may be excluded from public spec per rule guidance)
@@ -1864,71 +1861,71 @@ Rules are prioritized for linter implementation based on impact (MUST > SHOULD >
 testability (full > partial), and frequency of violation.
 
 ### P0 - Implement First (high impact, fully testable MUST rules)
-- #104 camelCase JSON properties
-- #107 lowercase-hyphenated paths, camelCase path params
-- #108 camelCase query params
-- #112 UPPER_SNAKE_CASE enums
-- #115 describe every parameter/property
-- #116 examples for every parameter/property
-- #122 camelCase operationId on every operation
-- #123 tag on every operation
-- #204 top-level JSON objects (no bare arrays)
-- #300 security on every operation
-- #304 HTTPS-only servers
-- #403 standard status codes
-- #404 Problem Details error contract
-- #500 no /api base path
-- #514 no sequential numeric IDs
-- #602 offset pagination support
-- #701 booleans not nullable
-- #702 arrays not nullable
-- #710 required fields modeled
-- #804 numeric formats defined
-- #903 X-Request-Id on every response
+- #use-camelcase-for-json-properties camelCase JSON properties
+- #use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters lowercase-hyphenated paths, camelCase path params
+- #use-camelcase-for-query-parameters camelCase query params
+- #declare-enum-values-in-upper-snake-case-strings UPPER_SNAKE_CASE enums
+- #describe-every-parameter-and-property describe every parameter/property
+- #provide-examples-for-operations-and-key-fields examples for every parameter/property
+- #provide-a-camelcase-operationid-for-every-operation camelCase operationId on every operation
+- #provide-a-tag-for-every-operation tag on every operation
+- #return-top-level-json-objects top-level JSON objects (no bare arrays)
+- #secure-endpoints-with-oauth-2-0 security on every operation
+- #require-https-tls-for-all-endpoints HTTPS-only servers
+- #use-standard-http-status-codes standard status codes
+- #define-a-standard-error-contract-in-openapi-problem-details Problem Details error contract
+- #do-not-use-api-base-path no /api base path
+- #do-not-use-sequential-numeric-ids no sequential numeric IDs
+- #support-offset-pagination-for-list-endpoints offset pagination support
+- #use-booleans-correctly booleans not nullable
+- #initialize-empty-arrays arrays not nullable
+- #define-required-fields-per-openapi required fields modeled
+- #define-numeric-formats numeric formats defined
+- #return-a-request-id-on-every-response X-Request-Id on every response
 
 ### P1 - Implement Second (MUST rules, partially testable or diff-based)
-- #101 valid OpenAPI spec
-- #105 ASCII identifiers
-- #110 plural collection names
-- #111 scope naming convention
-- #124 x-sailpoint-resource-operation-id
-- #200 no breaking changes (diff)
-- #208 year-based versioning
-- #214 API metadata complete
-- #215 x-audience specified
-- #305 no secrets in URLs
-- #310 tenant data isolation
-- #406 429 with Retry-After
-- #412 accurate response examples
-- #416 406 for unsupported Accept headers
-- #418 error retryability classification
-- #501 canonical URL forms
-- #600 conventional query parameter names
-- #601 collection format defined
-- #604 consistent query format
-- #705 standard media types
-- #711 PATCH content type and null semantics
-- #802 standard date/time formats
-- #806 standard property formats
-- #902 doc quality levels
+- #provide-an-openapi-specification valid OpenAPI spec
+- #use-ascii-for-api-identifiers ASCII identifiers
+- #pluralize-collection-resource-names plural collection names
+- #follow-naming-convention-for-permissions-scopes scope naming convention
+- #provide-x-sailpoint-resource-operation-id-for-path-parameters x-sailpoint-resource-operation-id
+- #do-not-break-compatibility no breaking changes (diff)
+- #use-year-based-api-versioning-yyyy-revision year-based versioning
+- #include-api-metadata API metadata complete
+- #specify-api-audience x-audience specified
+- #never-put-secrets-or-credentials-in-urls no secrets in URLs
+- #enforce-tenant-data-isolation-in-responses tenant data isolation
+- #use-429-with-rate-limit-headers 429 with Retry-After
+- #provide-accurate-response-examples accurate response examples
+- #return-406-for-unsupported-accept-headers 406 for unsupported Accept headers
+- #classify-error-retryability error retryability classification
+- #define-canonical-url-forms canonical URL forms
+- #use-conventional-query-parameters conventional query parameter names
+- #define-collection-formats-for-header-and-query-parameters collection format defined
+- #use-one-query-format-across-the-api consistent query format
+- #use-standard-media-types standard media types
+- #specify-patch-content-type-and-null-semantics PATCH content type and null semantics
+- #use-standard-date-time-formats standard date/time formats
+- #use-standard-property-formats standard property formats
+- #publish-an-openapi-specification-meet-doc-quality-levels doc quality levels
 
 ### P2 - Implement Third (SHOULD rules, advisory/educational)
-- #106 plural array names
-- #109 header casing
-- #117 summary word count
-- #118 avoid qualifying verbs
-- #119 positive boolean semantics
-- #120 filters parameter template
-- #121 sorters parameter template
-- #203 input constraints
-- #219 enum extensibility annotations
-- #309 input sanitization (maxLength)
-- #415 optimistic locking
-- #417 HEAD and OPTIONS method support
-- #502/#505 verb-free URLs
-- #510 nesting depth
-- #606 pagination links in collection responses
-- #706 maps with additionalProperties
-- #708 avoid deep nesting
-- #709 defaults for optionals
-- #805 common field names
+- #pluralize-array-property-names plural array names
+- #use-upper-case-words-with-hyphens header casing
+- #keep-operation-summaries-to-5-words-or-fewer summary word count
+- #avoid-qualifying-verbs avoid qualifying verbs
+- #use-positive-semantics-for-boolean-fields positive boolean semantics
+- #describe-the-filters-parameter-standard-format filters parameter template
+- #describe-the-sorters-parameter-standard-format sorters parameter template
+- #be-conservative-with-inputs input constraints
+- #annotate-enum-extensibility-open-vs-closed enum extensibility annotations
+- #sanitize-inputs-and-prevent-injection input sanitization (maxLength)
+- #use-optimistic-locking-for-concurrent-writes optimistic locking
+- #document-head-and-options-method-support HEAD and OPTIONS method support
+- #use-resource-oriented-urls resource modeling + noun-based URL segments (single consolidated rule)
+- #limit-nesting-depth nesting depth
+- #include-pagination-links-in-collection-responses pagination links in collection responses
+- #define-maps-with-additionalproperties maps with additionalProperties
+- #avoid-nested-objects avoid deep nesting
+- #define-defaults-for-optional-properties defaults for optionals
+- #use-common-field-names common field names

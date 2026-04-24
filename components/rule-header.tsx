@@ -1,3 +1,6 @@
+import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +18,12 @@ export type RuleLink = {
 
 export type ImplementationLink = RuleLink & {
   kind?: ImplementationKind;
+};
+
+export type RuleExample = {
+  label?: string;
+  lang: "yaml" | "json" | "http" | "ts" | "bash" | "text";
+  code: string;
 };
 
 const levelConfig = {
@@ -40,7 +49,7 @@ function LevelBadge({ level }: { level: RuleLevel }) {
     <span
       className={cn(
         "inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold",
-        config.className
+        config.className,
       )}
     >
       {config.label}
@@ -51,8 +60,45 @@ function LevelBadge({ level }: { level: RuleLevel }) {
 function RuleId({ id }: { id: string }) {
   return (
     <span className="font-mono text-sm font-semibold text-foreground">
-      #{id}
+      {id}
     </span>
+  );
+}
+
+function uniqueTabLabels(examples: RuleExample[]): string[] {
+  const seen = new Map<string, number>();
+  return examples.map((ex, i) => {
+    const base = ex.label ?? `${ex.lang.toUpperCase()} ${i + 1}`;
+    const n = seen.get(base) ?? 0;
+    seen.set(base, n + 1);
+    return n === 0 ? base : `${base} (${n + 1})`;
+  });
+}
+
+function RuleExamples({ examples }: { examples: RuleExample[] }) {
+  if (examples.length === 0) return null;
+
+  if (examples.length === 1) {
+    const [only] = examples;
+    return (
+      <div className="mt-3">
+        <DynamicCodeBlock lang={only.lang} code={only.code} />
+      </div>
+    );
+  }
+
+  const items = uniqueTabLabels(examples);
+
+  return (
+    <div className="mt-3">
+      <Tabs items={items}>
+        {examples.map((ex, i) => (
+          <Tab key={items[i]} value={items[i]}>
+            <DynamicCodeBlock lang={ex.lang} code={ex.code} />
+          </Tab>
+        ))}
+      </Tabs>
+    </div>
   );
 }
 
@@ -61,6 +107,7 @@ export function RuleHeader({
   level,
   externalDocs,
   implementation,
+  examples,
 }: {
   id: string;
   level: RuleLevel;
@@ -69,10 +116,13 @@ export function RuleHeader({
   tags?: string[];
   externalDocs?: RuleLink[];
   implementation?: ImplementationLink[];
+  examples?: RuleExample[];
 }) {
   const hasLinks =
     (externalDocs && externalDocs.length > 0) ||
     (implementation && implementation.length > 0);
+
+  const hasExamples = examples && examples.length > 0;
 
   return (
     <>
@@ -98,6 +148,7 @@ export function RuleHeader({
           )}
         </CardContent>
       </Card>
+      {hasExamples && <RuleExamples examples={examples} />}
     </>
   );
 }

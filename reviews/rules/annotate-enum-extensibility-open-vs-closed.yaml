@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "annotate-enum-extensibility-open-vs-closed",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#annotate-enum-extensibility-open-vs-closed",
+    "url": "/docs/rules/lifecycle-and-compatibility#annotate-enum-extensibility-open-vs-closed"
+  },
+  "currentTitle": "Annotate Enum Extensibility (Open vs Closed)",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

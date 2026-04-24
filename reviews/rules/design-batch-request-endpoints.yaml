@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "design-batch-request-endpoints",
+  "source": {
+    "doc": "content/docs/rules/requests-and-querying.mdx",
+    "anchor": "#design-batch-request-endpoints",
+    "url": "/docs/rules/requests-and-querying#design-batch-request-endpoints"
+  },
+  "currentTitle": "Design Batch Request Endpoints",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

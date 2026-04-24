@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-A documentation site for SailPoint's API design guidelines, built with FumaDocs (Next.js) and MDX. The content is a set of numbered API rules organized by category, plus guides and appendices.
+A documentation site for SailPoint's API design guidelines, built with FumaDocs (Next.js) and MDX. The content is a set of API rules identified by stable kebab-case IDs, organized by category. Rules are the sole source of truth — there are no separate guides or appendix pages.
 
 ## Commands
 
@@ -34,22 +34,29 @@ Scripts in `scripts/` require **bun** to execute.
 
 All documentation lives in `content/docs/` as MDX files. Sidebar order is controlled by `meta.json` files in each directory.
 
-- `content/docs/rules/` — One file per rule category (e.g., `http-semantics.mdx`, `payload-conventions.mdx`). Each file contains multiple rules.
-- `content/docs/guides/` — Longer-form how-to guides
-- `content/docs/appendices/` — Reference material (checklists, glossary, snippets)
+- `content/docs/index.mdx` — Short getting-started landing page
+- `content/docs/rules/` — One file per rule category (e.g., `http-semantics.mdx`, `payload-conventions.mdx`). Each file contains multiple rules. All substantive content (requirements, examples, anti-patterns) lives here.
 
 ### Rule Format
 
 Each rule uses the `<RuleHeader>` MDX component (registered in `mdx-components.tsx`). The pattern in MDX files is:
 
 ```mdx
-### #148 - Rule Title Here
-<RuleHeader id="148" level="MUST" title="Rule Title Here" externalDocs={[...]} implementation={[...]} />
+### use-standard-http-headers
+<RuleHeader
+  id="use-standard-http-headers"
+  level="MUST"
+  title="Use Standard HTTP Headers"
+  externalDocs={[...]}
+  implementation={[...]}
+  examples={[{ lang: "yaml", code: "..." }]}
+/>
 ```
 
-- **id**: Stable numeric identifier, never reused. Used for anchors (`#148`) and deep links.
+- **id**: Stable kebab-case identifier (derived from the rule name, linter-style), never reused. Used for anchors (`#use-standard-http-headers`) and deep links.
 - **level**: One of `MUST`, `SHOULD`, `MAY` (RFC 2119 keywords).
-- The heading must match the format `### #<id> - <title>` for consistent anchor generation.
+- **examples**: Optional array of `{ label?, lang, code }`. The first example renders as the canonical snippet directly under the rule's badge row. Use YAML for OpenAPI contract shape, JSON for payload shape, HTTP for headers/status/URL.
+- The markdown heading is the same kebab-case string as **id** (for TOC and anchor alignment).
 
 The `RuleHeader` component is split across: `components/rule-header.tsx` (server), `components/rule-header.client.tsx` (client interactivity), `components/rule-header.external-docs.tsx`, `components/rule-header.implementation.tsx`.
 

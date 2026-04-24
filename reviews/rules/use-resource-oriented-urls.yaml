@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-resource-oriented-urls",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#use-resource-oriented-urls",
+    "url": "/docs/rules/resource-modeling-and-urls#use-resource-oriented-urls"
+  },
+  "currentTitle": "Use Resource-Oriented URLs",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

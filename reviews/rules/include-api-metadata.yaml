@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "include-api-metadata",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#include-api-metadata",
+    "url": "/docs/rules/lifecycle-and-compatibility#include-api-metadata"
+  },
+  "currentTitle": "contain API meta information",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

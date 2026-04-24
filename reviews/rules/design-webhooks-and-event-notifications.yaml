@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "design-webhooks-and-event-notifications",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#design-webhooks-and-event-notifications",
+    "url": "/docs/rules/operations-and-quality#design-webhooks-and-event-notifications"
+  },
+  "currentTitle": "Design Webhooks and Event Notifications",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

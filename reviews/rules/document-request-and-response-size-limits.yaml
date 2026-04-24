@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "document-request-and-response-size-limits",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#document-request-and-response-size-limits",
+    "url": "/docs/rules/http-semantics#document-request-and-response-size-limits"
+  },
+  "currentTitle": "Document Request and Response Size Limits",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

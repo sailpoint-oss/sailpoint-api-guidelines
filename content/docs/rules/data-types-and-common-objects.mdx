@@ -5,8 +5,6 @@ description: Rules for consistent data formats (dates, durations, identifiers) a
 
 These rules standardize common formats and field names so the same concepts look the same across APIs.
 
-**Reference**: [Glossary](/docs/appendices/glossary) | [OpenAPI snippet library](/docs/appendices/openapi-snippet-library)
-
 Use this section to answer:
 
 - Which wire format should this value use?
@@ -16,16 +14,38 @@ Use this section to answer:
 ---
 
 ## Data Types & Formats
-### #801 - Use ISO 8601 Durations and Intervals
-<RuleHeader id="801" level="SHOULD" title="Use ISO 8601 Durations and Intervals" externalDocs={[{ href: "https://www.iso.org/iso-8601-date-and-time-format.html", label: "ISO 8601" }]} />
+### use-iso-8601-durations-and-intervals
+<RuleHeader
+  id="use-iso-8601-durations-and-intervals"
+  level="SHOULD"
+  title="Use ISO 8601 Durations and Intervals"
+  externalDocs={[{ href: "https://www.iso.org/iso-8601-date-and-time-format.html", label: "ISO 8601" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{ "timeout": "PT15M", "retention": "P7D" }`,
+    },
+  ]}
+/>
 
 - APIs SHOULD represent durations and time intervals using ISO 8601 format.
 - Common patterns: `PT15M` (15 minutes), `PT1H30M` (1 hour 30 minutes), `P7D` (7 days).
 - ❌ `900` (ambiguous unit)
 - ❌ `1h30m` (non-standard)
 
-### #802 - Use Standard Date/Time Formats
-<RuleHeader id="802" level="MUST" title="Use Standard Date/Time Formats" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc3339", label: "RFC 3339 — Date and Time on the Internet" }, { href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]} />
+### use-standard-date-time-formats
+<RuleHeader
+  id="use-standard-date-time-formats"
+  level="MUST"
+  title="Use Standard Date/Time Formats"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc3339", label: "RFC 3339 — Date and Time on the Internet" }, { href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{ "createdAt": "2026-01-15T14:30:00Z", "birthDate": "2026-01-15" }`,
+    },
+  ]}
+/>
 
 #### JSON payloads
 
@@ -61,8 +81,19 @@ birthDate:
   format: date
 ```
 
-### #803 - Use Standard Country, Language, and Currency Codes
-<RuleHeader id="803" level="MUST" title="Use Standard Country, Language, and Currency Codes" externalDocs={[{ href: "https://www.iso.org/iso-3166-country-codes.html", label: "ISO 3166-1 Country Codes" }, { href: "https://www.rfc-editor.org/rfc/bcp/bcp47.txt", label: "BCP 47 — Language Tags" }, { href: "https://www.iso.org/iso-4217-currency-codes.html", label: "ISO 4217 Currency Codes" }]} />
+### use-standard-country-language-and-currency-codes
+<RuleHeader
+  id="use-standard-country-language-and-currency-codes"
+  level="MUST"
+  title="Use Standard Country, Language, and Currency Codes"
+  externalDocs={[{ href: "https://www.iso.org/iso-3166-country-codes.html", label: "ISO 3166-1 Country Codes" }, { href: "https://www.rfc-editor.org/rfc/bcp/bcp47.txt", label: "BCP 47 — Language Tags" }, { href: "https://www.iso.org/iso-4217-currency-codes.html", label: "ISO 4217 Currency Codes" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{ "countryCode": "US", "languageTag": "en-US", "currency": "USD" }`,
+    },
+  ]}
+/>
 
 - APIs MUST use the appropriate standard for each type of code:
   - **Country codes**: ISO 3166-1 alpha-2 (e.g., `US`, `DE`)
@@ -85,8 +116,28 @@ currency:
   example: USD
 ```
 
-### #804 - Define Numeric Formats
-<RuleHeader id="804" level="MUST" title="Define Numeric Formats" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+### define-numeric-formats
+<RuleHeader
+  id="define-numeric-formats"
+  level="MUST"
+  title="Define Numeric Formats"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `count:
+  type: integer
+  format: int32
+amount:
+  type: string
+  description: Decimal string.
+  example: "123.45"
+resourceId:
+  type: string
+  format: uuid`,
+    },
+  ]}
+/>
 
 - Numeric fields MUST be modeled with explicit OpenAPI types and formats.
 
@@ -130,35 +181,75 @@ resourceId:
 ---
 
 ## Common Fields & Standard Formats
-### #805 - Use Common Field Names
-<RuleHeader id="805" level="MUST" title="Use Common Field Names" externalDocs={[{ href: "https://cloud.google.com/apis/design/standard_fields", label: "Google API Standard Fields" }]} />
+### use-common-field-names
+<RuleHeader
+  id="use-common-field-names"
+  level="MUST"
+  title="Use Common Field Names"
+  externalDocs={[{ href: "https://cloud.google.com/apis/design/standard_fields", label: "Google API Standard Fields" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "id": "abc-123",
+  "name": "Engineering",
+  "createdAt": "2026-01-15T14:30:00Z",
+  "modifiedAt": "2026-02-01T09:00:00Z",
+  "enabled": true,
+  "ownerRef": { "id": "u-42", "name": "Alice" }
+}`,
+    },
+  ]}
+/>
 
 - APIs MUST reuse common field names and semantics for shared concepts. Baseline field registry:
-  - `id` (string): stable identifier for the resource (see [#512])
+  - `id` (string): stable identifier for the resource (see [#use-url-friendly-ids])
   - `name` (string): human-readable display name
   - `description` (string): human-readable description (optional)
-  - `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#802])
-  - `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#802])
+  - `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#use-standard-date-time-formats])
+  - `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#use-standard-date-time-formats])
   - `type` (string): discriminator/type label when needed
-  - `status` (string/enum): lifecycle status (see [#112])
-  - `enabled` (boolean): true/false only (see [#701], [#119])
-  - `externalId` (string): external system identifier (see [#411])
+  - `status` (string/enum): lifecycle status (see [#declare-enum-values-in-upper-snake-case-strings])
+  - `enabled` (boolean): true/false only (see [#use-booleans-correctly], [#use-positive-semantics-for-boolean-fields])
+  - `externalId` (string): external system identifier (see [#use-secondary-keys-for-idempotent-post])
   - `tags` (array of strings): user-defined categorization labels
-  - `etag` (string): entity version tag for optimistic locking (see [Optimistic locking](/docs/appendices/optimistic-locking))
-  - `deletedAt` (string, date-time, nullable): soft-delete timestamp (see [#703] if `null` is used)
+  - `etag` (string): entity version tag for optimistic locking (see [#use-optimistic-locking-for-concurrent-writes])
+  - `deletedAt` (string, date-time, nullable): soft-delete timestamp (see [#model-nullable-fields-in-openapi] if `null` is used)
   - `href` or `self` (string, uri): canonical self-link URL
   - `ownerRef` (object: `{ id, name }`): standard reference shape for related entities
 - Do not invent synonyms (`created` vs `createdAt`, `lastModified` vs `modifiedAt`). Prefer the standard name for all new APIs and fields.
 - Teams SHOULD define a standard `Ref` shape (e.g., `{ "id": "...", "name": "..." }`) and reuse it for all entity references (`ownerRef`, `sourceRef`, `creatorRef`).
-- For money-like values, use `amount` as a decimal string (see [#804]) and `currency` as ISO 4217 (see [#803]).
+- For money-like values, use `amount` as a decimal string (see [#define-numeric-formats]) and `currency` as ISO 4217 (see [#use-standard-country-language-and-currency-codes]).
 
-### #806 - Use Standard Property Formats
-<RuleHeader id="806" level="MUST" title="Use Standard Property Formats" externalDocs={[{ label: "RFC 3339 — Date and Time on the Internet", href: "https://www.rfc-editor.org/rfc/rfc3339" }, { label: "IANA Media Types Registry", href: "https://www.iana.org/assignments/media-types/media-types.xhtml" }]} />
+### use-standard-property-formats
+<RuleHeader
+  id="use-standard-property-formats"
+  level="MUST"
+  title="Use Standard Property Formats"
+  externalDocs={[{ label: "RFC 3339 — Date and Time on the Internet", href: "https://www.rfc-editor.org/rfc/rfc3339" }, { label: "IANA Media Types Registry", href: "https://www.iana.org/assignments/media-types/media-types.xhtml" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `createdAt:
+  type: string
+  format: date-time
+email:
+  type: string
+  format: email
+callbackUrl:
+  type: string
+  format: uri
+requestId:
+  type: string
+  format: uuid`,
+    },
+  ]}
+/>
 
 - APIs MUST use standardized OpenAPI formats where they apply, and SHOULD validate them at runtime.
 - Use `format` only when it accurately describes the values emitted and accepted, and always provide matching examples.
 - Common formats:
-  - `date-time` / `date` (see [#802] for the canonical date/time rules)
+  - `date-time` / `date` (see [#use-standard-date-time-formats] for the canonical date/time rules)
   - `uuid` for UUID strings
   - `uri` for absolute URIs; `uri-reference` when relative references are allowed
   - `email` for email addresses
@@ -182,10 +273,25 @@ properties:
     format: uuid
 ```
 
-### #807 - Encode Embedded Binary Safely
-<RuleHeader id="807" level="MUST" title="Encode Embedded Binary Safely" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc4648", label: "RFC 4648 — Base16, Base32, Base64 Data Encodings" }]} />
+### encode-embedded-binary-safely
+<RuleHeader
+  id="encode-embedded-binary-safely"
+  level="MUST"
+  title="Encode Embedded Binary Safely"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc4648", label: "RFC 4648 — Base16, Base32, Base64 Data Encodings" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "contentType": "image/png",
+  "encoding": "base64",
+  "data": "iVBORw0KGgoAAAANSUhEUg..."
+}`,
+    },
+  ]}
+/>
 
-Prefer dedicated upload/download endpoints over embedding binary in JSON (see [#704]).
+Prefer dedicated upload/download endpoints over embedding binary in JSON (see [#use-standard-non-json-media-types]).
 
 - If embedding is unavoidable, APIs MUST use standard base64 encoding. Use base64url only when the value must be URL-safe.
 - MUST include metadata so clients can interpret the value: `contentType`, `encoding` (`base64` or `base64url`), and optionally `sizeBytes`.

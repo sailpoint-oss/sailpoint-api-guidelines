@@ -19,7 +19,7 @@ const ruleUrlById = new Map(
 
 function resolveRuleHref(href?: string) {
   if (!href) return href;
-  const match = href.match(/^#(\d+)$/);
+  const match = href.match(/^#([a-z][a-z0-9-]*)$/);
   if (!match) return href;
   return ruleUrlById.get(match[1]) ?? href;
 }
@@ -51,7 +51,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
       <DocsBody>
         <MDX
           components={getMDXComponents({
-            // Support both relative doc links and stable rule-id links like [#602].
+            // Support both relative doc links and stable rule-id links like [#support-offset-pagination-for-list-endpoints].
             a: RuleAwareLink,
           })}
         />

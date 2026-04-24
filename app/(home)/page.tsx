@@ -65,39 +65,21 @@ export default function HomePage() {
           </div>
         </header>
 
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 md:grid-cols-2">
           <div className="rounded-xl border border-fd-border bg-fd-card p-6 shadow-sm">
             <p className="text-sm font-medium text-fd-muted-foreground">
               Normative
             </p>
             <h2 className="mt-2 text-lg font-semibold tracking-tight">Rules</h2>
             <p className="mt-2 text-sm text-fd-muted-foreground">
-              The must/should guidance. Each rule is stable, linkable, and
-              tracked by ID.
+              The must/should guidance for every SailPoint API. Each rule is
+              stable, linkable, and tracked by a kebab-case ID.
             </p>
             <Link
               className="mt-4 inline-flex text-sm font-medium underline underline-offset-4"
               href="/docs/rules"
             >
               Open Rules
-            </Link>
-          </div>
-
-          <div className="rounded-xl border border-fd-border bg-fd-card p-6 shadow-sm">
-            <p className="text-sm font-medium text-fd-muted-foreground">
-              Supporting
-            </p>
-            <h2 className="mt-2 text-lg font-semibold tracking-tight">
-              Reference
-            </h2>
-            <p className="mt-2 text-sm text-fd-muted-foreground">
-              Checklists, recipes, and reusable patterns that support the Rules.
-            </p>
-            <Link
-              className="mt-4 inline-flex text-sm font-medium underline underline-offset-4"
-              href="/docs/appendices"
-            >
-              Open Reference
             </Link>
           </div>
 
@@ -131,71 +113,22 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-fd-border bg-fd-background p-6 shadow-sm">
-            <h2 className="text-base font-semibold tracking-tight">
-              How to use this hub
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm text-fd-muted-foreground">
-              <li>
-                <span className="font-medium text-fd-foreground">
-                  Start with
-                </span>{" "}
-                the overview to align on principles and terminology.
+        <section className="rounded-xl border border-fd-border bg-fd-background p-6 shadow-sm">
+          <h2 className="text-base font-semibold tracking-tight">
+            Popular rule categories
+          </h2>
+          <ul className="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2 md:grid-cols-3">
+            {popularRuleCategories.map((item) => (
+              <li key={item.href}>
+                <Link
+                  className="text-fd-foreground underline underline-offset-4"
+                  href={item.href}
+                >
+                  {item.title}
+                </Link>
               </li>
-              <li>
-                <span className="font-medium text-fd-foreground">Apply</span>{" "}
-                Rules during API design, reviews, and implementation. Each rule
-                includes embedded context explaining rationale.
-              </li>
-              <li>
-                <span className="font-medium text-fd-foreground">
-                  Reference
-                </span>{" "}
-                checklists, glossary, and recipe-style patterns in the Reference
-                section.
-              </li>
-            </ul>
-
-            <div className="mt-4 grid gap-3">
-              <div>
-                <p className="text-sm font-medium text-fd-foreground">
-                  External readers
-                </p>
-                <p className="text-sm text-fd-muted-foreground">
-                  Use Rules as a contract checklist and Reference for practical
-                  patterns.
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-fd-foreground">
-                  Internal teams
-                </p>
-                <p className="text-sm text-fd-muted-foreground">
-                  Cite rule IDs in reviews and keep OpenAPI as the single source
-                  of truth.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-fd-border bg-fd-background p-6 shadow-sm">
-            <h2 className="text-base font-semibold tracking-tight">
-              Popular rule categories
-            </h2>
-            <ul className="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-              {popularRuleCategories.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    className="text-fd-foreground underline underline-offset-4"
-                    href={item.href}
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            ))}
+          </ul>
         </section>
 
         <footer className="flex flex-col gap-2 text-sm text-fd-muted-foreground sm:flex-row sm:items-center sm:justify-between">

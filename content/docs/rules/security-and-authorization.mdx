@@ -13,28 +13,66 @@ For each protected endpoint, a reader should be able to answer:
 - What scopes, roles, or capabilities are required?
 - Does the service reject unauthenticated or unauthorized requests before parsing the payload?
 
-**Reference**: [Review checklist](/docs/appendices/review-checklist)
-
 ---
 
-### #300 - Secure Endpoints with OAuth 2.0
-<RuleHeader id="300" level="MUST" title="Secure Endpoints with OAuth 2.0" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
+### secure-endpoints-with-oauth-2-0
+<RuleHeader
+  id="secure-endpoints-with-oauth-2-0"
+  level="MUST"
+  title="Secure Endpoints with OAuth 2.0"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `security:
+  - userAuth: [idn:accounts:read]
+  - applicationAuth: [idn:accounts:read]`,
+    },
+  ]}
+/>
 
 - Each operation MUST declare its security requirements in OpenAPI using the `security` field.
 - Each operation MUST specify whether it supports **user-context** (`userAuth`), **system/service-context** (`applicationAuth`), or both.
 - Required scopes MUST be listed per operation — don't rely on global defaults when behavior differs across endpoints.
 - Use least privilege: keep required scope sets minimal and document behavior differences between user and service contexts.
 
-### #301 - Define and Assign Scopes
-<RuleHeader id="301" level="MUST" title="Define and Assign Scopes" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
+### define-and-assign-scopes
+<RuleHeader
+  id="define-and-assign-scopes"
+  level="MUST"
+  title="Define and Assign Scopes"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]}
+  examples={[
+    {
+      lang: "text",
+      code: `idn:accounts:read`,
+    },
+  ]}
+/>
 
 - Required scopes MUST be documented per operation using OpenAPI `security`.
 - Scope requirements MUST be unambiguous: multiple scopes in a single `security` requirement are **AND** (all required); multiple `security` requirements are **OR** (any one satisfies auth).
 - Prefer minimal scope sets.
 - If an operation behaves differently depending on which scopes are present, SHOULD split it into separate operations or endpoints rather than overloading behavior behind conditional logic.
 
-### #302 - Document Required Licenses for API Collections
-<RuleHeader id="302" level="MUST" title="Document Required Licenses for API Collections" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
+### document-required-licenses-for-api-collections
+<RuleHeader
+  id="document-required-licenses-for-api-collections"
+  level="MUST"
+  title="Document Required Licenses for API Collections"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `tags:
+  - name: Accounts
+    description: Manage accounts.
+    x-license-addons:
+      - IdentitySecurityCloud_Core
+      - LifecycleManagement`,
+    },
+  ]}
+/>
 
 - If any API collection or operation requires a specific license add-on, entitlement, or feature flag, teams MUST document that requirement.
 - Requirements MUST be explicit and machine-discoverable where feasible.
@@ -67,8 +105,26 @@ paths:
       x-license-addons: [LifecycleManagement]
 ```
 
-### #303 - Define User Capabilities for userAuth Endpoints
-<RuleHeader id="303" level="MUST" title="Define User Capabilities for userAuth Endpoints" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]} />
+### define-user-capabilities-for-userauth-endpoints
+<RuleHeader
+  id="define-user-capabilities-for-userauth-endpoints"
+  level="MUST"
+  title="Define User Capabilities for userAuth Endpoints"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `paths:
+  /accounts/{id}:
+    get:
+      description: |
+        Requires userAuth scope idn:accounts:read.
+        User must have capability: ORG_ADMIN or HELPDESK.
+      security:
+        - userAuth: [idn:accounts:read]`,
+    },
+  ]}
+/>
 
 OAuth scopes control what the *token* can do; user capabilities control what the *person behind the token* is allowed to do.
 
@@ -77,8 +133,21 @@ OAuth scopes control what the *token* can do; user capabilities control what the
 - If the requirement is conditional on feature flags or tenant configuration, MUST document the condition.
 - Put this information in the OpenAPI operation description, and prefer a consistent vendor extension if your platform tooling consumes it.
 
-### #304 - Require HTTPS/TLS for All Endpoints
-<RuleHeader id="304" level="MUST" title="Require HTTPS/TLS for All Endpoints" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://www.rfc-editor.org/rfc/rfc8446", label: "RFC 8446 — TLS 1.3" }]} />
+### require-https-tls-for-all-endpoints
+<RuleHeader
+  id="require-https-tls-for-all-endpoints"
+  level="MUST"
+  title="Require HTTPS/TLS for All Endpoints"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://www.rfc-editor.org/rfc/rfc8446", label: "RFC 8446 — TLS 1.3" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `servers:
+  - url: https://api.sailpoint.com/v3
+    description: Production`,
+    },
+  ]}
+/>
 
 - Every OpenAPI document MUST declare only `https` in its `servers` list — plain HTTP URLs MUST NOT appear.
 - APIs MUST NOT accept unencrypted HTTP connections in any environment, including staging and sandbox.
@@ -87,8 +156,21 @@ OAuth scopes control what the *token* can do; user capabilities control what the
 - HSTS (`Strict-Transport-Security`) headers SHOULD be returned.
 - Use automated certificate management (e.g., ACME/Let's Encrypt) to avoid lapses in certificate validity.
 
-### #305 - Never Put Secrets or Credentials in URLs
-<RuleHeader id="305" level="MUST" title="Never Put Secrets or Credentials in URLs" externalDocs={[{ href: "https://owasp.org/www-community/vulnerabilities/Information_exposure_through_query_strings_in_url", label: "OWASP: Information Exposure via Query Strings" }]} />
+### never-put-secrets-or-credentials-in-urls
+<RuleHeader
+  id="never-put-secrets-or-credentials-in-urls"
+  level="MUST"
+  title="Never Put Secrets or Credentials in URLs"
+  externalDocs={[{ href: "https://owasp.org/www-community/vulnerabilities/Information_exposure_through_query_strings_in_url", label: "OWASP: Information Exposure via Query Strings" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /v3/accounts HTTP/1.1
+Host: api.sailpoint.com
+Authorization: Bearer eyJhbGciOi...`,
+    },
+  ]}
+/>
 
 URLs appear in browser history, server logs, proxy logs, and `Referer` headers — treat them as public.
 
@@ -98,8 +180,20 @@ URLs appear in browser history, server logs, proxy logs, and `Referer` headers �
 - OpenAPI definitions MUST NOT declare security schemes of type `apiKey` with `in: query` for sensitive credentials.
 - For webhook callbacks or signed URLs where a query-string token is unavoidable (e.g., pre-signed download links), use short-lived, narrowly scoped tokens and document the expiration policy.
 
-### #306 - Authenticate and Authorize Before Processing Payloads
-<RuleHeader id="306" level="MUST" title="Authenticate and Authorize Before Processing Payloads" externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]} />
+### authenticate-and-authorize-before-processing-payloads
+<RuleHeader
+  id="authenticate-and-authorize-before-processing-payloads"
+  level="MUST"
+  title="Authenticate and Authorize Before Processing Payloads"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer realm="api.sailpoint.com"`,
+    },
+  ]}
+/>
 
 - The API gateway or service MUST verify the caller's identity before reading, deserializing, or semantically validating the request body.
 - After authentication, the service MUST confirm the caller has the required scopes, roles, or capabilities before processing the payload.
@@ -110,16 +204,31 @@ URLs appear in browser history, server logs, proxy logs, and `Referer` headers �
 - Enforce this ordering at the framework or middleware layer (API gateway policies, authentication filters) rather than in individual handler code.
 - For endpoints that accept large uploads or streaming bodies, authentication and authorization checks SHOULD occur before the server begins buffering the stream.
 
-### #307 - Document and Enforce Rate Limits
-<RuleHeader id="307" level="MUST" title="Document and Enforce Rate Limits" externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9235", label: "RFC 9235 — RateLimit Fields" }, { href: "https://stripe.com/docs/rate-limits", label: "Stripe: Rate Limits" }]} />
+### document-and-enforce-rate-limits
+<RuleHeader
+  id="document-and-enforce-rate-limits"
+  level="MUST"
+  title="Document and Enforce Rate Limits"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9235", label: "RFC 9235 — RateLimit Fields" }, { href: "https://stripe.com/docs/rate-limits", label: "Stripe: Rate Limits" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `HTTP/1.1 200 OK
+Content-Type: application/json
+RateLimit-Limit: 100
+RateLimit-Remaining: 87
+RateLimit-Reset: 45`,
+    },
+  ]}
+/>
 
 - Rate limits MUST be documented for every API or endpoint group that enforces them.
 - Documentation MUST state the scope (per-tenant, per-client, or per-endpoint), the limit value, the time window, and whether limits are burst or sustained.
-- Include this in the API user manual (see [#102]) and/or OpenAPI operation descriptions.
+- Include this in the API user manual (see [#provide-an-api-user-manual]) and/or OpenAPI operation descriptions.
 
 #### Response headers
 
-When enforcing rate limits, return `429 Too Many Requests` with a `Retry-After` header when a client is throttled (see [#406]). Services SHOULD also return these headers on every response so clients can self-regulate:
+When enforcing rate limits, return `429 Too Many Requests` with a `Retry-After` header when a client is throttled (see [#use-429-with-rate-limit-headers]). Services SHOULD also return these headers on every response so clients can self-regulate:
 
 - `RateLimit-Limit`: the maximum number of requests allowed in the current window.
 - `RateLimit-Remaining`: the number of requests remaining in the current window.
@@ -157,10 +266,26 @@ Content-Type: application/problem+json
 - ❌ Using `503 Service Unavailable` for rate limiting (use `429`).
 - ❌ Enforcing rate limits without documenting them.
 
-**Related rules**: [#406] for 429 format, [#404] error body, [#102] user manual coverage.
+**Related rules**: [#use-429-with-rate-limit-headers] for 429 format, [#define-a-standard-error-contract-in-openapi-problem-details] error body, [#provide-an-api-user-manual] user manual coverage.
 
-### #308 - Support CORS for Browser Clients
-<RuleHeader id="308" level="SHOULD" title="Support CORS for Browser Clients" externalDocs={[{ href: "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS", label: "MDN: Cross-Origin Resource Sharing" }, { href: "https://www.w3.org/TR/cors/", label: "W3C CORS Specification" }]} />
+### support-cors-for-browser-clients
+<RuleHeader
+  id="support-cors-for-browser-clients"
+  level="SHOULD"
+  title="Support CORS for Browser Clients"
+  externalDocs={[{ href: "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS", label: "MDN: Cross-Origin Resource Sharing" }, { href: "https://www.w3.org/TR/cors/", label: "W3C CORS Specification" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: https://app.example.com
+Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS
+Access-Control-Allow-Headers: Authorization, Content-Type, X-Request-Id, Idempotency-Key
+Access-Control-Expose-Headers: X-Request-Id, RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, Retry-After, ETag, Location
+Access-Control-Max-Age: 86400`,
+    },
+  ]}
+/>
 
 APIs intended for browser-based consumption SHOULD support CORS by returning appropriate `Access-Control-*` response headers:
 
@@ -175,10 +300,28 @@ Handle `OPTIONS` preflight requests at the gateway or framework level. Return `2
 
 APIs that are strictly server-to-server MAY omit CORS headers, but SHOULD document this so frontend teams know not to call them directly.
 
-**Related rules**: [#304] HTTPS, [#400] standard headers, [#307] rate limit headers (exposed via CORS).
+**Related rules**: [#require-https-tls-for-all-endpoints] HTTPS, [#use-standard-http-headers] standard headers, [#document-and-enforce-rate-limits] rate limit headers (exposed via CORS).
 
-### #309 - Sanitize Inputs and Prevent Injection
-<RuleHeader id="309" level="SHOULD" title="Sanitize Inputs and Prevent Injection" externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }, { href: "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html", label: "OWASP: Input Validation Cheat Sheet" }]} />
+### sanitize-inputs-and-prevent-injection
+<RuleHeader
+  id="sanitize-inputs-and-prevent-injection"
+  level="SHOULD"
+  title="Sanitize Inputs and Prevent Injection"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }, { href: "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html", label: "OWASP: Input Validation Cheat Sheet" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `properties:
+  name:
+    type: string
+    maxLength: 128
+  status:
+    type: string
+    enum: [ACTIVE, DISABLED]
+additionalProperties: false`,
+    },
+  ]}
+/>
 
 APIs SHOULD validate and sanitize all client-provided input beyond schema conformance, with particular attention to injection risks.
 
@@ -201,10 +344,21 @@ APIs SHOULD validate and sanitize all client-provided input beyond schema confor
 - SHOULD reject request bodies that contain unknown properties when the schema forbids additional properties.
 - For file upload endpoints, SHOULD validate content type, file size, and filename.
 
-**Related rules**: [#306] authenticate before processing, [#120] filter parameter format, [#404] error responses for rejected input.
+**Related rules**: [#authenticate-and-authorize-before-processing-payloads] authenticate before processing, [#describe-the-filters-parameter-standard-format] filter parameter format, [#define-a-standard-error-contract-in-openapi-problem-details] error responses for rejected input.
 
-### #310 - Enforce Tenant Data Isolation in Responses
-<RuleHeader id="310" level="MUST" title="Enforce Tenant Data Isolation in Responses" externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]} />
+### enforce-tenant-data-isolation-in-responses
+<RuleHeader
+  id="enforce-tenant-data-isolation-in-responses"
+  level="MUST"
+  title="Enforce Tenant Data Isolation in Responses"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]}
+  examples={[
+    {
+      lang: "text",
+      code: `cache_key = f"{tenant_id}:{resource_type}:{resource_id}"`,
+    },
+  ]}
+/>
 
 - API responses MUST only contain data belonging to the requesting tenant.
 - Tenant scope MUST be derived from the authenticated context (token claims, session), never from client-supplied parameters alone.
@@ -227,6 +381,6 @@ cache_key = f"{tenant_id}:{resource_type}:{resource_id}"
 
 #### Implicit scoping on list endpoints
 
-List and search endpoints MUST implicitly scope results to the authenticated tenant (see [#603]). Clients MUST NOT need to pass a `tenantId` filter to avoid seeing other tenants' data.
+List and search endpoints MUST implicitly scope results to the authenticated tenant (see [#document-implicit-filters-and-default-sorting]). Clients MUST NOT need to pass a `tenantId` filter to avoid seeing other tenants' data.
 
-**Related rules**: [#300] OAuth security, [#306] authenticate before processing, [#408] no internal details in errors, [#413] caching behavior, [#513] use UUIDs (prevents enumeration), [#603] implicit filters.
+**Related rules**: [#secure-endpoints-with-oauth-2-0] OAuth security, [#authenticate-and-authorize-before-processing-payloads] authenticate before processing, [#never-expose-stack-traces-or-internal-details] no internal details in errors, [#document-caching-behavior] caching behavior, [#never-include-customer-org-names-in-paths] use UUIDs (prevents enumeration), [#document-implicit-filters-and-default-sorting] implicit filters.

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "define-useful-resources",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#define-useful-resources",
+    "url": "/docs/rules/resource-modeling-and-urls#define-useful-resources"
+  },
+  "currentTitle": "SHOULD define useful resources",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": "SHOULD define useful resources (optimize for common workflows)",
+    "proposedText": "**Intent**: keep APIs practical and efficient for the most common use cases.\n\nResources SHOULD be designed around the common workflows and support efficient retrieval without excessive round trips.\n\n**Checklist**:\n\n- Resource boundaries reflect domain concepts (see [#use-domain-specific-resource-names]).\n- Primary workflows are supported end-to-end (see [#model-business-processes]).\n- Collections support pagination (see [#support-offset-pagination-for-list-endpoints]) and conventional query params (see [#use-conventional-query-parameters]).\n- Filtering/sorting are available where lists would otherwise be unusable.\n- Responses are lean by default, with optional field selection/embedding when needed (see [#support-partial-responses-fields], [#allow-optional-embedding]).\n\n**Examples**:\n\n- ✅ `GET /accounts?filters=status eq \"ACTIVE\"&sorters=name:asc&limit=50&offset=0`\n- ✅ `GET /accounts/{id}?fields=(id,name,status)`\n\n**Anti-patterns**:\n\n- ❌ Exposing dozens of near-duplicate resources that only exist to support a single UI view.\n- ❌ Requiring clients to fetch N related resources with N additional calls for the common case.\n\n**Testability**:\n\n- A consumer can accomplish the top workflows with a small number of calls and predictable patterns.\n",
+    "rationale": "APIs that are ‘technically REST’ but not optimized for real workflows force clients into brittle orchestration and create performance problems.",
+    "compatNotes": "Primarily design guidance."
+  },
+  "reviewNotes": []
+}

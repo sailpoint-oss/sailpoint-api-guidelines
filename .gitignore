@@ -8,6 +8,7 @@
 node_modules
 .next/
 .source/
+.fallow/
 out/
 npm-debug.log*
 pnpm-debug.log*

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const CONTENT_ROOT = path.join(REPO_ROOT, "content", "docs");
 const RULES_JSON_PATH = path.join(REPO_ROOT, "public", "rules.json");
-const RULE_LINK_RE = /\[#(\d+)\]/g;
+const RULE_LINK_RE = /\[#([a-z][a-z0-9-]*)\]/g;
 
 type RulesData = {
   rules: Array<{

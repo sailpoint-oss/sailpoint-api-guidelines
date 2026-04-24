@@ -1,10 +1,10 @@
 # SailPoint API Guidelines
 
-This repository is the source for SailPoint’s **API design guidelines**: numbered rules, guides, and appendices, published as a static documentation site.
+This repository is the source for SailPoint’s **API design guidelines**: normative rules with stable kebab-case IDs, published as a static documentation site. The rules are the sole source of truth — there are no separate guides or appendix pages.
 
 - **Framework**: [Next.js](https://nextjs.org/) (App Router) with [FumaDocs](https://fumadocs.dev/) (`fumadocs-core`, `fumadocs-mdx`, `fumadocs-ui`)
 - **Content**: MDX under [`content/docs/`](content/docs/)
-- **Rule IDs**: Stable numeric IDs for anchors, search, and deep links
+- **Rule IDs**: Stable kebab-case slugs for anchors, search, and deep links
 
 **Repository**: [github.com/sailpoint-oss/sailpoint-api-guidelines](https://github.com/sailpoint-oss/sailpoint-api-guidelines)
 
@@ -105,23 +105,25 @@ GITHUB_PAGES=true pnpm build
 
 Rules live as **one MDX file per category** under [`content/docs/rules/`](content/docs/rules/). Sidebar order is controlled by `meta.json` files in the docs tree (for example [`content/docs/meta.json`](content/docs/meta.json) and [`content/docs/rules/meta.json`](content/docs/rules/meta.json)).
 
-Each rule uses a level-3 heading with a **numeric id** and title, plus the `<RuleHeader>` component:
+Each rule uses a level-3 heading and `<RuleHeader>` that share the same **kebab-case** id (linter-style, derived from the rule name):
 
 ```mdx
-### #148 - Rule title here
+### use-standard-http-headers
 
 <RuleHeader
-  id="148"
+  id="use-standard-http-headers"
   level="MUST"
-  title="Rule title here"
+  title="Use Standard HTTP Headers"
   externalDocs={[...]}
   implementation={[...]}
+  examples={[{ lang: "yaml", code: "..." }]}
 />
 ```
 
-- **`id`**: Stable numeric identifier (never reused). Used for anchors (e.g. `#148`) and URLs.
+- **`id`**: Stable kebab-case identifier (never reused). Used for anchors (e.g. `#use-standard-http-headers`) and URLs.
 - **`level`**: One of `MUST`, `SHOULD`, `MAY` (RFC 2119).
-- The heading must stay in the form `### #<id> - <title>` so anchors and generated metadata stay consistent.
+- **`examples`**: Optional canonical snippet(s) rendered directly under the rule's badge. Use YAML for OpenAPI contract shape, JSON for payload shape, HTTP for headers/status/URL. If more than one example is supplied, they render as tabs.
+- The heading text must match the `id` so anchors, TOC, and `public/rules.json` stay aligned.
 
 `RuleHeader` is implemented across [`components/rule-header.tsx`](components/rule-header.tsx), [`components/rule-header.client.tsx`](components/rule-header.client.tsx), and related files.
 

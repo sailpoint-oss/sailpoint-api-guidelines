@@ -5,8 +5,6 @@ description: Rules for operational quality, performance patterns, and observabil
 
 These rules cover the supporting quality bar around docs, observability, performance patterns, and operational endpoints.
 
-**Reference**: [Review checklist](/docs/appendices/review-checklist)
-
 Use this section to answer:
 
 - What publishing quality bar must the OpenAPI meet?
@@ -16,10 +14,22 @@ Use this section to answer:
 ---
 
 ## Performance & Optimization
-### #900 - Support Partial Responses (fields)
-<RuleHeader id="900" level="SHOULD" title="Support Partial Responses (fields)" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]} />
+### support-partial-responses-fields
+<RuleHeader
+  id="support-partial-responses-fields"
+  level="SHOULD"
+  title="Support Partial Responses (fields)"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /accounts?fields=(id,name)&limit=50&offset=0`,
+    },
+  ]}
+/>
 
 - APIs SHOULD support a `fields` query parameter so clients can request only the fields they need.
+- `fields` SHOULD apply to **collection GET endpoints** as well as single-resource GETs and dedicated `POST /.../search` endpoints. Do not limit field projection to search as a matter of convention.
 - Field filtering MUST NOT apply by default — full responses remain the baseline.
 - Document the allowed values and syntax explicitly (e.g., `fields=(id,name,status)`).
 - If you support nested field selection, document the limits and behavior.
@@ -27,9 +37,21 @@ Use this section to answer:
 
 - ✅ `GET /accounts/{id}?fields=(id,name,status)`
 - ✅ `GET /accounts?fields=(id,name)&limit=50&offset=0`
+- ✅ `POST /accounts/search` with `fields` in the request body
 
-### #901 - Allow Optional Embedding
-<RuleHeader id="901" level="SHOULD" title="Allow Optional Embedding" externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]} />
+### allow-optional-embedding
+<RuleHeader
+  id="allow-optional-embedding"
+  level="SHOULD"
+  title="Allow Optional Embedding"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /accounts/{id}?embed=(ownerRef,sourceRef)`,
+    },
+  ]}
+/>
 
 - APIs SHOULD support an `embed` query parameter to optionally include related sub-resources inline.
 - Embedding MUST be opt-in (not the default) so baseline responses stay lean.
@@ -45,36 +67,71 @@ Use this section to answer:
 ---
 
 ## API Operation & Monitoring
-### #902 - Publish an OpenAPI Specification (Meet Doc Quality Levels)
-<RuleHeader id="902" level="MUST" title="Publish an OpenAPI Specification (Meet Doc Quality Levels)" externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]} />
+### publish-an-openapi-specification-meet-doc-quality-levels
+<RuleHeader
+  id="publish-an-openapi-specification-meet-doc-quality-levels"
+  level="MUST"
+  title="Publish an OpenAPI Specification (Meet Doc Quality Levels)"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `paths:
+  /accounts:
+    get:
+      summary: List accounts
+      description: Returns a paginated list of accounts.
+      operationId: listAccounts
+      tags: [Accounts]
+      security:
+        - oauth2: [accounts:read]
+      responses:
+        "200": { $ref: "#/components/responses/AccountList" }
+        "400": { $ref: "#/components/responses/Problem" }`,
+    },
+  ]}
+/>
 
 - All APIs MUST publish an OpenAPI specification accessible to intended consumers (public docs for public APIs, internal portal for internal-only).
-- The published spec MUST be versioned and aligned with the documented API version (see [#208]).
+- The published spec MUST be versioned and aligned with the documented API version (see [#use-year-based-api-versioning-yyyy-revision]).
 - The spec SHOULD be the source for generated docs, SDKs, and contract validation where feasible.
-- While [#101] requires that an OAS exists and is valid, this rule defines the quality bar.
+- While [#provide-an-openapi-specification] requires that an OAS exists and is valid, this rule defines the quality bar.
 
 #### Documentation quality levels
 
 - **Level 0 (non-compliant)**: paths exist but missing schemas, responses, and security details.
 - **Level 1 (minimum acceptable)**:
   - Every operation has `summary` + `description`.
-  - Every operation defines success responses and expected error responses (see [#404]).
+  - Every operation defines success responses and expected error responses (see [#define-a-standard-error-contract-in-openapi-problem-details]).
   - Request/response schemas are defined (no `any`/untyped objects).
-  - `security` is declared with required scopes (see [#300], [#301]).
-  - At least one realistic example is provided for the primary success and error paths.
+  - `security` is declared with required scopes (see [#secure-endpoints-with-oauth-2-0], [#define-and-assign-scopes]).
+  - Every operation includes realistic success and error examples as required by [#provide-examples-for-operations-and-key-fields].
 - **Level 2 (required for external APIs; strongly recommended for internal)**:
   - Consistent tagging and `operationId` conventions.
-  - Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#600]).
-  - Deprecations are marked with `deprecated: true` and migration guidance (see [#209]).
-  - Changelog/revision info is maintained for contract changes (see [#208]).
+  - Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#use-conventional-query-parameters]).
+  - Deprecations are marked with `deprecated: true` and migration guidance (see [#reflect-deprecation-in-openapi]).
+  - Changelog/revision info is maintained for contract changes (see [#use-year-based-api-versioning-yyyy-revision]).
 
 Teams MUST have a checklist or review gate so new and changed endpoints meet the required level.
 
-### #903 - Return a Request ID on Every Response
-<RuleHeader id="903" level="MUST" title="Return a Request ID on Every Response" externalDocs={[{ href: "https://www.w3.org/TR/trace-context/", label: "W3C Trace Context" }, { href: "https://opensource.zalando.com/restful-api-guidelines/#233", label: "Zalando: X-Flow-ID" }]} />
+### return-a-request-id-on-every-response
+<RuleHeader
+  id="return-a-request-id-on-every-response"
+  level="MUST"
+  title="Return a Request ID on Every Response"
+  externalDocs={[{ href: "https://www.w3.org/TR/trace-context/", label: "W3C Trace Context" }, { href: "https://opensource.zalando.com/restful-api-guidelines/#233", label: "Zalando: X-Flow-ID" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+X-Request-Id: 3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b`,
+    },
+  ]}
+/>
 
 - The server MUST generate a unique `X-Request-Id` header (UUID v4) on every response — including `4xx`, `5xx`, and `429`.
-- Error response bodies MUST include the same value as `correlationId` (see [#404]).
+- Error response bodies MUST include the same value as `correlationId` (see [#define-a-standard-error-contract-in-openapi-problem-details]).
 - If the client sends an `X-Request-Id` header, the server SHOULD echo it back (after validation) rather than generating a new one.
 - For distributed tracing, services SHOULD support W3C Trace Context (`traceparent`/`tracestate` headers).
 
@@ -109,10 +166,31 @@ components:
         format: uuid
 ```
 
-**Related rules**: [#404] correlationId, [#408] sanitized error responses.
+**Related rules**: [#define-a-standard-error-contract-in-openapi-problem-details] correlationId, [#never-expose-stack-traces-or-internal-details] sanitized error responses.
 
-### #904 - Design Webhooks and Event Notifications
-<RuleHeader id="904" level="SHOULD" title="Design Webhooks and Event Notifications" externalDocs={[{ href: "https://docs.stripe.com/webhooks", label: "Stripe: Webhooks" }, { href: "https://docs.github.com/en/webhooks", label: "GitHub: Webhooks" }]} />
+### design-webhooks-and-event-notifications
+<RuleHeader
+  id="design-webhooks-and-event-notifications"
+  level="SHOULD"
+  title="Design Webhooks and Event Notifications"
+  externalDocs={[{ href: "https://docs.stripe.com/webhooks", label: "Stripe: Webhooks" }, { href: "https://docs.github.com/en/webhooks", label: "GitHub: Webhooks" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "id": "evt-3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b",
+  "type": "account.created",
+  "timestamp": "2026-03-05T10:00:00Z",
+  "tenantId": "tenant-abc",
+  "data": {
+    "id": "acct-123",
+    "name": "Example Account",
+    "status": "ACTIVE"
+  }
+}`,
+    },
+  ]}
+/>
 
 - APIs with meaningful state transitions SHOULD offer webhook notifications.
 - Use one standard event envelope shape across the API.
@@ -137,10 +215,28 @@ components:
 }
 ```
 
-**Related rules**: [#304] HTTPS for webhook URLs, [#407] webhooks complement async operations, [#903] include X-Request-Id in webhook deliveries.
+**Related rules**: [#require-https-tls-for-all-endpoints] HTTPS for webhook URLs, [#support-long-running-operations] webhooks complement async operations, [#return-a-request-id-on-every-response] include X-Request-Id in webhook deliveries.
 
-### #905 - Provide Health Check Endpoints
-<RuleHeader id="905" level="SHOULD" title="Provide Health Check Endpoints" externalDocs={[{ href: "https://datatracker.ietf.org/doc/html/draft-inadarei-api-health-check", label: "IETF Health Check Response Format" }, { href: "https://learn.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring", label: "Azure: Health Endpoint Monitoring Pattern" }]} />
+### provide-health-check-endpoints
+<RuleHeader
+  id="provide-health-check-endpoints"
+  level="SHOULD"
+  title="Provide Health Check Endpoints"
+  externalDocs={[{ href: "https://datatracker.ietf.org/doc/html/draft-inadarei-api-health-check", label: "IETF Health Check Response Format" }, { href: "https://learn.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring", label: "Azure: Health Endpoint Monitoring Pattern" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "status": "UP",
+  "checks": [
+    { "name": "database", "status": "UP" },
+    { "name": "cache", "status": "UP" },
+    { "name": "search-index", "status": "DOWN", "detail": "Connection timeout" }
+  ]
+}`,
+    },
+  ]}
+/>
 
 - APIs SHOULD provide standardized health check endpoints for infrastructure probes and operational monitoring.
 
@@ -178,6 +274,6 @@ components:
 - Do not include health endpoints in your public OpenAPI spec — document them in operational runbooks instead.
 - Return `Cache-Control: no-store` on health responses to prevent stale caching.
 
-**Related rules**: [#403] status codes (503 for not-ready), [#408] never expose internal details.
+**Related rules**: [#use-standard-http-status-codes] status codes (503 for not-ready), [#never-expose-stack-traces-or-internal-details] never expose internal details.
 
 ---

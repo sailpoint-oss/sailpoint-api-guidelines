@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
 import { Check, Copy } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -40,12 +40,9 @@ export function CopyRuleLinkButton({
       type="button"
       variant="outline"
       size="sm"
-      className={cn(
-        showLabel ? "h-7 gap-1 px-2" : "h-7 w-7 p-0",
-        className,
-      )}
+      className={cn(showLabel ? "h-7 gap-1 px-2" : "h-7 w-7 p-0", className)}
       onClick={onCopy}
-      aria-label={`Copy link to rule #${ruleId}`}
+      aria-label={`Copy link to rule ${ruleId}`}
       title={copied ? "Copied" : "Copy link"}
     >
       {copied ? (

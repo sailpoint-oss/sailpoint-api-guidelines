@@ -10,7 +10,12 @@ type RulesIndex = {
   }>;
 };
 
-type ReviewStatus = "pending" | "in_review" | "accepted" | "needs_rework" | "rejected";
+type ReviewStatus =
+  | "pending"
+  | "in_review"
+  | "accepted"
+  | "needs_rework"
+  | "rejected";
 
 type ReviewEntryV1 = {
   schemaVersion: 1;
@@ -35,7 +40,10 @@ function assert(cond: unknown, msg: string): asserts cond {
 
 function parseRulesIndex(raw: string): RulesIndex {
   const parsed = JSON.parse(raw) as RulesIndex;
-  assert(Array.isArray(parsed.rules), "Invalid public/rules.json (missing rules[])");
+  assert(
+    Array.isArray(parsed.rules),
+    "Invalid public/rules.json (missing rules[])",
+  );
   return parsed;
 }
 
@@ -71,7 +79,9 @@ async function main(): Promise<void> {
     const raw = await readFile(filePath, "utf8");
     const parsed = parseJsonishYaml(raw);
     if (!parsed) {
-      errors.push(`Unparseable review entry (expected JSON-formatted YAML): ${path.join("reviews", "rules", name)}`);
+      errors.push(
+        `Unparseable review entry (expected JSON-formatted YAML): ${path.join("reviews", "rules", name)}`,
+      );
       continue;
     }
 
@@ -79,17 +89,23 @@ async function main(): Promise<void> {
     reviewIds.add(id);
 
     if (`${id}.yaml` !== name) {
-      errors.push(`Review filename does not match ruleId: ${path.join("reviews", "rules", name)} expected ${id}.yaml`);
+      errors.push(
+        `Review filename does not match ruleId: ${path.join("reviews", "rules", name)} expected ${id}.yaml`,
+      );
     }
 
     if (!ruleIds.has(id)) {
-      errors.push(`Review has no matching rule id in public/rules.json: ${path.join("reviews", "rules", name)} (ruleId=${id})`);
+      errors.push(
+        `Review has no matching rule id in public/rules.json: ${path.join("reviews", "rules", name)} (ruleId=${id})`,
+      );
       continue;
     }
 
     const rule = ruleById.get(id);
     if (!rule) {
-      errors.push(`Review has no matching rule metadata: ${path.join("reviews", "rules", name)} (ruleId=${id})`);
+      errors.push(
+        `Review has no matching rule metadata: ${path.join("reviews", "rules", name)} (ruleId=${id})`,
+      );
       continue;
     }
     const expectedUrl = rule.url;
@@ -119,20 +135,24 @@ async function main(): Promise<void> {
   for (const id of ruleIds) {
     if (!reviewIds.has(id)) {
       const rule = ruleById.get(id);
-      errors.push(`Missing review entry for rule [#${id}] (${rule?.url ?? "unknown URL"})`);
+      errors.push(
+        `Missing review entry for rule [#${id}] (${rule?.url ?? "unknown URL"})`,
+      );
     }
   }
 
   if (errors.length) {
-    process.stderr.write(`Review validation failed (${errors.length} issues):\n`);
+    process.stderr.write(
+      `Review validation failed (${errors.length} issues):\n`,
+    );
     for (const e of errors) process.stderr.write(`- ${e}\n`);
     process.exitCode = 1;
     return;
   }
 
-  process.stdout.write(`Review validation OK: ${ruleIds.size} rules, ${yamlNames.length} review files\n`);
+  process.stdout.write(
+    `Review validation OK: ${ruleIds.size} rules, ${yamlNames.length} review files\n`,
+  );
 }
 
 await main();
-
-

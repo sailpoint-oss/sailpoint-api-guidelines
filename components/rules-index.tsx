@@ -52,7 +52,7 @@ export function RulesIndex() {
 
   const categories = useMemo(
     () => [...new Set(rules.map((r) => r.category))].sort(),
-    [rules]
+    [rules],
   );
 
   const filtered = useMemo(() => {
@@ -62,7 +62,7 @@ export function RulesIndex() {
         return false;
       if (
         search &&
-        !`#${r.id} ${r.title}`.toLowerCase().includes(search.toLowerCase())
+        !`${r.id} ${r.title}`.toLowerCase().includes(search.toLowerCase())
       )
         return false;
       return true;
@@ -145,12 +145,12 @@ export function RulesIndex() {
                     className="flex items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-fd-accent"
                   >
                     <span className="font-mono text-fd-muted-foreground">
-                      #{rule.id}
+                      {rule.id}
                     </span>
                     <span
                       className={cn(
                         "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold",
-                        config?.className
+                        config?.className,
                       )}
                     >
                       {rule.level}
