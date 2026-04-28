@@ -16,16 +16,16 @@ Use this section to answer:
 
 | If you need to... | Start here |
 | --- | --- |
-| Publish the minimum acceptable contract | [#provide-an-openapi-specification] and [#publish-an-openapi-specification-meet-doc-quality-levels] |
-| Explain the API to a new consumer | [#provide-an-api-user-manual] and [#provide-a-detailed-api-description] |
-| Pick standard naming conventions | [#use-camelcase-for-json-properties], [#use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters], [#use-camelcase-for-query-parameters], and [#declare-enum-values-in-upper-snake-case-strings] |
-| Document operation metadata consistently | [#provide-examples-for-operations-and-key-fields], [#keep-operation-summaries-to-5-words-or-fewer], [#provide-a-camelcase-operationid-for-every-operation], and [#provide-a-tag-for-every-operation] |
+| Publish the minimum acceptable contract | [#require-openapi] and [#meet-doc-quality] |
+| Explain the API to a new consumer | [#document-user-manual] and [#describe-api] |
+| Pick standard naming conventions | [#use-camelcase-properties], [#use-path-casing], [#use-camelcase-query], and [#use-upper-snake-enums] |
+| Document operation metadata consistently | [#require-examples], [#limit-summary-length], [#use-camelcase-operationids], and [#require-operation-tags] |
 
 ## API Design & Documentation
 
-### follow-api-first
+### api-first
 <RuleHeader
-  id="follow-api-first"
+  id="api-first"
   level="SHOULD"
   title="Follow API-First"
   externalDocs={[{ href: "https://www.postman.com/api-first/", label: "Postman API-first" }, { href: "https://swagger.io/resources/articles/adopting-an-api-first-approach/", label: "Swagger: API Design-First" }]}
@@ -47,9 +47,9 @@ paths:
 - Keep the spec in version control next to the service code and validate it in CI.
 - Check backward compatibility for changes within the same major version.
 
-### provide-an-openapi-specification
+### require-openapi
 <RuleHeader
-  id="provide-an-openapi-specification"
+  id="require-openapi"
   level="MUST"
   title="Provide an OpenAPI Specification"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -70,11 +70,11 @@ info:
 - Keep examples accurate and sanitized. Never publish secrets or real customer data.
 - Prefer OpenAPI 3.0.3 for broad tooling compatibility. Use OpenAPI 3.1.x when its JSON Schema features are required.
 
-For documentation quality levels (Level 1/Level 2 requirements), see [#publish-an-openapi-specification-meet-doc-quality-levels].
+For documentation quality levels (Level 1/Level 2 requirements), see [#meet-doc-quality].
 
-### provide-an-api-user-manual
+### document-user-manual
 <RuleHeader
-  id="provide-an-api-user-manual"
+  id="document-user-manual"
   level="SHOULD"
   title="Provide an API User Manual"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -97,7 +97,7 @@ If a new consumer cannot succeed from OpenAPI alone, teams SHOULD provide a shor
 - **Core workflows** — step-by-step guides per use case (create, update, search, pagination).
 - **Edge cases** — validation rules, idempotency expectations, conflict handling, eventual consistency.
 - **Error handling** — common errors and recommended client behavior for retry vs no-retry.
-- **Performance** — pagination guidance, filtering/sorting limitations, rate limits (see [#document-and-enforce-rate-limits]), expected latency, recommended client timeout values.
+- **Performance** — pagination guidance, filtering/sorting limitations, rate limits (see [#enforce-rate-limits]), expected latency, recommended client timeout values.
 
 Link the manual from OpenAPI using `externalDocs`. Include at least one end-to-end example for each primary workflow.
 
@@ -112,9 +112,9 @@ If you only need the naming defaults, use this shortcut:
 - Path parameters: camelCase
 - Enum values: UPPER_SNAKE_CASE
 
-### write-in-u-s-english
+### use-us-english
 <RuleHeader
-  id="write-in-u-s-english"
+  id="use-us-english"
   level="MUST"
   title="Write in U.S. English"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -134,11 +134,11 @@ description: Returns the color-coded status for each account.`,
 - This rule does not require clients to send U.S. English values unless a field is explicitly documented as English text.
 - Prefer consistent terminology across endpoints — avoid synonyms for the same concept. Expand acronyms once when first introduced.
 
-SailPoint APIs do not currently support content localization via `Accept-Language`. For internationalization-related data formats, see [#use-standard-country-language-and-currency-codes].
+SailPoint APIs do not currently support content localization via `Accept-Language`. For internationalization-related data formats, see [#use-standard-codes].
 
-### use-camelcase-for-json-properties
+### use-camelcase-properties
 <RuleHeader
-  id="use-camelcase-for-json-properties"
+  id="use-camelcase-properties"
   level="MUST"
   title="Use camelCase for JSON Properties"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -155,7 +155,7 @@ SailPoint APIs do not currently support content localization via `Accept-Languag
 />
 
 - JSON property names MUST use camelCase for request and response bodies.
-- For path segments and path parameters, see [#use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters]. For query parameters, see [#use-camelcase-for-query-parameters]. For ASCII requirements, see [#use-ascii-for-api-identifiers].
+- For path segments and path parameters, see [#use-path-casing]. For query parameters, see [#use-camelcase-query]. For ASCII requirements, see [#use-ascii-identifiers].
 
 - ✅ `createdAt`, `identityProfileId`, `lastLogin`
 - ❌ `created_at` (snake_case)
@@ -166,9 +166,9 @@ SailPoint APIs do not currently support content localization via `Accept-Languag
 
 Prefer `oauthClientId` over `OAuthClientID`. Be consistent across the entire API surface.
 
-### use-ascii-for-api-identifiers
+### use-ascii-identifiers
 <RuleHeader
-  id="use-ascii-for-api-identifiers"
+  id="use-ascii-identifiers"
   level="MUST"
   title="Use ASCII for API Identifiers"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -197,9 +197,9 @@ Prefer `oauthClientId` over `OAuthClientID`. Be consistent across the entire API
 - ❌ `créatedAt`
 - ❌ `名前`
 
-### pluralize-array-property-names
+### pluralize-arrays
 <RuleHeader
-  id="pluralize-array-property-names"
+  id="pluralize-arrays"
   level="SHOULD"
   title="Pluralize Array Property Names"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -225,9 +225,9 @@ Prefer `oauthClientId` over `OAuthClientID`. Be consistent across the entire API
 - ❌ `item` for an array
 - ❌ `account` for an array
 
-### use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters
+### use-path-casing
 <RuleHeader
-  id="use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters"
+  id="use-path-casing"
   level="MUST"
   title="Use Lowercase Hyphenated Path Segments and camelCase Path Parameters"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -248,9 +248,9 @@ GET /access-requests/{accessRequestId}`,
 - ❌ `/IdentityProfiles/{IdentityProfileId}` (wrong casing)
 - ❌ `/identity_profiles/{identity_profile_id}` (snake_case)
 
-### use-camelcase-for-query-parameters
+### use-camelcase-query
 <RuleHeader
-  id="use-camelcase-for-query-parameters"
+  id="use-camelcase-query"
   level="MUST"
   title="Use camelCase for Query Parameters"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -263,7 +263,7 @@ GET /access-requests/{accessRequestId}`,
 />
 
 - Query parameter names MUST use camelCase.
-- Prefer conventional query parameter names for pagination, filtering, and sorting (see [#use-conventional-query-parameters]). Be consistent across endpoints.
+- Prefer conventional query parameter names for pagination, filtering, and sorting (see [#use-standard-query-params]). Be consistent across endpoints.
 
 - ✅ `?sortOrder=asc&includeDisabled=true`
 - ✅ `?includeDisabled=true`
@@ -273,9 +273,9 @@ GET /access-requests/{accessRequestId}`,
 - ❌ `?SortOrder=asc` (PascalCase)
 - ❌ `?include-disabled=true` (kebab-case)
 
-### use-upper-case-words-with-hyphens
+### use-header-case
 <RuleHeader
-  id="use-upper-case-words-with-hyphens"
+  id="use-header-case"
   level="SHOULD"
   title="Use Upper-Case Words with Hyphens"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -290,16 +290,16 @@ Retry-After: 30`,
 />
 
 - When documenting HTTP header names (including custom headers), teams SHOULD use the conventional Upper-Case-Words-With-Hyphens style.
-- Prefer standardized headers over custom ones where possible (see [#use-standard-http-headers]).
+- Prefer standardized headers over custom ones where possible (see [#use-standard-headers]).
 
 - ✅ `Content-Type`, `If-Match`, `If-None-Match`, `Retry-After`
 - ✅ `X-Request-Id` (if using an `X-` prefixed header during a migration)
 - ❌ `content-type`
 - ❌ `IF_MATCH`
 
-### pluralize-collection-resource-names
+### pluralize-resources
 <RuleHeader
-  id="pluralize-collection-resource-names"
+  id="pluralize-resources"
   level="MUST"
   title="Pluralize Collection Resource Names"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -314,7 +314,7 @@ GET /identity-profiles/{identityProfileId}`,
 />
 
 - Collection endpoints MUST use plural resource names.
-- Use domain language and stable nouns (see [#use-domain-specific-resource-names]). If a term is uncountable (rare), pick a consistent convention and document it.
+- Use domain language and stable nouns (see [#use-domain-names]). If a term is uncountable (rare), pick a consistent convention and document it.
 
 - ✅ `GET /accounts` (collection)
 - ✅ `GET /accounts/{accountId}` (single resource)
@@ -322,9 +322,9 @@ GET /identity-profiles/{identityProfileId}`,
 - ❌ `GET /account` (ambiguous)
 - ❌ `GET /Accounts` (wrong casing)
 
-### follow-naming-convention-for-permissions-scopes
+### use-scope-names
 <RuleHeader
-  id="follow-naming-convention-for-permissions-scopes"
+  id="use-scope-names"
   level="MUST"
   title="Follow Naming Convention for Permissions (Scopes)"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6749", label: "RFC 6749 — OAuth 2.0" }]}
@@ -364,7 +364,7 @@ Use real product namespaces and scope families (not a generic `identity` placeho
 
 #### Endpoint documentation
 
-- OpenAPI `security` requirements MUST list the full set of scopes accepted for the operation (see [#secure-endpoints-with-oauth-2-0] and [#define-and-assign-scopes]).
+- OpenAPI `security` requirements MUST list the full set of scopes accepted for the operation (see [#use-oauth2] and [#define-scopes]).
 - If an endpoint supports multiple privilege modes, document them explicitly.
 
 #### Anti-examples
@@ -373,9 +373,9 @@ Use real product namespaces and scope families (not a generic `identity` placeho
 - `accounts:read` (missing domain)
 - `idn:readAccounts` (inconsistent action encoding — use `idn:accounts:read`)
 
-### declare-enum-values-in-upper-snake-case-strings
+### use-upper-snake-enums
 <RuleHeader
-  id="declare-enum-values-in-upper-snake-case-strings"
+  id="use-upper-snake-enums"
   level="MUST"
   title="Declare Enum Values in UPPER_SNAKE_CASE Strings"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -401,9 +401,9 @@ Use real product namespaces and scope families (not a generic `identity` placeho
 ---
 
 ## Specification Guidelines
-### follow-sailpoint-api-guidelines
+### follow-api-guidelines
 <RuleHeader
-  id="follow-sailpoint-api-guidelines"
+  id="follow-api-guidelines"
   level="MUST"
   title="Follow SailPoint API Guidelines"
   externalDocs={[{ href: "https://opensource.zalando.com/restful-api-guidelines/", label: "Zalando RESTful API Guidelines" }]}
@@ -413,9 +413,9 @@ Use real product namespaces and scope families (not a generic `identity` placeho
 - Use automation where possible: OpenAPI validation, compatibility checks, and linting.
 - Any exception MUST be documented with rationale and an owner.
 
-### provide-a-detailed-api-description
+### describe-api
 <RuleHeader
-  id="provide-a-detailed-api-description"
+  id="describe-api"
   level="MUST"
   title="Provide a Detailed API Description"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -436,17 +436,17 @@ externalDocs:
 APIs MUST provide a detailed description covering what the API does and how consumers should use it. At minimum include:
 
 - Purpose and scope (in-scope vs out-of-scope).
-- Intended audience and required licenses or entitlements (see [#specify-api-audience], [#document-required-licenses-for-api-collections]).
-- Authentication model and high-level authorization expectations (see [#secure-endpoints-with-oauth-2-0], [#define-and-assign-scopes], [#define-user-capabilities-for-userauth-endpoints]).
-- Primary workflows and "happy path" usage (link to guides/user manual; see [#provide-an-api-user-manual]).
+- Intended audience and required licenses or entitlements (see [#specify-audience], [#document-licenses]).
+- Authentication model and high-level authorization expectations (see [#use-oauth2], [#define-scopes], [#document-user-capabilities]).
+- Primary workflows and "happy path" usage (link to guides/user manual; see [#document-user-manual]).
 - Major edge cases affecting client correctness: pagination defaults, filtering/sorting constraints, idempotency/retry guidance, consistency expectations.
-- Versioning/deprecation model and how changes are communicated (see [#use-year-based-api-versioning-yyyy-revision], [#reflect-deprecation-in-openapi]).
+- Versioning/deprecation model and how changes are communicated (see [#use-calendar-versioning], [#mark-deprecated]).
 
 Put this in OpenAPI `info.description` and/or tag-level descriptions, and link to deeper guides via `externalDocs`. A reviewer should be able to answer: what is this API for, who can use it, and how do I perform the primary workflows?
 
-### describe-every-parameter-and-property
+### describe-fields
 <RuleHeader
-  id="describe-every-parameter-and-property"
+  id="describe-fields"
   level="MUST"
   title="Describe Every Parameter and Property"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -466,14 +466,14 @@ Every query parameter, path parameter, request property, and response property M
 
 - What the field means, not just its data type.
 - Important constraints such as allowed values, ranges, patterns, and maximum lengths.
-- Default or omission behavior when callers leave it out (see [#define-defaults-for-optional-properties], [#handle-null-values-correctly]).
+- Default or omission behavior when callers leave it out (see [#define-defaults], [#handle-null-values]).
 - Security or privacy considerations when relevant.
 
 Empty descriptions are not acceptable. Neither are descriptions that restate the property name (e.g., "The status.").
 
-### provide-examples-for-operations-and-key-fields
+### require-examples
 <RuleHeader
-  id="provide-examples-for-operations-and-key-fields"
+  id="require-examples"
   level="MUST"
   title="Provide Examples for Operations and Key Fields"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -491,15 +491,15 @@ Empty descriptions are not acceptable. Neither are descriptions that restate the
   ]}
 />
 
-- Every operation MUST include realistic success and error examples (see [#define-a-standard-error-contract-in-openapi-problem-details], [#provide-accurate-response-examples]).
+- Every operation MUST include realistic success and error examples (see [#use-problem-details], [#require-accurate-examples]).
 - Add field-level examples when format, defaults, or allowed values would otherwise be unclear.
 - Examples MUST conform to the declared schema and formats.
 - Prefer OpenAPI `example` or `examples` so tooling can render them.
 - Never include secrets or real customer data.
 
-### keep-operation-summaries-to-5-words-or-fewer
+### limit-summary-length
 <RuleHeader
-  id="keep-operation-summaries-to-5-words-or-fewer"
+  id="limit-summary-length"
   level="MUST"
   title="Keep Operation Summaries to 5 Words or Fewer"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -522,9 +522,9 @@ Empty descriptions are not acceptable. Neither are descriptions that restate the
 - ✅ `Get account`
 - ❌ `Get accounts for a given identity profile and include nested entitlements` (too long; belongs in `description`)
 
-### avoid-qualifying-verbs
+### omit-boolean-prefixes
 <RuleHeader
-  id="avoid-qualifying-verbs"
+  id="omit-boolean-prefixes"
   level="SHOULD"
   title="Avoid Qualifying Verbs"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -547,9 +547,9 @@ Empty descriptions are not acceptable. Neither are descriptions that restate the
 - ✅ `active` over `isActive`
 - ✅ `visible` over `isVisible`
 
-### use-positive-semantics-for-boolean-fields
+### use-positive-booleans
 <RuleHeader
-  id="use-positive-semantics-for-boolean-fields"
+  id="use-positive-booleans"
   level="SHOULD"
   title="Use Positive Semantics for Boolean Fields"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -583,9 +583,9 @@ For most endpoints, the minimum documentation bar is:
 - Include realistic success and error examples.
 - Reuse the standard `filters` and `sorters` wording where applicable.
 
-### describe-the-filters-parameter-standard-format
+### document-filters
 <RuleHeader
-  id="describe-the-filters-parameter-standard-format"
+  id="document-filters"
   level="MUST"
   title="Describe the Filters Parameter (Standard Format)"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
@@ -635,11 +635,11 @@ Examples:
 
 - Each endpoint MUST document the supported field whitelist and include at least one filter example.
 
-**Related**: shared query story in [#use-one-query-format-across-the-api] and implicit/default behavior guidance in [#document-implicit-filters-and-default-sorting].
+**Related**: shared query story in [#use-consistent-query-format] and implicit/default behavior guidance in [#document-default-query].
 
-### describe-the-sorters-parameter-standard-format
+### document-sorters
 <RuleHeader
-  id="describe-the-sorters-parameter-standard-format"
+  id="document-sorters"
   level="MUST"
   title="Describe the Sorters Parameter (Standard Format)"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
@@ -688,11 +688,11 @@ Examples:
 
 - Sort fields MUST be documented, and the API MUST guarantee a stable ordering for pagination.
 
-**Related**: shared query story in [#use-one-query-format-across-the-api] and default ordering policy in [#document-implicit-filters-and-default-sorting].
+**Related**: shared query story in [#use-consistent-query-format] and default ordering policy in [#document-default-query].
 
-### provide-a-camelcase-operationid-for-every-operation
+### use-camelcase-operationids
 <RuleHeader
-  id="provide-a-camelcase-operationid-for-every-operation"
+  id="use-camelcase-operationids"
   level="MUST"
   title="Provide a camelCase operationId for Every Operation"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -722,7 +722,7 @@ Examples:
 - POST collection: `create<Resource>`
 - PUT/PATCH: `update<Resource>`
 - DELETE: `delete<Resource>`
-- POST search endpoints (see [#use-one-query-format-across-the-api]): `search<ResourcePlural>`
+- POST search endpoints (see [#use-consistent-query-format]): `search<ResourcePlural>`
 - Long-running jobs/resources: `create<Thing>Job` (POST), `get<Thing>Job` (GET), `list<Thing>Jobs` (GET)
 
 | Method | Path | operationId |
@@ -734,9 +734,9 @@ Examples:
 | PATCH | `/accounts/{id}` | `updateAccount` |
 | DELETE | `/accounts/{id}` | `deleteAccount` |
 
-### provide-a-tag-for-every-operation
+### require-operation-tags
 <RuleHeader
-  id="provide-a-tag-for-every-operation"
+  id="require-operation-tags"
   level="MUST"
   title="Provide a Tag for Every Operation"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -759,9 +759,9 @@ paths:
 - Prefer resource-centric tags (e.g., `Accounts`, `Entitlements`).
 - Keep tags stable across versions. Tag descriptions SHOULD explain what belongs in the tag.
 
-### provide-x-sailpoint-resource-operation-id-for-path-parameters
+### require-resource-operation-id
 <RuleHeader
-  id="provide-x-sailpoint-resource-operation-id-for-path-parameters"
+  id="require-resource-operation-id"
   level="MUST"
   title="Provide x-sailpoint-resource-operation-id for Path Parameters"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -782,7 +782,7 @@ paths:
 SailPoint tooling maps path parameters back to the operation that provides valid values for them.
 
 - For path parameters (except enums and user-defined values), APIs MUST provide a camelCase operation identifier under `x-sailpoint-resource-operation-id` on the path parameter definition.
-- The value MUST be camelCase and SHOULD align with the operation's `operationId` (see [#provide-a-camelcase-operationid-for-every-operation]).
+- The value MUST be camelCase and SHOULD align with the operation's `operationId` (see [#use-camelcase-operationids]).
 - Do not change these identifiers without a compatibility plan — tooling depends on them.
 
 ```yaml

@@ -7,16 +7,17 @@
  *
  * Run: bun run scripts/validate-docs-links.ts
  */
-import { readFile, readdir, stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { createRuleLinkRegex } from "../lib/rule-links";
 
 const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const CONTENT_ROOT = path.join(REPO_ROOT, "content", "docs");
 const RULES_JSON_PATH = path.join(REPO_ROOT, "public", "rules.json");
 const CHECK_EXTERNAL = process.env.CHECK_EXTERNAL_URLS === "1";
 
-const RULE_LINK_RE = /\[#([a-z][a-z0-9-]*)\]/g;
 const INTERNAL_MD_RE = /\]\(\/docs\/[^)]+\)/g;
 const INTERNAL_HREF_RE = /href="(\/docs\/[^"]+)"/g;
 const EXTERNAL_URL_RE = /https?:\/\/[^\s)"'<>]+/g;
@@ -149,7 +150,7 @@ async function main(): Promise<void> {
     }
     const rel = path.relative(REPO_ROOT, filePath);
 
-    for (const m of raw.matchAll(RULE_LINK_RE)) {
+    for (const m of raw.matchAll(createRuleLinkRegex())) {
       ruleRefsChecked += 1;
       const id = m[1];
       if (!ruleById.has(id)) {
@@ -179,7 +180,7 @@ async function main(): Promise<void> {
       const ruleEntry = ruleById.get(hash);
       if (ruleEntry !== undefined) {
         if (
-          !ruleEntry.url.startsWith(docPath + "#") &&
+          !ruleEntry.url.startsWith(`${docPath}#`) &&
           ruleEntry.url !== `${docPath}#${hash}`
         ) {
           errors.push(

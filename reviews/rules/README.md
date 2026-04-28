@@ -13,8 +13,8 @@ Required top-level fields:
 - `ruleId`: string (e.g. `"151"`)
 - `source`:
   - `doc`: string (MDX path, e.g. `"content/docs/rules/http-semantics.mdx"`)
-  - `anchor`: string (e.g. `"#define-a-standard-error-contract-in-openapi-problem-details"`)
-  - `url`: string (site URL, e.g. `"/docs/rules/http-semantics#define-a-standard-error-contract-in-openapi-problem-details"`)
+  - `anchor`: string (e.g. `"#use-problem-details"`)
+  - `url`: string (site URL, e.g. `"/docs/rules/http-semantics#use-problem-details"`)
 - `currentTitle`: string
 - `status`: one of:
   - `"pending"`

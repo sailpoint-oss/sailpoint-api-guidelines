@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "no-breaking-changes",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#no-breaking-changes",
+    "url": "/docs/rules/lifecycle-and-compatibility#no-breaking-changes"
+  },
+  "currentTitle": "not break backward compatibility",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

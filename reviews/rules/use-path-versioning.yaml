@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-path-versioning",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#use-path-versioning",
+    "url": "/docs/rules/lifecycle-and-compatibility#use-path-versioning"
+  },
+  "currentTitle": "use URI (path) versioning when multiple versions must coexist",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

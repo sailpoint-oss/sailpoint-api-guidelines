@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-common-fields",
+  "source": {
+    "doc": "content/docs/rules/data-types-and-common-objects.mdx",
+    "anchor": "#use-common-fields",
+    "url": "/docs/rules/data-types-and-common-objects#use-common-fields"
+  },
+  "currentTitle": "MUST use common field names and semantics",
+  "status": "accepted",
+  "decision": {
+    "changeType": "editorial",
+    "proposedTitle": null,
+    "proposedText": "**Intent**: reduce cognitive load and prevent “same concept, different name” drift across APIs.\n\nAPIs MUST reuse common field names and semantics for shared concepts.\n\n**Baseline field registry** (expand over time):\n\n- `id` (string): stable identifier for the resource (URL-friendly; see [#use-url-safe-ids])\n- `name` (string): human-readable display name\n- `description` (string): human-readable description (optional)\n- `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#use-standard-dates])\n- `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#use-standard-dates])\n- `type` (string): discriminator/type label when needed\n- `status` (string/enum): lifecycle status (document enum values; see [#use-upper-snake-enums])\n- `enabled` (boolean): boolean flags are true/false only (see [#use-camelcase-operationids])\n\n**Rules**:\n\n- Do not invent synonyms (`created` vs `createdAt`, `lastModified` vs `modifiedAt`) without a strong reason.\n- If you already have a legacy name, do not rename without a compatibility plan; prefer the standard name for new APIs/fields.\n\n**If you model money-like values** (optional pattern):\n\n- Use `amount` as a decimal string (see [#define-number-formats]) and `currency` as ISO 4217 (see [#use-standard-codes]).\n\n**Testability**:\n\n- Reviewers can spot-check schemas across APIs for consistent naming and formats.\n",
+    "rationale": "Shared field naming conventions make APIs easier to learn, reduce SDK churn, and improve cross-service consistency.",
+    "compatNotes": "Documentation guidance. Existing APIs should align over time; do not introduce breaking renames without a migration plan."
+  },
+  "reviewNotes": []
+}

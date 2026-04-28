@@ -2,10 +2,11 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { createRuleLinkRegex } from "../lib/rule-links";
+
 const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const CONTENT_ROOT = path.join(REPO_ROOT, "content", "docs");
 const RULES_JSON_PATH = path.join(REPO_ROOT, "public", "rules.json");
-const RULE_LINK_RE = /\[#([a-z][a-z0-9-]*)\]/g;
 
 type RulesData = {
   rules: Array<{
@@ -37,7 +38,7 @@ async function main(): Promise<void> {
     const raw = await readFile(filePath, "utf8");
     const relativePath = path.relative(REPO_ROOT, filePath);
 
-    for (const match of raw.matchAll(RULE_LINK_RE)) {
+    for (const match of raw.matchAll(createRuleLinkRegex())) {
       const ruleId = match[1];
       checkedLinks += 1;
 

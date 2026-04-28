@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-optimistic-locking",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#use-optimistic-locking",
+    "url": "/docs/rules/http-semantics#use-optimistic-locking"
+  },
+  "currentTitle": "Use Optimistic Locking for Concurrent Writes",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

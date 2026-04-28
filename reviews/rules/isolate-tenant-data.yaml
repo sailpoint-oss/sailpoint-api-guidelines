@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "isolate-tenant-data",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#isolate-tenant-data",
+    "url": "/docs/rules/security-and-authorization#isolate-tenant-data"
+  },
+  "currentTitle": "Enforce Tenant Data Isolation in Responses",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

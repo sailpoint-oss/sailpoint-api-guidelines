@@ -18,7 +18,7 @@ filtering shape the client experience.
 
 **Recommended contracts:**
 
-- Keep offset pagination (`limit`/`offset`) as the baseline — see [#support-offset-pagination-for-list-endpoints] for the canonical envelope.
+- Keep offset pagination (`limit`/`offset`) as the baseline — see [#support-offset-pagination] for the canonical envelope.
 - If you expect large or volatile datasets, consider cursor pagination; keep cursors **opaque and stable**.
 
 **Filtering and searching:**
@@ -36,9 +36,9 @@ Every list endpoint should make these answers obvious:
 ---
 
 ## Query Parameters & Pagination
-### use-conventional-query-parameters
+### use-standard-query-params
 <RuleHeader
-  id="use-conventional-query-parameters"
+  id="use-standard-query-params"
   level="MUST"
   title="Use Conventional Query Parameters"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
@@ -51,20 +51,20 @@ Every list endpoint should make these answers obvious:
 />
 
 - APIs MUST use consistent query parameter names across all endpoints:
-  - `limit` + `offset` for offset-based pagination (see [#support-offset-pagination-for-list-endpoints]).
+  - `limit` + `offset` for offset-based pagination (see [#support-offset-pagination]).
   - `count` (boolean) when supporting a total count — be explicit about cost/performance.
-  - `filters` for filter expressions and `sorters` for ordering (see [#use-one-query-format-across-the-api]).
+  - `filters` for filter expressions and `sorters` for ordering (see [#use-consistent-query-format]).
 - Every endpoint MUST document its allowed fields (whitelist) for filtering and sorting.
 - Avoid inventing per-endpoint bespoke query DSLs.
-- Prefer OpenAPI-defined encoding for multi-valued parameters (`style`/`explode`) (see [#define-collection-formats-for-header-and-query-parameters]).
+- Prefer OpenAPI-defined encoding for multi-valued parameters (`style`/`explode`) (see [#define-array-params]).
 
 ```http
 GET /accounts?limit=50&offset=0&filters=status eq "ACTIVE"&sorters=name:asc
 ```
 
-### define-collection-formats-for-header-and-query-parameters
+### define-array-params
 <RuleHeader
-  id="define-collection-formats-for-header-and-query-parameters"
+  id="define-array-params"
   level="MUST"
   title="Define Collection Formats for Header and Query Parameters"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -119,9 +119,9 @@ parameters:
     explode: false
 ```
 
-### support-offset-pagination-for-list-endpoints
+### support-offset-pagination
 <RuleHeader
-  id="support-offset-pagination-for-list-endpoints"
+  id="support-offset-pagination"
   level="MUST"
   title="Support Offset Pagination for List Endpoints"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }, { href: "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api", label: "GitHub REST API Pagination" }]}
@@ -154,7 +154,7 @@ parameters:
 }
 ```
 
-- **Do not** document or implement list responses as a bare JSON array at the root (`[ {...}, {...} ]`). The root MUST remain an object so pagination metadata can be added without breaking clients (see [#return-top-level-json-objects]). Examples in OpenAPI, guides, and SDK snippets MUST match the envelope you return in production.
+- **Do not** document or implement list responses as a bare JSON array at the root (`[ {...}, {...} ]`). The root MUST remain an object so pagination metadata can be added without breaking clients (see [#use-object-responses]). Examples in OpenAPI, guides, and SDK snippets MUST match the envelope you return in production.
 
 - MUST define a stable, deterministic default sort order — otherwise pagination produces duplicates or missed records.
 - If `offset` is beyond the available result set, return `200 OK` with an empty `items` array rather than `404`.
@@ -202,14 +202,14 @@ components:
 }
 ```
 
-**Related rules**: [#return-top-level-json-objects], [#use-conventional-query-parameters], [#include-pagination-links-in-collection-responses].
+**Related rules**: [#use-object-responses], [#use-standard-query-params], [#include-pagination-links].
 
 ---
 
 ## Query Conventions
-### document-implicit-filters-and-default-sorting
+### document-default-query
 <RuleHeader
-  id="document-implicit-filters-and-default-sorting"
+  id="document-default-query"
   level="MUST"
   title="Document Implicit Filters and Default Sorting"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
@@ -238,13 +238,13 @@ components:
 
 > If `sorters` is omitted, results are ordered by `createdAt:desc` (ties broken by `id:asc`).
 
-**Related rules**: [#use-conventional-query-parameters], [#support-offset-pagination-for-list-endpoints], [#use-one-query-format-across-the-api]
+**Related rules**: [#use-standard-query-params], [#support-offset-pagination], [#use-consistent-query-format]
 
 ---
 
-### use-one-query-format-across-the-api
+### use-consistent-query-format
 <RuleHeader
-  id="use-one-query-format-across-the-api"
+  id="use-consistent-query-format"
   level="MUST"
   title="Use One Query Format Across the API"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
@@ -259,7 +259,7 @@ components:
 - APIs MUST use a single, consistent query format across all endpoints:
   - `filters` for filter expressions
   - `sorters` for ordering
-  - `limit`/`offset` for pagination (see [#support-offset-pagination-for-list-endpoints])
+  - `limit`/`offset` for pagination (see [#support-offset-pagination])
 - The grammar for `filters` and `sorters` MUST be consistent across endpoints.
 - Every endpoint MUST document its allowed field list for filtering and sorting.
 
@@ -274,7 +274,7 @@ GET /accounts?filters=status eq "ACTIVE"&sorters=createdAt:desc&limit=50&offset=
 When queries exceed practical URL length or complexity, use `POST /{resource}/search` with read-only search semantics.
 
 - MUST clearly document "search semantics; no creation."
-- MUST be safe to retry (see [#prefer-idempotent-post-patch-where-possible], [#support-idempotency-key]).
+- MUST be safe to retry (see [#prefer-idempotent-writes], [#support-idempotency-key]).
 - MUST use a single standard request body shape across all search endpoints.
 
 ```http
@@ -292,14 +292,14 @@ Content-Type: application/json
 }
 ```
 
-**Related rules**: [#use-conventional-query-parameters], [#define-collection-formats-for-header-and-query-parameters], [#document-implicit-filters-and-default-sorting]
+**Related rules**: [#use-standard-query-params], [#define-array-params], [#document-default-query]
 
 ---
 
 ## Batch Operations
-### design-batch-request-endpoints
+### design-batch-endpoints
 <RuleHeader
-  id="design-batch-request-endpoints"
+  id="design-batch-endpoints"
   level="SHOULD"
   title="Design Batch Request Endpoints"
   externalDocs={[{ href: "https://google.aip.dev/233", label: "Google AIP-233: Batch Methods" }, { href: "https://learn.microsoft.com/en-us/graph/json-batching", label: "Microsoft Graph: JSON Batching" }]}
@@ -349,7 +349,7 @@ Content-Type: application/json
 Choose one processing model and document it explicitly:
 
 - **All-or-nothing (transactional)**: all items succeed or all fail. Return a single status code. Preferred when items are interdependent.
-- **Partial success (best-effort)**: each item processed independently. Return per-item results using `207 Multi-Status` or `200` with per-item outcomes (see [#use-207-or-200-for-per-item-batch-results]). Preferred when items are independent.
+- **Partial success (best-effort)**: each item processed independently. Return per-item results using `207 Multi-Status` or `200` with per-item outcomes (see [#use-per-item-batch-status]). Preferred when items are independent.
 
 Most batch endpoints SHOULD use partial-success semantics.
 
@@ -371,15 +371,15 @@ Most batch endpoints SHOULD use partial-success semantics.
 
 Follow `batch<Action><ResourcePlural>` — e.g., `batchCreateAccounts`, `batchDeleteAccounts`, `batchUpdateAccounts`.
 
-**Related rules**: [#use-207-or-200-for-per-item-batch-results] per-item batch results, [#support-long-running-operations] async for very large operations, [#document-request-and-response-size-limits] request size limits.
+**Related rules**: [#use-per-item-batch-status] per-item batch results, [#support-async-operations] async for very large operations, [#document-size-limits] request size limits.
 
 ---
 
 ## Response Metadata
 
-### include-pagination-links-in-collection-responses
+### include-pagination-links
 <RuleHeader
-  id="include-pagination-links-in-collection-responses"
+  id="include-pagination-links"
   level="SHOULD"
   title="Include Pagination Links in Collection Responses"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc8288", label: "RFC 8288 — Web Linking" }, { href: "https://jsonapi.org/format/#fetching-pagination", label: "JSON:API Pagination" }]}
@@ -405,7 +405,7 @@ Follow `batch<Action><ResourcePlural>` — e.g., `batchCreateAccounts`, `batchDe
 />
 
 - Collection responses SHOULD include a `links` object with absolute URLs for navigating the result set.
-- Links complement — but do not replace — the `limit`, `offset`, and `count` fields required by [#support-offset-pagination-for-list-endpoints].
+- Links complement — but do not replace — the `limit`, `offset`, and `count` fields required by [#support-offset-pagination].
 
 #### Standard link relations
 
@@ -461,4 +461,4 @@ Cursor-based pagination is typically forward-only, so `prev` is usually omitted:
 
 If an endpoint supports both offset and cursor, return envelope fields for both so clients can pick the pattern that fits their workload. When a `cursor` is present the server paginates from the cursor; otherwise it paginates from `offset`.
 
-**Related rules**: [#return-top-level-json-objects] top-level JSON objects, [#use-conventional-query-parameters] conventional query parameters, [#support-offset-pagination-for-list-endpoints] offset pagination, [#use-common-field-names] common field names.
+**Related rules**: [#use-object-responses] top-level JSON objects, [#use-standard-query-params] conventional query parameters, [#support-offset-pagination] offset pagination, [#use-common-fields] common field names.

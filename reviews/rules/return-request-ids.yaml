@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "return-request-ids",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#return-request-ids",
+    "url": "/docs/rules/operations-and-quality#return-request-ids"
+  },
+  "currentTitle": "Return a Request ID on Every Response",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

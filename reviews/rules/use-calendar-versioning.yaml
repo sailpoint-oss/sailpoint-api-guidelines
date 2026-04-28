@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-calendar-versioning",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#use-calendar-versioning",
+    "url": "/docs/rules/lifecycle-and-compatibility#use-calendar-versioning"
+  },
+  "currentTitle": "use year-based API versioning (`YYYY.{revision}`)",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

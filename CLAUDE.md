@@ -16,6 +16,7 @@ pnpm lint            # biome check (linting + formatting check)
 pnpm format          # biome format --write
 pnpm types:check     # fumadocs-mdx && next typegen && tsc --noEmit
 pnpm rules:generate  # bun run scripts/generate-rules-json.ts → public/rules.json
+pnpm docs-links:validate # bun run scripts/validate-docs-links.ts
 pnpm reviews:stubs   # bun run scripts/generate-rule-review-stubs.ts
 pnpm reviews:validate # bun run scripts/validate-reviews.ts
 ```
@@ -42,9 +43,9 @@ All documentation lives in `content/docs/` as MDX files. Sidebar order is contro
 Each rule uses the `<RuleHeader>` MDX component (registered in `mdx-components.tsx`). The pattern in MDX files is:
 
 ```mdx
-### use-standard-http-headers
+### use-standard-headers
 <RuleHeader
-  id="use-standard-http-headers"
+  id="use-standard-headers"
   level="MUST"
   title="Use Standard HTTP Headers"
   externalDocs={[...]}
@@ -53,7 +54,7 @@ Each rule uses the `<RuleHeader>` MDX component (registered in `mdx-components.t
 />
 ```
 
-- **id**: Stable kebab-case identifier (derived from the rule name, linter-style), never reused. Used for anchors (`#use-standard-http-headers`) and deep links.
+- **id**: Stable kebab-case identifier (derived from the rule name, linter-style), never reused. Used for anchors (`#use-standard-headers`) and deep links.
 - **level**: One of `MUST`, `SHOULD`, `MAY` (RFC 2119 keywords).
 - **examples**: Optional array of `{ label?, lang, code }`. The first example renders as the canonical snippet directly under the rule's badge row. Use YAML for OpenAPI contract shape, JSON for payload shape, HTTP for headers/status/URL.
 - The markdown heading is the same kebab-case string as **id** (for TOC and anchor alignment).

@@ -14,9 +14,9 @@ Use this section to answer:
 ---
 
 ## Performance & Optimization
-### support-partial-responses-fields
+### support-fields
 <RuleHeader
-  id="support-partial-responses-fields"
+  id="support-fields"
   level="SHOULD"
   title="Support Partial Responses (fields)"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#pagination", label: "Microsoft REST API Guidelines: Pagination" }]}
@@ -39,9 +39,9 @@ Use this section to answer:
 - ✅ `GET /accounts?fields=(id,name)&limit=50&offset=0`
 - ✅ `POST /accounts/search` with `fields` in the request body
 
-### allow-optional-embedding
+### support-embedding
 <RuleHeader
-  id="allow-optional-embedding"
+  id="support-embedding"
   level="SHOULD"
   title="Allow Optional Embedding"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -67,9 +67,9 @@ Use this section to answer:
 ---
 
 ## API Operation & Monitoring
-### publish-an-openapi-specification-meet-doc-quality-levels
+### meet-doc-quality
 <RuleHeader
-  id="publish-an-openapi-specification-meet-doc-quality-levels"
+  id="meet-doc-quality"
   level="MUST"
   title="Publish an OpenAPI Specification (Meet Doc Quality Levels)"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -93,30 +93,30 @@ Use this section to answer:
 />
 
 - All APIs MUST publish an OpenAPI specification accessible to intended consumers (public docs for public APIs, internal portal for internal-only).
-- The published spec MUST be versioned and aligned with the documented API version (see [#use-year-based-api-versioning-yyyy-revision]).
+- The published spec MUST be versioned and aligned with the documented API version (see [#use-calendar-versioning]).
 - The spec SHOULD be the source for generated docs, SDKs, and contract validation where feasible.
-- While [#provide-an-openapi-specification] requires that an OAS exists and is valid, this rule defines the quality bar.
+- While [#require-openapi] requires that an OAS exists and is valid, this rule defines the quality bar.
 
 #### Documentation quality levels
 
 - **Level 0 (non-compliant)**: paths exist but missing schemas, responses, and security details.
 - **Level 1 (minimum acceptable)**:
   - Every operation has `summary` + `description`.
-  - Every operation defines success responses and expected error responses (see [#define-a-standard-error-contract-in-openapi-problem-details]).
+  - Every operation defines success responses and expected error responses (see [#use-problem-details]).
   - Request/response schemas are defined (no `any`/untyped objects).
-  - `security` is declared with required scopes (see [#secure-endpoints-with-oauth-2-0], [#define-and-assign-scopes]).
-  - Every operation includes realistic success and error examples as required by [#provide-examples-for-operations-and-key-fields].
+  - `security` is declared with required scopes (see [#use-oauth2], [#define-scopes]).
+  - Every operation includes realistic success and error examples as required by [#require-examples].
 - **Level 2 (required for external APIs; strongly recommended for internal)**:
   - Consistent tagging and `operationId` conventions.
-  - Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#use-conventional-query-parameters]).
-  - Deprecations are marked with `deprecated: true` and migration guidance (see [#reflect-deprecation-in-openapi]).
-  - Changelog/revision info is maintained for contract changes (see [#use-year-based-api-versioning-yyyy-revision]).
+  - Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#use-standard-query-params]).
+  - Deprecations are marked with `deprecated: true` and migration guidance (see [#mark-deprecated]).
+  - Changelog/revision info is maintained for contract changes (see [#use-calendar-versioning]).
 
 Teams MUST have a checklist or review gate so new and changed endpoints meet the required level.
 
-### return-a-request-id-on-every-response
+### return-request-ids
 <RuleHeader
-  id="return-a-request-id-on-every-response"
+  id="return-request-ids"
   level="MUST"
   title="Return a Request ID on Every Response"
   externalDocs={[{ href: "https://www.w3.org/TR/trace-context/", label: "W3C Trace Context" }, { href: "https://opensource.zalando.com/restful-api-guidelines/#233", label: "Zalando: X-Flow-ID" }]}
@@ -131,7 +131,7 @@ X-Request-Id: 3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b`,
 />
 
 - The server MUST generate a unique `X-Request-Id` header (UUID v4) on every response — including `4xx`, `5xx`, and `429`.
-- Error response bodies MUST include the same value as `correlationId` (see [#define-a-standard-error-contract-in-openapi-problem-details]).
+- Error response bodies MUST include the same value as `correlationId` (see [#use-problem-details]).
 - If the client sends an `X-Request-Id` header, the server SHOULD echo it back (after validation) rather than generating a new one.
 - For distributed tracing, services SHOULD support W3C Trace Context (`traceparent`/`tracestate` headers).
 
@@ -166,11 +166,11 @@ components:
         format: uuid
 ```
 
-**Related rules**: [#define-a-standard-error-contract-in-openapi-problem-details] correlationId, [#never-expose-stack-traces-or-internal-details] sanitized error responses.
+**Related rules**: [#use-problem-details] correlationId, [#no-internal-errors] sanitized error responses.
 
-### design-webhooks-and-event-notifications
+### design-webhooks
 <RuleHeader
-  id="design-webhooks-and-event-notifications"
+  id="design-webhooks"
   level="SHOULD"
   title="Design Webhooks and Event Notifications"
   externalDocs={[{ href: "https://docs.stripe.com/webhooks", label: "Stripe: Webhooks" }, { href: "https://docs.github.com/en/webhooks", label: "GitHub: Webhooks" }]}
@@ -215,11 +215,11 @@ components:
 }
 ```
 
-**Related rules**: [#require-https-tls-for-all-endpoints] HTTPS for webhook URLs, [#support-long-running-operations] webhooks complement async operations, [#return-a-request-id-on-every-response] include X-Request-Id in webhook deliveries.
+**Related rules**: [#require-https] HTTPS for webhook URLs, [#support-async-operations] webhooks complement async operations, [#return-request-ids] include X-Request-Id in webhook deliveries.
 
-### provide-health-check-endpoints
+### provide-health-checks
 <RuleHeader
-  id="provide-health-check-endpoints"
+  id="provide-health-checks"
   level="SHOULD"
   title="Provide Health Check Endpoints"
   externalDocs={[{ href: "https://datatracker.ietf.org/doc/html/draft-inadarei-api-health-check", label: "IETF Health Check Response Format" }, { href: "https://learn.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring", label: "Azure: Health Endpoint Monitoring Pattern" }]}
@@ -274,6 +274,6 @@ components:
 - Do not include health endpoints in your public OpenAPI spec — document them in operational runbooks instead.
 - Return `Cache-Control: no-store` on health responses to prevent stale caching.
 
-**Related rules**: [#use-standard-http-status-codes] status codes (503 for not-ready), [#never-expose-stack-traces-or-internal-details] never expose internal details.
+**Related rules**: [#use-standard-status-codes] status codes (503 for not-ready), [#no-internal-errors] never expose internal details.
 
 ---

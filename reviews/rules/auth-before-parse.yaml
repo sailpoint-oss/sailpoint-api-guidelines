@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "auth-before-parse",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#auth-before-parse",
+    "url": "/docs/rules/security-and-authorization#auth-before-parse"
+  },
+  "currentTitle": "Authenticate and Authorize Before Processing Payloads",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

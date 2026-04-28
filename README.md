@@ -81,9 +81,10 @@ For a Pages-faithful preview (correct asset URLs), serve from a path that matche
 | `pnpm types:check` | `fumadocs-mdx`, `next typegen`, `tsc --noEmit`. |
 | `pnpm rules:generate` | Regenerate [`public/rules.json`](public/rules.json) from rule MDX (`bun`). Run after adding or renaming rules. |
 | `pnpm rule-links:validate` | Validate rule cross-links (`bun`). |
+| `pnpm docs-links:validate` | Validate internal docs links, anchors, and rule references (`bun`). |
 | `pnpm reviews:stubs` | Generate rule review stub files (`bun`). |
 | `pnpm reviews:validate` | Validate rule reviews (`bun`). |
-| `pnpm verify` | Regenerate `public/rules.json`, fail if git diff, then run `reviews:validate` and `rule-links:validate` — mirrors part of CI. |
+| `pnpm verify` | Regenerate `public/rules.json`, fail if git diff, then run review and link validators — mirrors part of CI. |
 
 ## Before opening a pull request
 
@@ -108,10 +109,10 @@ Rules live as **one MDX file per category** under [`content/docs/rules/`](conten
 Each rule uses a level-3 heading and `<RuleHeader>` that share the same **kebab-case** id (linter-style, derived from the rule name):
 
 ```mdx
-### use-standard-http-headers
+### use-standard-headers
 
 <RuleHeader
-  id="use-standard-http-headers"
+  id="use-standard-headers"
   level="MUST"
   title="Use Standard HTTP Headers"
   externalDocs={[...]}
@@ -120,7 +121,7 @@ Each rule uses a level-3 heading and `<RuleHeader>` that share the same **kebab-
 />
 ```
 
-- **`id`**: Stable kebab-case identifier (never reused). Used for anchors (e.g. `#use-standard-http-headers`) and URLs.
+- **`id`**: Stable kebab-case identifier (never reused). Used for anchors (e.g. `#use-standard-headers`) and URLs.
 - **`level`**: One of `MUST`, `SHOULD`, `MAY` (RFC 2119).
 - **`examples`**: Optional canonical snippet(s) rendered directly under the rule's badge. Use YAML for OpenAPI contract shape, JSON for payload shape, HTTP for headers/status/URL. If more than one example is supplied, they render as tabs.
 - The heading text must match the `id` so anchors, TOC, and `public/rules.json` stay aligned.

@@ -12,9 +12,10 @@
     "format": "biome format --write",
     "rules:generate": "bun run ./scripts/generate-rules-json.ts",
     "rule-links:validate": "bun run ./scripts/validate-rule-links.ts",
+    "docs-links:validate": "bun run ./scripts/validate-docs-links.ts",
     "reviews:stubs": "bun run ./scripts/generate-rule-review-stubs.ts",
     "reviews:validate": "bun run ./scripts/validate-reviews.ts",
-    "verify": "pnpm run rules:generate && git diff --exit-code -- public/rules.json && pnpm run reviews:validate && pnpm run rule-links:validate"
+    "verify": "pnpm run rules:generate && git diff --exit-code -- public/rules.json && pnpm run reviews:validate && pnpm run rule-links:validate && pnpm run docs-links:validate"
   },
   "dependencies": {
     "@base-ui/react": "1.0.0",

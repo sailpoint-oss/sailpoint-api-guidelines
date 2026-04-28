@@ -14,9 +14,9 @@ Use this section to answer:
 ---
 
 ## Data Types & Formats
-### use-iso-8601-durations-and-intervals
+### use-iso8601-durations
 <RuleHeader
-  id="use-iso-8601-durations-and-intervals"
+  id="use-iso8601-durations"
   level="SHOULD"
   title="Use ISO 8601 Durations and Intervals"
   externalDocs={[{ href: "https://www.iso.org/iso-8601-date-and-time-format.html", label: "ISO 8601" }]}
@@ -33,9 +33,9 @@ Use this section to answer:
 - ❌ `900` (ambiguous unit)
 - ❌ `1h30m` (non-standard)
 
-### use-standard-date-time-formats
+### use-standard-dates
 <RuleHeader
-  id="use-standard-date-time-formats"
+  id="use-standard-dates"
   level="MUST"
   title="Use Standard Date/Time Formats"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc3339", label: "RFC 3339 — Date and Time on the Internet" }, { href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]}
@@ -81,9 +81,9 @@ birthDate:
   format: date
 ```
 
-### use-standard-country-language-and-currency-codes
+### use-standard-codes
 <RuleHeader
-  id="use-standard-country-language-and-currency-codes"
+  id="use-standard-codes"
   level="MUST"
   title="Use Standard Country, Language, and Currency Codes"
   externalDocs={[{ href: "https://www.iso.org/iso-3166-country-codes.html", label: "ISO 3166-1 Country Codes" }, { href: "https://www.rfc-editor.org/rfc/bcp/bcp47.txt", label: "BCP 47 — Language Tags" }, { href: "https://www.iso.org/iso-4217-currency-codes.html", label: "ISO 4217 Currency Codes" }]}
@@ -116,9 +116,9 @@ currency:
   example: USD
 ```
 
-### define-numeric-formats
+### define-number-formats
 <RuleHeader
-  id="define-numeric-formats"
+  id="define-number-formats"
   level="MUST"
   title="Define Numeric Formats"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
@@ -181,9 +181,9 @@ resourceId:
 ---
 
 ## Common Fields & Standard Formats
-### use-common-field-names
+### use-common-fields
 <RuleHeader
-  id="use-common-field-names"
+  id="use-common-fields"
   level="MUST"
   title="Use Common Field Names"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/standard_fields", label: "Google API Standard Fields" }]}
@@ -203,27 +203,27 @@ resourceId:
 />
 
 - APIs MUST reuse common field names and semantics for shared concepts. Baseline field registry:
-  - `id` (string): stable identifier for the resource (see [#use-url-friendly-ids])
+  - `id` (string): stable identifier for the resource (see [#use-url-safe-ids])
   - `name` (string): human-readable display name
   - `description` (string): human-readable description (optional)
-  - `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#use-standard-date-time-formats])
-  - `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#use-standard-date-time-formats])
+  - `createdAt` (string, date-time): creation timestamp (RFC 3339; see [#use-standard-dates])
+  - `modifiedAt` (string, date-time): last-modified timestamp (RFC 3339; see [#use-standard-dates])
   - `type` (string): discriminator/type label when needed
-  - `status` (string/enum): lifecycle status (see [#declare-enum-values-in-upper-snake-case-strings])
-  - `enabled` (boolean): true/false only (see [#use-booleans-correctly], [#use-positive-semantics-for-boolean-fields])
-  - `externalId` (string): external system identifier (see [#use-secondary-keys-for-idempotent-post])
+  - `status` (string/enum): lifecycle status (see [#use-upper-snake-enums])
+  - `enabled` (boolean): true/false only (see [#use-booleans], [#use-positive-booleans])
+  - `externalId` (string): external system identifier (see [#use-secondary-idempotency-keys])
   - `tags` (array of strings): user-defined categorization labels
-  - `etag` (string): entity version tag for optimistic locking (see [#use-optimistic-locking-for-concurrent-writes])
-  - `deletedAt` (string, date-time, nullable): soft-delete timestamp (see [#model-nullable-fields-in-openapi] if `null` is used)
+  - `etag` (string): entity version tag for optimistic locking (see [#use-optimistic-locking])
+  - `deletedAt` (string, date-time, nullable): soft-delete timestamp (see [#model-nullability] if `null` is used)
   - `href` or `self` (string, uri): canonical self-link URL
   - `ownerRef` (object: `{ id, name }`): standard reference shape for related entities
 - Do not invent synonyms (`created` vs `createdAt`, `lastModified` vs `modifiedAt`). Prefer the standard name for all new APIs and fields.
 - Teams SHOULD define a standard `Ref` shape (e.g., `{ "id": "...", "name": "..." }`) and reuse it for all entity references (`ownerRef`, `sourceRef`, `creatorRef`).
-- For money-like values, use `amount` as a decimal string (see [#define-numeric-formats]) and `currency` as ISO 4217 (see [#use-standard-country-language-and-currency-codes]).
+- For money-like values, use `amount` as a decimal string (see [#define-number-formats]) and `currency` as ISO 4217 (see [#use-standard-codes]).
 
-### use-standard-property-formats
+### use-standard-formats
 <RuleHeader
-  id="use-standard-property-formats"
+  id="use-standard-formats"
   level="MUST"
   title="Use Standard Property Formats"
   externalDocs={[{ label: "RFC 3339 — Date and Time on the Internet", href: "https://www.rfc-editor.org/rfc/rfc3339" }, { label: "IANA Media Types Registry", href: "https://www.iana.org/assignments/media-types/media-types.xhtml" }]}
@@ -249,7 +249,7 @@ requestId:
 - APIs MUST use standardized OpenAPI formats where they apply, and SHOULD validate them at runtime.
 - Use `format` only when it accurately describes the values emitted and accepted, and always provide matching examples.
 - Common formats:
-  - `date-time` / `date` (see [#use-standard-date-time-formats] for the canonical date/time rules)
+  - `date-time` / `date` (see [#use-standard-dates] for the canonical date/time rules)
   - `uuid` for UUID strings
   - `uri` for absolute URIs; `uri-reference` when relative references are allowed
   - `email` for email addresses
@@ -273,9 +273,9 @@ properties:
     format: uuid
 ```
 
-### encode-embedded-binary-safely
+### encode-binary
 <RuleHeader
-  id="encode-embedded-binary-safely"
+  id="encode-binary"
   level="MUST"
   title="Encode Embedded Binary Safely"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc4648", label: "RFC 4648 — Base16, Base32, Base64 Data Encodings" }]}
@@ -291,7 +291,7 @@ properties:
   ]}
 />
 
-Prefer dedicated upload/download endpoints over embedding binary in JSON (see [#use-standard-non-json-media-types]).
+Prefer dedicated upload/download endpoints over embedding binary in JSON (see [#use-non-json-media-types]).
 
 - If embedding is unavoidable, APIs MUST use standard base64 encoding. Use base64url only when the value must be URL-safe.
 - MUST include metadata so clients can interpret the value: `contentType`, `encoding` (`base64` or `base64url`), and optionally `sizeBytes`.

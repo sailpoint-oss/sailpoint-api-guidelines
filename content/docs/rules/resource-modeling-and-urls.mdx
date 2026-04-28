@@ -14,9 +14,9 @@ Use this section to answer:
 ---
 
 ## Resource & URL Design
-### do-not-use-api-base-path
+### no-api-base-path
 <RuleHeader
-  id="do-not-use-api-base-path"
+  id="no-api-base-path"
   level="MUST"
   title="Do Not Use /api Base Path"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -29,14 +29,14 @@ Use this section to answer:
 />
 
 - APIs MUST NOT include redundant base path segments like `/api` in public-facing URL paths.
-- Configure environment-specific base URLs via OpenAPI `servers` and keep paths focused on domain-driven resource names (see [#use-domain-specific-resource-names]).
+- Configure environment-specific base URLs via OpenAPI `servers` and keep paths focused on domain-driven resource names (see [#use-domain-names]).
 
 - ✅ `https://example.sailpoint.com/v2026/accounts`
 - ❌ `https://example.sailpoint.com/api/v2026/accounts`
 
-### define-canonical-url-forms
+### canonical-urls
 <RuleHeader
-  id="define-canonical-url-forms"
+  id="canonical-urls"
   level="MUST"
   title="Define Canonical URL Forms"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -52,8 +52,8 @@ APIs MUST define and enforce a canonical URL form:
 
 - No duplicate slashes (`//`) or empty path segments.
 - Define a trailing-slash policy and apply it consistently — prefer omitting the trailing slash.
-- Use lowercase hyphenated path segments (see [#use-lowercase-hyphenated-path-segments-and-camelcase-path-parameters]).
-- Avoid redundant base path segments like `/api` in public URLs (see [#do-not-use-api-base-path]).
+- Use lowercase hyphenated path segments (see [#use-path-casing]).
+- Avoid redundant base path segments like `/api` in public URLs (see [#no-api-base-path]).
 
 - ✅ `/accounts/123`
 - ✅ `/accounts/123/entitlements`
@@ -67,11 +67,9 @@ APIs MUST define and enforce a canonical URL form:
 
 If a non-canonical form is received, either normalize internally, redirect to the canonical form, or reject with `400`.
 
-### use-resource-oriented-urls
-<span id="model-resources-avoid-action-endpoints" className="scroll-mt-28 block" aria-hidden="true" />
-<span id="keep-urls-verb-free" className="scroll-mt-28 block" aria-hidden="true" />
+### use-resource-urls
 <RuleHeader
-  id="use-resource-oriented-urls"
+  id="use-resource-urls"
   level="SHOULD"
   title="Use Resource-Oriented URLs"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -98,9 +96,9 @@ DELETE /accounts/{accountId}`,
 - ❌ `GET /accounts/{accountId}/delete`
 - ❌ `GET /accounts/{accountId}/disable`
 
-### model-business-processes
+### model-workflows
 <RuleHeader
-  id="model-business-processes"
+  id="model-workflows"
   level="SHOULD"
   title="Model Business Processes"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -115,7 +113,7 @@ GET /access-requests/{id}`,
 
 - APIs SHOULD model complete business processes and workflows as first-class resources, not just individual data entities.
 - Prefer stable workflow resources that can be created, queried, and audited over ad-hoc action endpoints.
-- Document the workflow in a step-by-step guide (see [#provide-an-api-user-manual]).
+- Document the workflow in a step-by-step guide (see [#document-user-manual]).
 
 - ✅ `POST /access-requests` (create request)
 - ✅ `GET /access-requests/{id}` (check status)
@@ -123,9 +121,9 @@ GET /access-requests/{id}`,
 - ✅ `POST /imports` (create import job)
 - ✅ `GET /imports/{id}` (status/results)
 
-### define-useful-resources
+### design-useful-resources
 <RuleHeader
-  id="define-useful-resources"
+  id="design-useful-resources"
   level="SHOULD"
   title="Define Useful Resources"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -139,11 +137,11 @@ GET /access-requests/{id}`,
 
 Resources SHOULD be designed around common workflows and support efficient retrieval:
 
-- Resource boundaries SHOULD reflect domain concepts (see [#use-domain-specific-resource-names]).
-- Primary workflows SHOULD be supported end-to-end (see [#model-business-processes]).
-- Collections SHOULD support pagination (see [#support-offset-pagination-for-list-endpoints]) and conventional query params (see [#use-conventional-query-parameters]).
+- Resource boundaries SHOULD reflect domain concepts (see [#use-domain-names]).
+- Primary workflows SHOULD be supported end-to-end (see [#model-workflows]).
+- Collections SHOULD support pagination (see [#support-offset-pagination]) and conventional query params (see [#use-standard-query-params]).
 - Filtering and sorting SHOULD be available where lists would otherwise be unusable.
-- Responses SHOULD be lean by default, with optional field selection or embedding when needed (see [#support-partial-responses-fields], [#allow-optional-embedding]).
+- Responses SHOULD be lean by default, with optional field selection or embedding when needed (see [#support-fields], [#support-embedding]).
 - Field projection (`fields`, sparse fieldsets, or your API's equivalent) SHOULD be available on **collection GET** endpoints when clients routinely need slimmer payloads—not only on dedicated `POST /.../search` endpoints. If projection is limited to search for historical reasons, document that explicitly and plan to widen it where it reduces payload size without harming cacheability.
 
 - ✅ `GET /accounts?filters=status eq "ACTIVE"&sorters=name:asc&limit=50&offset=0`
@@ -151,9 +149,9 @@ Resources SHOULD be designed around common workflows and support efficient retri
 
 Avoid exposing many near-duplicate resources or designs that require extra round-trips for the common case.
 
-### use-domain-specific-resource-names
+### use-domain-names
 <RuleHeader
-  id="use-domain-specific-resource-names"
+  id="use-domain-names"
   level="MUST"
   title="Use Domain-Specific Resource Names"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/standard_fields", label: "Google API Standard Fields" }]}
@@ -172,9 +170,9 @@ GET /identity-profiles`,
 - ✅ `/accounts`, `/entitlements`, `/identity-profiles`
 - ❌ `/dbUsers`, `/tblEntitlements`, `/internalAccounts`
 
-### nest-sub-resources-only-when-tightly-coupled
+### nest-coupled-resources
 <RuleHeader
-  id="nest-sub-resources-only-when-tightly-coupled"
+  id="nest-coupled-resources"
   level="MUST"
   title="Nest Sub-resources Only When Tightly Coupled"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -197,9 +195,9 @@ Sub-resources MUST only be nested under a parent when they are tightly coupled �
 - ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`
 - ❌ `/accounts/{accountId}/access-requests/{accessRequestId}` if access requests have a global ID and independent lifecycle — prefer `/access-requests/{accessRequestId}` with filters
 
-### prefer-non-nested-urls-for-independent-resources
+### prefer-flat-urls
 <RuleHeader
-  id="prefer-non-nested-urls-for-independent-resources"
+  id="prefer-flat-urls"
   level="SHOULD"
   title="Prefer Non-nested URLs for Independent Resources"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -230,9 +228,9 @@ Sub-resources MUST only be nested under a parent when they are tightly coupled �
 - Use query parameters, field filtering (`fields`), or embedding (`embed`) to support different views of the same resource rather than creating new resource types.
 - Watch for warning signs: resources that differ only by a flag, multiple resources representing the same concept under different names, or clients needing many endpoints for a single workflow.
 
-### limit-nesting-depth
+### limit-url-depth
 <RuleHeader
-  id="limit-nesting-depth"
+  id="limit-url-depth"
   level="SHOULD"
   title="Limit Nesting Depth"
   externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -251,27 +249,27 @@ Sub-resources MUST only be nested under a parent when they are tightly coupled �
 - ✅ `/identity-profiles/{identityProfileId}/attribute-mappings`
 - ❌ `/orgs/{orgId}/identities/{identityId}/accounts/{accountId}/entitlements`
 
-### use-rest-maturity-level-2
-<RuleHeader id="use-rest-maturity-level-2" level="MUST" title="Use REST Maturity Level 2" externalDocs={[{ href: "https://martinfowler.com/articles/richardsonMaturityModel.html", label: "Richardson Maturity Model" }]} />
+### use-rest-level-2
+<RuleHeader id="use-rest-level-2" level="MUST" title="Use REST Maturity Level 2" externalDocs={[{ href: "https://martinfowler.com/articles/richardsonMaturityModel.html", label: "Richardson Maturity Model" }]} />
 
 APIs MUST target at least **Richardson Maturity Model (RMM) Level 2**. In Fowler's model, Level 0 is RPC-on-HTTP; Level 1 introduces distinct resources but not necessarily full HTTP semantics; **Level 2** means you identify resources with URLs, apply the correct HTTP methods to them, and use HTTP status codes for outcomes. **Level 3** adds hypermedia-driven state transitions; SailPoint APIs do **not** require Level 3 (no mandate for HAL, JSON:API links, or other HATEOAS styles).
 
 What you must change in practice:
 
 - Use resource URLs (nouns), not action/RPC endpoints.
-- Use HTTP methods correctly (see [#use-http-methods-correctly]) and respect method properties (see [#honor-method-properties]).
-- Use standard, semantically correct status codes (see [#use-standard-http-status-codes]).
+- Use HTTP methods correctly (see [#use-http-methods]) and respect method properties (see [#honor-method-semantics]).
+- Use standard, semantically correct status codes (see [#use-standard-status-codes]).
 - Use standard content negotiation and media types (see [#use-standard-media-types]).
-- Use a standardized error contract (Problem Details) (see [#define-a-standard-error-contract-in-openapi-problem-details]).
+- Use a standardized error contract (Problem Details) (see [#use-problem-details]).
 
 Hypermedia controls (RMM Level 3) are not required. Do not mandate HAL or JSON:API link schemas.
 
 ---
 
 ## Resource Identifiers
-### use-url-friendly-ids
+### use-url-safe-ids
 <RuleHeader
-  id="use-url-friendly-ids"
+  id="use-url-safe-ids"
   level="MUST"
   title="Use URL-Friendly IDs"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -284,7 +282,7 @@ Hypermedia controls (RMM Level 3) are not required. Do not mandate HAL or JSON:A
 />
 
 - Resource identifiers used in URL path segments MUST be URL-friendly.
-- Prefer opaque string IDs such as UUIDs (see [#define-numeric-formats]) or base64url-encoded identifiers.
+- Prefer opaque string IDs such as UUIDs (see [#define-number-formats]) or base64url-encoded identifiers.
 - IDs MUST NOT contain spaces, characters requiring frequent percent-encoding, unescaped unicode, or `/`.
 - Recommended safe character set for path segments: `[A-Za-z0-9._:-]` (and optionally `~`).
 
@@ -297,9 +295,9 @@ Hypermedia controls (RMM Level 3) are not required. Do not mandate HAL or JSON:A
 
 If an ID can include unsafe characters (e.g., legacy or natural keys), it MUST be carried as a query parameter or body field instead of a path segment.
 
-### never-include-customer-org-names-in-paths
+### no-org-names-in-paths
 <RuleHeader
-  id="never-include-customer-org-names-in-paths"
+  id="no-org-names-in-paths"
   level="MUST"
   title="Never Include Customer Org Names in Paths"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -320,13 +318,13 @@ If an ID can include unsafe characters (e.g., legacy or natural keys), it MUST b
 
 Internal-only administrative APIs may have different constraints; this rule applies to public, customer-facing APIs.
 
-**Related rules**: [#secure-endpoints-with-oauth-2-0], [#enforce-tenant-data-isolation-in-responses]
+**Related rules**: [#use-oauth2], [#isolate-tenant-data]
 
 ---
 
-### do-not-use-sequential-numeric-ids
+### no-sequential-ids
 <RuleHeader
-  id="do-not-use-sequential-numeric-ids"
+  id="no-sequential-ids"
   level="MUST"
   title="Do Not Use Sequential Numeric IDs"
   externalDocs={[{ href: "https://cloud.google.com/apis/design/naming_convention", label: "Google API Naming Convention" }]}
@@ -345,9 +343,9 @@ Sequential IDs enable enumeration attacks and leak business scale.
 - Non-sequential natural keys are acceptable only when truly stable and non-sensitive.
 - Internal database surrogate keys may be sequential — just don't expose them directly.
 
-### define-soft-delete-behavior
+### define-soft-delete
 <RuleHeader
-  id="define-soft-delete-behavior"
+  id="define-soft-delete"
   level="SHOULD"
   title="Define Soft Delete Behavior"
   externalDocs={[{ href: "https://google.aip.dev/164", label: "Google AIP-164: Soft Delete" }, { href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
@@ -403,6 +401,6 @@ In the OpenAPI operation description for DELETE endpoints, state:
 - Whether recovery is possible and how.
 - The retention/purge policy.
 
-**Related rules**: [#use-http-methods-correctly] DELETE semantics, [#use-standard-http-status-codes] status codes (410 Gone), [#document-implicit-filters-and-default-sorting] implicit filters (excluding deleted items).
+**Related rules**: [#use-http-methods] DELETE semantics, [#use-standard-status-codes] status codes (410 Gone), [#document-default-query] implicit filters (excluding deleted items).
 
 ---

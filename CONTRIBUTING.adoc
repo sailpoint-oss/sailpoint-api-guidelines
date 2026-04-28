@@ -20,8 +20,8 @@ doesn't change until the content of the rule changes significantly so that
 it does not make sense to identify it with the old Rule ID.
 
 Rules are authored as Markdown/MDX under `content/docs/rules/`.
-Each rule uses a stable **kebab-case** id (same string as the level-3 heading and the `RuleHeader` `id`), for example `use-http-methods-correctly`.
-Cross-links in docs use the shorthand `[#use-http-methods-correctly]`, which resolves to the rule’s canonical URL.
+Each rule uses a stable **kebab-case** id (same string as the level-3 heading and the `RuleHeader` `id`), for example `use-http-methods`.
+Cross-links in docs use the shorthand `[#use-http-methods]`, which resolves to the rule’s canonical URL.
 
 To validate uniqueness and generate the rule index:
 

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "classify-retryability",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#classify-retryability",
+    "url": "/docs/rules/http-semantics#classify-retryability"
+  },
+  "currentTitle": "Classify Error Retryability",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

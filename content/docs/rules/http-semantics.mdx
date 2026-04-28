@@ -44,11 +44,11 @@ Use this section to answer:
 
 | If you are implementing... | Start here |
 | --- | --- |
-| A standard read or write endpoint | [#use-http-methods-correctly], [#honor-method-properties], and [#use-standard-http-status-codes] |
-| A shared error contract | [#define-a-standard-error-contract-in-openapi-problem-details] |
-| A long-running operation | [#support-long-running-operations] |
-| Retry-safe writes | [#prefer-idempotent-post-patch-where-possible], [#support-idempotency-key], and [#use-optimistic-locking-for-concurrent-writes] |
-| Retry guidance for clients | [#use-429-with-rate-limit-headers] and [#classify-error-retryability] |
+| A standard read or write endpoint | [#use-http-methods], [#honor-method-semantics], and [#use-standard-status-codes] |
+| A shared error contract | [#use-problem-details] |
+| A long-running operation | [#support-async-operations] |
+| Retry-safe writes | [#prefer-idempotent-writes], [#support-idempotency-key], and [#use-optimistic-locking] |
+| Retry guidance for clients | [#use-429-rate-limits] and [#classify-retryability] |
 
 ---
 
@@ -62,9 +62,9 @@ Use this section to answer:
 | `PATCH` | Partial update | Document content type and null semantics |
 | `DELETE` | Hard delete or documented soft delete | Be explicit about the response behavior |
 
-### use-standard-http-headers
+### use-standard-headers
 <RuleHeader
-  id="use-standard-http-headers"
+  id="use-standard-headers"
   level="MUST"
   title="Use Standard HTTP Headers"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]}
@@ -86,9 +86,9 @@ If-None-Match: "v42"`,
 - You MAY use `Prefer` + `Preference-Applied` when clients need to express processing preferences.
 - APIs SHOULD support `Accept-Encoding` for response compression (gzip, br) and return `Content-Encoding` when compression is applied. Document whether compression is supported.
 
-### use-http-methods-correctly
+### use-http-methods
 <RuleHeader
-  id="use-http-methods-correctly"
+  id="use-http-methods"
   level="MUST"
   title="Use HTTP Methods Correctly"
   externalDocs={[{ label: "RFC 9110 — HTTP Semantics", href: "https://www.rfc-editor.org/rfc/rfc9110" }, { label: "RFC 7231 — HTTP/1.1 Semantics and Content (historic)", href: "https://www.rfc-editor.org/rfc/rfc7231" }]}
@@ -130,7 +130,7 @@ PUT replaces the entire resource representation. Missing fields are reset, not l
 #### PATCH
 
 - You MUST document the patch format: a resource-specific patch schema, JSON Merge Patch, or JSON Patch.
-- You MUST define null semantics — does sending `null` clear the field, or is it invalid? See [#specify-patch-content-type-and-null-semantics].
+- You MUST define null semantics — does sending `null` clear the field, or is it invalid? See [#define-patch-semantics].
 - ✅ `PATCH /accounts/{accountId}` with `{ "status": "DISABLED" }`
 - ✅ `PATCH /accounts/{accountId}` with JSON Patch ops (if documented)
 
@@ -139,12 +139,12 @@ PUT replaces the entire resource representation. Missing fields are reset, not l
 DELETE removes a resource or performs a documented soft-delete.
 
 - ✅ `DELETE /accounts/{accountId}` → `204 No Content` for hard delete
-- ✅ `DELETE /accounts/{accountId}` → documented soft-delete response (see [#define-soft-delete-behavior])
+- ✅ `DELETE /accounts/{accountId}` → documented soft-delete response (see [#define-soft-delete])
 - ❌ `GET /accounts/{accountId}/delete`
 
-### honor-method-properties
+### honor-method-semantics
 <RuleHeader
-  id="honor-method-properties"
+  id="honor-method-semantics"
   level="MUST"
   title="Honor Method Properties"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]}
@@ -167,16 +167,16 @@ DELETE /accounts/{id}`,
 - ✅ `DELETE /accounts/{id}` where a repeat returns 404/410 or 204 (idempotent)
 - ✅ `PUT /accounts/{id}` full replacement (idempotent)
 - ❌ `POST /accounts/{id}/disable` where a repeat creates multiple side effects (not idempotent)
-- ✅ `GET /accounts/{id}` cache-validated via `ETag`/`If-None-Match` (see [#use-optimistic-locking-for-concurrent-writes])
+- ✅ `GET /accounts/{id}` cache-validated via `ETag`/`If-None-Match` (see [#use-optimistic-locking])
 
-Design operations to be idempotent where feasible, especially if clients might retry (see [#prefer-idempotent-post-patch-where-possible], [#support-idempotency-key]). If an operation is genuinely not idempotent, document the retry behavior.
+Design operations to be idempotent where feasible, especially if clients might retry (see [#prefer-idempotent-writes], [#support-idempotency-key]). If an operation is genuinely not idempotent, document the retry behavior.
 
 ---
 
 ## HTTP Status Codes & Error Handling
-### use-standard-http-status-codes
+### use-standard-status-codes
 <RuleHeader
-  id="use-standard-http-status-codes"
+  id="use-standard-status-codes"
   level="MUST"
   title="Use Standard HTTP Status Codes"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml", label: "IANA HTTP Status Code Registry" }]}
@@ -197,14 +197,14 @@ Content-Type: application/json`,
 
 - `200`: successful request with response body
 - `201`: resource created successfully (include `Location` header)
-- `202`: request accepted for async processing (see [#support-long-running-operations])
+- `202`: request accepted for async processing (see [#support-async-operations])
 - `204`: successful operation with no response body (DELETE, some PATCHs)
 - `301`/`308`: permanent redirects for canonical URL normalization
 - `400`: validation errors, malformed requests
 - `401`: missing/invalid authentication
 - `403`: authenticated but not authorized (when revealing existence is acceptable)
 - `404`: resource not found (or "not authorized to know it exists")
-- `406`: not acceptable — unsupported `Accept` header (see [#return-406-for-unsupported-accept-headers])
+- `406`: not acceptable — unsupported `Accept` header (see [#use-406-for-accept])
 - `409`: conflicts (state transitions, uniqueness constraints)
 - `412`: conditional request / optimistic locking failures (ETag/If-Match)
 - `429`: rate limiting
@@ -217,9 +217,9 @@ Content-Type: application/json`,
 - Prefer secure defaults — return `404` rather than `403` when resource existence itself is sensitive.
 - Be consistent: do not return different codes for the same condition across endpoints.
 
-### define-a-standard-error-contract-in-openapi-problem-details
+### use-problem-details
 <RuleHeader
-  id="define-a-standard-error-contract-in-openapi-problem-details"
+  id="use-problem-details"
   level="MUST"
   title="Define a Standard Error Contract in OpenAPI (Problem Details)"
   externalDocs={[{ label: "RFC 9457 — Problem Details for HTTP APIs", href: "https://www.rfc-editor.org/rfc/rfc9457" }, { label: "OpenAPI Specification", href: "https://spec.openapis.org/oas/latest.html" }]}
@@ -252,7 +252,7 @@ At minimum, every operation should make these things obvious to callers:
 - Error responses MUST use Problem Details (RFC 9457) with media type `Content-Type: application/problem+json`.
 - For each operation, define the common success responses (2xx) and the expected error responses (400/401/403/404/409/412/429/5xx) where applicable. Use OpenAPI `default` only for truly unexpected server errors.
 - Required fields are `type`, `title`, `status`, `detail`, and `instance`.
-- Recommended extensions are `errors[]` for field-level validation, `code` for stable application-specific identifiers, and `correlationId` for support and debugging (see [#return-a-request-id-on-every-response]).
+- Recommended extensions are `errors[]` for field-level validation, `code` for stable application-specific identifiers, and `correlationId` for support and debugging (see [#return-request-ids]).
 - If application-specific error codes are used, they MUST be documented, stable, and MUST NOT replace HTTP status codes.
 - Reuse one shared `ProblemDetails` schema across SailPoint APIs so clients can share error handling logic.
 - Include at least one accurate error example per operation. Never include secrets or real customer data.
@@ -332,9 +332,9 @@ components:
           description: Field-level validation errors.
 ```
 
-### use-207-or-200-for-per-item-batch-results
+### use-per-item-batch-status
 <RuleHeader
-  id="use-207-or-200-for-per-item-batch-results"
+  id="use-per-item-batch-status"
   level="SHOULD"
   title="Use 207 (or 200) for Per-Item Batch Results"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc4918", label: "RFC 4918 — WebDAV (207 Multi-Status)" }]}
@@ -354,9 +354,9 @@ components:
 - For batch or bulk operations, you SHOULD return per-item results with status and error details for each item.
 - Use `207 Multi-Status` for mixed outcomes. If your platform does not support `207` well, `200 OK` is acceptable as long as the body clearly communicates per-item outcomes.
 
-### use-429-with-rate-limit-headers
+### use-429-rate-limits
 <RuleHeader
-  id="use-429-with-rate-limit-headers"
+  id="use-429-rate-limits"
   level="MUST"
   title="Use 429 with Rate-Limit Headers"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc6585", label: "RFC 6585 — Additional HTTP Status Codes" }, { href: "https://www.rfc-editor.org/rfc/rfc9235", label: "RFC 9235 — RateLimit Fields" }]}
@@ -373,11 +373,11 @@ Content-Type: application/problem+json`,
 - You MUST return `429 Too Many Requests` when rate limiting and include `Retry-After` when you can provide a meaningful retry delay.
 - You SHOULD expose rate limit metadata using the standard `RateLimit-*` header fields from RFC 9235.
 
-See [#document-and-enforce-rate-limits] for rate limit documentation requirements.
+See [#enforce-rate-limits] for rate limit documentation requirements.
 
-### support-long-running-operations
+### support-async-operations
 <RuleHeader
-  id="support-long-running-operations"
+  id="support-async-operations"
   level="MUST"
   title="Support Long-Running Operations"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-15.3.3", label: "RFC 9110 §15.3.3 — 202 Accepted" }, { href: "https://google.aip.dev/151", label: "Google AIP-151: Long-Running Operations" }, { href: "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#asynchronous-operations", label: "Azure: Asynchronous Operations" }]}
@@ -425,7 +425,7 @@ The status resource MUST include at minimum:
 - `completedAt`: when the job finished (nullable)
 - `progress`: optional completion percentage (0-100)
 - `result`: outcome or link to created resource (nullable)
-- `error`: Problem Details on failure (nullable, see [#define-a-standard-error-contract-in-openapi-problem-details])
+- `error`: Problem Details on failure (nullable, see [#use-problem-details])
 
 #### Initiation
 
@@ -495,13 +495,13 @@ GET /accounts/imports/job-abc-123
 - When the job creates a resource, include a link to that resource in `result`.
 - Servers SHOULD retain completed job status for a documented period (at least 24 hours recommended).
 
-Follow the operationId convention: `create<Thing>Job`, `get<Thing>Job`, `list<Thing>Jobs` (see [#provide-a-camelcase-operationid-for-every-operation]).
+Follow the operationId convention: `create<Thing>Job`, `get<Thing>Job`, `list<Thing>Jobs` (see [#use-camelcase-operationids]).
 
-**Related rules**: [#define-a-standard-error-contract-in-openapi-problem-details] error shape, [#use-429-with-rate-limit-headers] Retry-After, [#prefer-idempotent-post-patch-where-possible] idempotent POST for job creation.
+**Related rules**: [#use-problem-details] error shape, [#use-429-rate-limits] Retry-After, [#prefer-idempotent-writes] idempotent POST for job creation.
 
-### never-expose-stack-traces-or-internal-details
+### no-internal-errors
 <RuleHeader
-  id="never-expose-stack-traces-or-internal-details"
+  id="no-internal-errors"
   level="MUST"
   title="Never Expose Stack Traces or Internal Details"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9457", label: "RFC 9457 — Problem Details" }]}
@@ -521,8 +521,8 @@ Follow the operationId convention: `create<Thing>Job`, `get<Thing>Job`, `list<Th
 />
 
 - API error responses MUST never include stack traces, exception class names, internal hostnames, file paths, database keys, raw upstream service messages, SQL queries, secrets, tokens, or cryptographic material.
-- MUST log detailed diagnostics server-side and return sanitized Problem Details to clients (see [#define-a-standard-error-contract-in-openapi-problem-details]).
-- MUST include a stable `correlationId` so the developer can hand it to support (see [#return-a-request-id-on-every-response] for the `X-Request-Id` header).
+- MUST log detailed diagnostics server-side and return sanitized Problem Details to clients (see [#use-problem-details]).
+- MUST include a stable `correlationId` so the developer can hand it to support (see [#return-request-ids] for the `X-Request-Id` header).
 
 ```json
 {
@@ -538,9 +538,9 @@ Follow the operationId convention: `create<Thing>Job`, `get<Thing>Job`, `list<Th
 ---
 
 ## Idempotency & Retries
-### prefer-idempotent-post-patch-where-possible
+### prefer-idempotent-writes
 <RuleHeader
-  id="prefer-idempotent-post-patch-where-possible"
+  id="prefer-idempotent-writes"
   level="SHOULD"
   title="Prefer Idempotent POST/PATCH Where Possible"
   externalDocs={[{ href: "https://stripe.com/docs/idempotency", label: "Stripe API: Idempotency" }]}
@@ -561,7 +561,7 @@ Content-Type: application/json
 - Recommended mechanisms:
   - Optimistic locking for updates (`ETag` + `If-Match`, preferred for PATCH/PUT)
   - `Idempotency-Key` header for side-effecting requests (see [#support-idempotency-key])
-  - Secondary/external keys for create operations (see [#use-secondary-keys-for-idempotent-post])
+  - Secondary/external keys for create operations (see [#use-secondary-idempotency-keys])
 - Prioritize idempotency for:
   - Create endpoints (`POST /resources`) where duplicates are harmful
   - Command endpoints that trigger work (e.g., `POST /imports`, `POST /exports`)
@@ -608,9 +608,9 @@ Content-Type: application/json
 
 `Idempotency-Key` does not replace optimistic locking — use `If-Match` for updates to existing resources. Document whether the key is honored on `429`/`5xx` retries.
 
-### use-secondary-keys-for-idempotent-post
+### use-secondary-idempotency-keys
 <RuleHeader
-  id="use-secondary-keys-for-idempotent-post"
+  id="use-secondary-idempotency-keys"
   level="MAY"
   title="Use Secondary Keys for Idempotent POST"
   externalDocs={[{ href: "https://stripe.com/docs/idempotency", label: "Stripe API: Idempotency" }]}
@@ -639,9 +639,9 @@ Content-Type: application/json
 
 Best for resources with a stable external identifier (imports, integrations, ID mappings). Prefer opaque server IDs as the primary identifier in URLs; secondary keys are for idempotency and lookup.
 
-### provide-accurate-response-examples
+### require-accurate-examples
 <RuleHeader
-  id="provide-accurate-response-examples"
+  id="require-accurate-examples"
   level="MUST"
   title="Provide Accurate Response Examples"
   externalDocs={[{ label: "OpenAPI: Example Object", href: "https://spec.openapis.org/oas/latest.html#example-object" }]}
@@ -669,7 +669,7 @@ If a caller cannot tell how the endpoint behaves from the examples, the examples
 - Examples MUST be specific to the endpoint's behavior — avoid generic examples.
 - Never include secrets, real customer data, or environment-specific identifiers.
 - In OpenAPI, use `content.application/json.example` for a single canonical example, or `content.application/json.examples` for multiple named examples.
-- Success examples for list endpoints MUST use the same JSON object envelope as production (for example `items` plus pagination metadata), not a bare top-level array, unless the operation is explicitly grandfathered and called out in the spec (see [#return-top-level-json-objects], [#support-offset-pagination-for-list-endpoints]).
+- Success examples for list endpoints MUST use the same JSON object envelope as production (for example `items` plus pagination metadata), not a bare top-level array, unless the operation is explicitly grandfathered and called out in the spec (see [#use-object-responses], [#support-offset-pagination]).
 
 #### Examples
 
@@ -724,9 +724,9 @@ GET /accounts?limit=2&offset=0
 
 ## Caching & Concurrency
 
-### document-caching-behavior
+### document-caching
 <RuleHeader
-  id="document-caching-behavior"
+  id="document-caching"
   level="SHOULD"
   title="Document Caching Behavior"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9111", label: "RFC 9111 — HTTP Caching" }, { href: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching", label: "MDN: HTTP Caching" }]}
@@ -786,11 +786,11 @@ For each endpoint, document:
 
 If caching behavior is not documented, clients SHOULD assume `no-store`.
 
-**Related rules**: [#use-standard-http-headers] standard headers (ETag), [#use-optimistic-locking-for-concurrent-writes] optimistic locking (ETag for writes).
+**Related rules**: [#use-standard-headers] standard headers (ETag), [#use-optimistic-locking] optimistic locking (ETag for writes).
 
-### document-request-and-response-size-limits
+### document-size-limits
 <RuleHeader
-  id="document-request-and-response-size-limits"
+  id="document-size-limits"
   level="MUST"
   title="Document Request and Response Size Limits"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-15.5.14", label: "RFC 9110 §15.5.14 — 413 Content Too Large" }]}
@@ -829,21 +829,21 @@ APIs MUST document request and response size limits for every endpoint or endpoi
 
 #### Response size limits
 
-- List endpoints MUST enforce a maximum page size via the `limit` parameter (see [#support-offset-pagination-for-list-endpoints]) and document the maximum allowed value.
-- If a response could exceed practical size limits even with pagination, document the constraint and recommend field filtering (see [#support-partial-responses-fields]) or async export (see [#support-long-running-operations]).
+- List endpoints MUST enforce a maximum page size via the `limit` parameter (see [#support-offset-pagination]) and document the maximum allowed value.
+- If a response could exceed practical size limits even with pagination, document the constraint and recommend field filtering (see [#support-fields]) or async export (see [#support-async-operations]).
 
 #### Large payload alternatives
 
-- **Async import/export**: accept a reference to a file and process it asynchronously (see [#support-long-running-operations]).
+- **Async import/export**: accept a reference to a file and process it asynchronously (see [#support-async-operations]).
 - **Streaming**: consider `Transfer-Encoding: chunked` for large result sets.
 
-Document maximum sizes in the OpenAPI operation description and in the API user manual (see [#provide-an-api-user-manual]).
+Document maximum sizes in the OpenAPI operation description and in the API user manual (see [#document-user-manual]).
 
-**Related rules**: [#support-offset-pagination-for-list-endpoints] pagination limits, [#support-long-running-operations] async for large operations, [#define-a-standard-error-contract-in-openapi-problem-details] error response format.
+**Related rules**: [#support-offset-pagination] pagination limits, [#support-async-operations] async for large operations, [#use-problem-details] error response format.
 
-### use-optimistic-locking-for-concurrent-writes
+### use-optimistic-locking
 <RuleHeader
-  id="use-optimistic-locking-for-concurrent-writes"
+  id="use-optimistic-locking"
   level="SHOULD"
   title="Use Optimistic Locking for Concurrent Writes"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-13.1", label: "RFC 9110 §13.1 — Conditional Requests" }, { href: "https://google.aip.dev/154", label: "Google AIP-154: Resource Freshness" }]}
@@ -960,15 +960,15 @@ When you already track a reliable `updatedAt` timestamp and want a simpler heade
 
 Embedding an `etag` or `version` field inside the resource body (rather than in the HTTP header) can be convenient for bulk or search responses, but it mixes HTTP concerns into your domain object. If you do it, mark the field read-only, document the semantics clearly, and keep the authoritative version in the `ETag` header.
 
-**Related rules**: [#use-standard-http-headers] standard headers, [#use-standard-http-status-codes] status codes (412), [#define-a-standard-error-contract-in-openapi-problem-details] error format, [#document-caching-behavior] caching (ETag for reads).
+**Related rules**: [#use-standard-headers] standard headers, [#use-standard-status-codes] status codes (412), [#use-problem-details] error format, [#document-caching] caching (ETag for reads).
 
 ---
 
 ## Content Negotiation
 
-### return-406-for-unsupported-accept-headers
+### use-406-for-accept
 <RuleHeader
-  id="return-406-for-unsupported-accept-headers"
+  id="use-406-for-accept"
   level="MUST"
   title="Return 406 for Unsupported Accept Headers"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-15.5.7", label: "RFC 9110 §15.5.7 — 406 Not Acceptable" }]}
@@ -984,7 +984,7 @@ Content-Type: application/problem+json`,
   ]}
 />
 
-- When a client sends an `Accept` header the endpoint cannot satisfy, the API MUST return `406 Not Acceptable` with a Problem Details body (see [#define-a-standard-error-contract-in-openapi-problem-details]) listing the supported media types.
+- When a client sends an `Accept` header the endpoint cannot satisfy, the API MUST return `406 Not Acceptable` with a Problem Details body (see [#use-problem-details]) listing the supported media types.
 - If the `Accept` header is absent or `*/*`, the API MUST default to `application/json`.
 - Document supported content types in the response `content` map for each OpenAPI operation.
 
@@ -1008,15 +1008,15 @@ Content-Type: application/problem+json
 }
 ```
 
-**Related rules**: [#use-standard-http-headers] standard headers, [#use-standard-http-status-codes] status codes, [#define-a-standard-error-contract-in-openapi-problem-details] error format, [#use-standard-media-types] standard media types.
+**Related rules**: [#use-standard-headers] standard headers, [#use-standard-status-codes] status codes, [#use-problem-details] error format, [#use-standard-media-types] standard media types.
 
 ---
 
 ## Additional Methods
 
-### document-head-and-options-method-support
+### document-head-options
 <RuleHeader
-  id="document-head-and-options-method-support"
+  id="document-head-options"
   level="SHOULD"
   title="Document HEAD and OPTIONS Method Support"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-9.3.2", label: "RFC 9110 §9.3.2 — HEAD" }, { href: "https://www.rfc-editor.org/rfc/rfc9110#section-9.3.7", label: "RFC 9110 §9.3.7 — OPTIONS" }]}
@@ -1052,7 +1052,7 @@ ETag: "v42"
 
 #### OPTIONS
 
-- Typically handled at the API gateway level for CORS preflight (see [#support-cors-for-browser-clients]).
+- Typically handled at the API gateway level for CORS preflight (see [#support-cors]).
 - If explicitly supported beyond CORS, SHOULD return an `Allow` header listing supported methods:
 
 ```http
@@ -1066,15 +1066,15 @@ Allow: GET, PATCH, DELETE, HEAD, OPTIONS
 
 Most frameworks and gateways handle HEAD and OPTIONS automatically. Only document them in OpenAPI if your API has specific behavior for these methods.
 
-**Related rules**: [#use-http-methods-correctly] HTTP methods, [#honor-method-properties] method properties, [#support-cors-for-browser-clients] CORS.
+**Related rules**: [#use-http-methods] HTTP methods, [#honor-method-semantics] method properties, [#support-cors] CORS.
 
 ---
 
 ## Retry Semantics
 
-### classify-error-retryability
+### classify-retryability
 <RuleHeader
-  id="classify-error-retryability"
+  id="classify-retryability"
   level="MUST"
   title="Classify Error Retryability"
   externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }, { href: "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/", label: "AWS Builders' Library: Timeouts, Retries, and Backoff" }]}
@@ -1104,7 +1104,7 @@ At minimum, tell callers:
 
 | Status | Meaning | Retry guidance |
 |---|---|---|
-| `429` | Too Many Requests | Retry after `Retry-After` header value (see [#use-429-with-rate-limit-headers]) |
+| `429` | Too Many Requests | Retry after `Retry-After` header value (see [#use-429-rate-limits]) |
 | `502` | Bad Gateway | Retry with exponential backoff |
 | `503` | Service Unavailable | Retry after `Retry-After` if present, else exponential backoff |
 | `504` | Gateway Timeout | Retry with exponential backoff |
@@ -1120,7 +1120,7 @@ For all retryable errors, the server SHOULD include a `Retry-After` header when 
 | `403` | Forbidden | Insufficient permissions — retrying won't help |
 | `404` | Not Found | Resource does not exist |
 | `405` | Method Not Allowed | Wrong HTTP method |
-| `406` | Not Acceptable | Unsupported Accept header (see [#return-406-for-unsupported-accept-headers]) |
+| `406` | Not Acceptable | Unsupported Accept header (see [#use-406-for-accept]) |
 | `409` | Conflict | Resolve the conflict, then retry with corrected state |
 | `410` | Gone | Resource permanently removed |
 | `412` | Precondition Failed | Re-fetch resource, then retry with updated ETag |
@@ -1135,7 +1135,7 @@ Note: `409` and `412` are "retry after corrective action" — the client can ret
 
 #### Application-specific error codes
 
-- If your API defines application-specific error codes (see [#define-a-standard-error-contract-in-openapi-problem-details]), each code MUST document whether the error is retryable.
+- If your API defines application-specific error codes (see [#use-problem-details]), each code MUST document whether the error is retryable.
 - Consider adding a `retryable` boolean extension to Problem Details responses:
 
 ```json
@@ -1175,4 +1175,4 @@ for attempt in 1..max_retries:
 
 Use **full jitter** (`random(0, delay)`) rather than no jitter — synchronized retries produce thundering-herd outages.
 
-**Related rules**: [#use-standard-http-status-codes] status codes, [#define-a-standard-error-contract-in-openapi-problem-details] error format, [#use-429-with-rate-limit-headers] rate limit headers, [#prefer-idempotent-post-patch-where-possible] idempotent retries.
+**Related rules**: [#use-standard-status-codes] status codes, [#use-problem-details] error format, [#use-429-rate-limits] rate limit headers, [#prefer-idempotent-writes] idempotent retries.

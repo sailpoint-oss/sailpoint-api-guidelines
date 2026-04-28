@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "support-cors",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#support-cors",
+    "url": "/docs/rules/security-and-authorization#support-cors"
+  },
+  "currentTitle": "Support CORS for Browser Clients",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

@@ -55,7 +55,7 @@ async function exists(p: string): Promise<boolean> {
 }
 
 function guessDocPathFromUrl(url: string): string | null {
-  // url example: /docs/rules/http-semantics#define-a-standard-error-contract-in-openapi-problem-details
+  // url example: /docs/rules/http-semantics#use-problem-details
   const [pathPart] = url.split("#");
   if (!pathPart) return null;
   if (!pathPart.startsWith("/docs/")) return null;

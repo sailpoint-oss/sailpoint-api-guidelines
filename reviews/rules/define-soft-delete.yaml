@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "define-soft-delete",
+  "source": {
+    "doc": "content/docs/rules/resource-modeling-and-urls.mdx",
+    "anchor": "#define-soft-delete",
+    "url": "/docs/rules/resource-modeling-and-urls#define-soft-delete"
+  },
+  "currentTitle": "Define Soft Delete Behavior",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

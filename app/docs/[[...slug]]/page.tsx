@@ -5,6 +5,7 @@ import {
   DocsTitle,
 } from "fumadocs-ui/layouts/docs/page";
 import { createRelativeLink } from "fumadocs-ui/mdx";
+import { getRuleIdFromHash } from "lib/rule-links";
 import { getPageImage, source } from "lib/source";
 import { getMDXComponents } from "mdx-components";
 import type { Metadata } from "next";
@@ -19,9 +20,9 @@ const ruleUrlById = new Map(
 
 function resolveRuleHref(href?: string) {
   if (!href) return href;
-  const match = href.match(/^#([a-z][a-z0-9-]*)$/);
-  if (!match) return href;
-  return ruleUrlById.get(match[1]) ?? href;
+  const ruleId = getRuleIdFromHash(href);
+  if (!ruleId) return href;
+  return ruleUrlById.get(ruleId) ?? href;
 }
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
@@ -51,7 +52,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
       <DocsBody>
         <MDX
           components={getMDXComponents({
-            // Support both relative doc links and stable rule-id links like [#support-offset-pagination-for-list-endpoints].
+            // Support both relative doc links and stable rule-id links like [#support-offset-pagination].
             a: RuleAwareLink,
           })}
         />
