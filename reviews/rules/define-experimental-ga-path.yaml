@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "define-experimental-ga-path",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#define-experimental-ga-path",
+    "url": "/docs/rules/lifecycle-and-compatibility#define-experimental-ga-path"
+  },
+  "currentTitle": "Define the Experimental Path to GA",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

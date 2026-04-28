@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "protect-openapi-sdk-contracts",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#protect-openapi-sdk-contracts",
+    "url": "/docs/rules/lifecycle-and-compatibility#protect-openapi-sdk-contracts"
+  },
+  "currentTitle": "Protect OpenAPI and SDK Contracts",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

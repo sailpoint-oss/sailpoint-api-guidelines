@@ -71,7 +71,7 @@ Use this section to answer:
 <RuleHeader
   id="meet-doc-quality"
   level="MUST"
-  title="Publish an OpenAPI Specification (Meet Doc Quality Levels)"
+  title="Meet Documentation Quality Levels"
   externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
   examples={[
     {
@@ -92,25 +92,42 @@ Use this section to answer:
   ]}
 />
 
-- All APIs MUST publish an OpenAPI specification accessible to intended consumers (public docs for public APIs, internal portal for internal-only).
-- The published spec MUST be versioned and aligned with the documented API version (see [#use-calendar-versioning]).
-- The spec SHOULD be the source for generated docs, SDKs, and contract validation where feasible.
-- While [#require-openapi] requires that an OAS exists and is valid, this rule defines the quality bar.
+All APIs MUST meet the documentation quality level required for their audience. While [#require-openapi] requires that an OpenAPI specification exists and is valid, this rule defines the quality bar for published operations.
 
 #### Documentation quality levels
 
 - **Level 0 (non-compliant)**: paths exist but missing schemas, responses, and security details.
-- **Level 1 (minimum acceptable)**:
-  - Every operation has `summary` + `description`.
-  - Every operation defines success responses and expected error responses (see [#use-problem-details]).
-  - Request/response schemas are defined (no `any`/untyped objects).
-  - `security` is declared with required scopes (see [#use-oauth2], [#define-scopes]).
-  - Every operation includes realistic success and error examples as required by [#require-examples].
-- **Level 2 (required for external APIs; strongly recommended for internal)**:
-  - Consistent tagging and `operationId` conventions.
-  - Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#use-standard-query-params]).
-  - Deprecations are marked with `deprecated: true` and migration guidance (see [#mark-deprecated]).
-  - Changelog/revision info is maintained for contract changes (see [#use-calendar-versioning]).
+
+### meet-doc-quality-level-1
+<RuleHeader
+  id="meet-doc-quality-level-1"
+  level="MUST"
+  title="Meet Documentation Quality Level 1"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+/>
+
+Level 1 is the minimum acceptable quality bar:
+
+- Every operation has `summary` + `description`.
+- Every operation defines success responses and expected error responses (see [#use-problem-details]).
+- Request/response schemas are defined (no `any`/untyped objects).
+- `security` is declared with required scopes (see [#use-oauth2], [#define-scopes]).
+- Every operation includes realistic success and error examples as required by [#require-examples].
+
+### meet-doc-quality-level-2
+<RuleHeader
+  id="meet-doc-quality-level-2"
+  level="MUST"
+  title="Meet Documentation Quality Level 2"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+/>
+
+Level 2 is required for external APIs and strongly recommended for internal APIs:
+
+- Consistent tagging and `operationId` conventions.
+- Pagination/filtering/sorting parameters are documented where applicable, including supported field lists (see [#use-standard-query-params]).
+- Deprecations are marked with `deprecated: true` and migration guidance (see [#mark-deprecated]).
+- Changelog/revision info is maintained for contract changes (see [#use-calendar-versioning]).
 
 Teams MUST have a checklist or review gate so new and changed endpoints meet the required level.
 
@@ -130,10 +147,45 @@ X-Request-Id: 3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b`,
   ]}
 />
 
-- The server MUST generate a unique `X-Request-Id` header (UUID v4) on every response — including `4xx`, `5xx`, and `429`.
-- Error response bodies MUST include the same value as `correlationId` (see [#use-problem-details]).
-- If the client sends an `X-Request-Id` header, the server SHOULD echo it back (after validation) rather than generating a new one.
-- For distributed tracing, services SHOULD support W3C Trace Context (`traceparent`/`tracestate` headers).
+- The server MUST generate a unique `X-Request-Id` header (UUID v4) on every response, including `4xx`, `5xx`, and `429`.
+- If the client sends an `X-Request-Id` header, the server SHOULD echo it back after validation rather than generating a new one.
+
+### align-error-correlation-id
+<RuleHeader
+  id="align-error-correlation-id"
+  level="MUST"
+  title="Align Error correlationId with X-Request-Id"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9457", label: "RFC 9457 — Problem Details" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "type": "https://developer.sailpoint.com/problems/validation-error",
+  "title": "Validation error",
+  "status": 400,
+  "correlationId": "3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b"
+}`,
+    },
+  ]}
+/>
+
+Error response bodies MUST include the same request identifier as `correlationId` (see [#use-problem-details]).
+
+### support-trace-context
+<RuleHeader
+  id="support-trace-context"
+  level="SHOULD"
+  title="Support W3C Trace Context"
+  externalDocs={[{ href: "https://www.w3.org/TR/trace-context/", label: "W3C Trace Context" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-00`,
+    },
+  ]}
+/>
+
+For distributed tracing, services SHOULD support W3C Trace Context (`traceparent`/`tracestate` headers).
 
 Error response (header matches body):
 
@@ -192,14 +244,76 @@ components:
   ]}
 />
 
-- APIs with meaningful state transitions SHOULD offer webhook notifications.
+APIs with meaningful state transitions SHOULD offer webhook notifications. Webhook design has three separate contracts: event payloads, delivery security/retry behavior, and subscription management.
+
+### define-webhook-event-envelope
+<RuleHeader
+  id="define-webhook-event-envelope"
+  level="MUST"
+  title="Define a Webhook Event Envelope"
+  externalDocs={[{ href: "https://docs.github.com/en/webhooks", label: "GitHub: Webhooks" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "id": "evt-3f7c2b7f-1b4c-4f0e-9b8e-0b6a0a0b0a0b",
+  "type": "account.created",
+  "timestamp": "2026-03-05T10:00:00Z",
+  "tenantId": "tenant-abc",
+  "data": { "id": "acct-123" }
+}`,
+    },
+  ]}
+/>
+
 - Use one standard event envelope shape across the API.
 - Every event MUST include `id`, `type`, `timestamp`, `data`, and `tenantId`.
+- The event `id` MUST be stable across retries so consumers can deduplicate.
+
+### sign-webhook-deliveries
+<RuleHeader
+  id="sign-webhook-deliveries"
+  level="MUST"
+  title="Sign Webhook Deliveries"
+  externalDocs={[{ href: "https://docs.stripe.com/webhooks", label: "Stripe: Webhooks" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `POST /webhook-receiver
+X-Webhook-Signature: sha256=...`,
+    },
+  ]}
+/>
+
+Include an `X-Webhook-Signature` header with an HMAC-SHA256 signature and document how consumers verify it.
+
+### document-webhook-delivery-retries
+<RuleHeader
+  id="document-webhook-delivery-retries"
+  level="MUST"
+  title="Document Webhook Delivery Retries"
+  externalDocs={[{ href: "https://docs.stripe.com/webhooks", label: "Stripe: Webhooks" }]}
+/>
+
 - Document delivery guarantees explicitly. At-least-once delivery is recommended.
 - Failed deliveries MUST be retried with exponential backoff, and docs MUST explain the retry behavior.
-- Include an `X-Webhook-Signature` header with an HMAC-SHA256 signature and document how consumers verify it.
-- The event `id` MUST be stable across retries so consumers can deduplicate.
-- Provide a CRUD API for webhook subscriptions with filtering by event type.
+
+### provide-webhook-subscriptions
+<RuleHeader
+  id="provide-webhook-subscriptions"
+  level="SHOULD"
+  title="Provide Webhook Subscription APIs"
+  externalDocs={[{ href: "https://docs.github.com/en/webhooks", label: "GitHub: Webhooks" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `POST /webhook-subscriptions
+GET /webhook-subscriptions/{subscriptionId}`,
+    },
+  ]}
+/>
+
+Provide a CRUD API for webhook subscriptions with filtering by event type.
 
 ```json
 {
@@ -238,12 +352,39 @@ components:
   ]}
 />
 
-- APIs SHOULD provide standardized health check endpoints for infrastructure probes and operational monitoring.
+APIs SHOULD provide standardized health check endpoints for infrastructure probes and operational monitoring.
 
-#### Standard endpoints
+### provide-readiness-check
+<RuleHeader
+  id="provide-readiness-check"
+  level="SHOULD"
+  title="Provide a Readiness Check"
+  externalDocs={[{ href: "https://learn.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring", label: "Azure: Health Endpoint Monitoring Pattern" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /health/ready`,
+    },
+  ]}
+/>
 
-- `/health` or `/health/ready` — **Readiness**: returns `200` when all critical dependencies are reachable and initialized; returns `503` when alive but not ready.
-- `/health/live` — **Liveness**: returns `200` if the process can respond. This check SHOULD be lightweight — no dependency checks, no database queries.
+`/health` or `/health/ready` returns `200` when all critical dependencies are reachable and initialized. It returns `503` when the service is alive but not ready.
+
+### provide-liveness-check
+<RuleHeader
+  id="provide-liveness-check"
+  level="SHOULD"
+  title="Provide a Liveness Check"
+  externalDocs={[{ href: "https://learn.microsoft.com/en-us/azure/architecture/patterns/health-endpoint-monitoring", label: "Azure: Health Endpoint Monitoring Pattern" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /health/live`,
+    },
+  ]}
+/>
+
+`/health/live` returns `200` if the process can respond. This check SHOULD be lightweight: no dependency checks and no database queries.
 
 #### Response shape
 

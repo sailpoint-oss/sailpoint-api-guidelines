@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "document-operation-responses",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#document-operation-responses",
+    "url": "/docs/rules/http-semantics#document-operation-responses"
+  },
+  "currentTitle": "Document Success and Error Responses",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

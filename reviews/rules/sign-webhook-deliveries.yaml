@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "sign-webhook-deliveries",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#sign-webhook-deliveries",
+    "url": "/docs/rules/operations-and-quality#sign-webhook-deliveries"
+  },
+  "currentTitle": "Sign Webhook Deliveries",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

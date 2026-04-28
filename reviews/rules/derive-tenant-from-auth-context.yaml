@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "derive-tenant-from-auth-context",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#derive-tenant-from-auth-context",
+    "url": "/docs/rules/security-and-authorization#derive-tenant-from-auth-context"
+  },
+  "currentTitle": "Derive Tenant Scope from Auth Context",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

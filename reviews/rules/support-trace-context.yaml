@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "support-trace-context",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#support-trace-context",
+    "url": "/docs/rules/operations-and-quality#support-trace-context"
+  },
+  "currentTitle": "Support W3C Trace Context",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

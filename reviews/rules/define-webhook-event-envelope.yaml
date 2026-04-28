@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "define-webhook-event-envelope",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#define-webhook-event-envelope",
+    "url": "/docs/rules/operations-and-quality#define-webhook-event-envelope"
+  },
+  "currentTitle": "Define a Webhook Event Envelope",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

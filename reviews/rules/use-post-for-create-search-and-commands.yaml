@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-post-for-create-search-and-commands",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#use-post-for-create-search-and-commands",
+    "url": "/docs/rules/http-semantics#use-post-for-create-search-and-commands"
+  },
+  "currentTitle": "Use POST for Create, Search, and Command Requests",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

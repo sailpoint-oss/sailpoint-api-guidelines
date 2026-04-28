@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "isolate-experimental-contracts",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#isolate-experimental-contracts",
+    "url": "/docs/rules/lifecycle-and-compatibility#isolate-experimental-contracts"
+  },
+  "currentTitle": "Isolate Experimental Contract Elements",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

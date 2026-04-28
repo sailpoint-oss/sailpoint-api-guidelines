@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "classify-compatibility-by-layer",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#classify-compatibility-by-layer",
+    "url": "/docs/rules/lifecycle-and-compatibility#classify-compatibility-by-layer"
+  },
+  "currentTitle": "Classify Compatibility by Contract Layer",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

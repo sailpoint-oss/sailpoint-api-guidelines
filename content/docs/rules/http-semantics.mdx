@@ -78,13 +78,34 @@ If-None-Match: "v42"`,
   ]}
 />
 
-- You MUST use standard HTTP headers when your API implements a behavior they cover, and document them in your OpenAPI spec.
-- You MUST use `Accept` and `Content-Type` for content negotiation.
-- You MUST use `Retry-After` with `429` responses when you can provide meaningful retry guidance.
-- You MUST use `ETag` + `If-Match` for optimistic locking (returning `412` on precondition failure).
-- You SHOULD consider `ETag` + `If-None-Match` for cache validation (with `304 Not Modified`).
-- You MAY use `Prefer` + `Preference-Applied` when clients need to express processing preferences.
-- APIs SHOULD support `Accept-Encoding` for response compression (gzip, br) and return `Content-Encoding` when compression is applied. Document whether compression is supported.
+- APIs MUST use standard HTTP headers when a standard header covers the behavior. Do not create custom headers for content negotiation, preconditions, retry guidance, caching, compression, or request preferences when HTTP already defines one.
+- APIs MUST document request and response headers in OpenAPI when clients need to send, read, or branch on them.
+- Content negotiation uses `Accept` and `Content-Type` (see [#use-406-for-accept] and [#use-standard-media-types]).
+- Retry guidance uses `Retry-After` (see [#use-429-rate-limits] and [#classify-retryability]).
+- Cache validation and write preconditions use `ETag`, `If-None-Match`, and `If-Match` (see [#document-caching] and [#use-optimistic-locking]).
+- Processing preferences MAY use `Prefer` and `Preference-Applied` when the preference is part of the public contract.
+
+### support-response-compression
+<RuleHeader
+  id="support-response-compression"
+  level="SHOULD"
+  title="Support Standard Response Compression"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /accounts
+Accept-Encoding: gzip, br
+
+HTTP/1.1 200 OK
+Content-Encoding: br`,
+    },
+  ]}
+/>
+
+- APIs SHOULD support `Accept-Encoding` for response compression (`gzip`, `br`) when responses can be large.
+- When compression is applied, responses MUST include the matching `Content-Encoding` header.
+- Document whether compression is supported and whether any response types are excluded.
 
 ### use-http-methods
 <RuleHeader
@@ -101,46 +122,93 @@ GET /accounts?limit=50&offset=0`,
   ]}
 />
 
-Use each method according to its standard semantics as defined in RFC 9110.
+Use each method according to its standard semantics as defined in RFC 9110. The method-specific rules below make the common review checks explicit.
 
-#### GET
+### keep-get-safe
+<RuleHeader
+  id="keep-get-safe"
+  level="MUST"
+  title="Keep GET Safe and Side-Effect Free"
+  externalDocs={[{ label: "RFC 9110 — Safe Methods", href: "https://www.rfc-editor.org/rfc/rfc9110#name-safe-methods" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /accounts/{accountId}
+GET /accounts?limit=50&offset=0`,
+    },
+  ]}
+/>
 
-GET MUST be safe and side-effect free — no mutations, no "mark as viewed" side effects, no triggering background jobs.
+GET MUST be safe and side-effect free: no mutations, no "mark as viewed" side effects, and no triggering background jobs.
 
 - ✅ `GET /accounts/{accountId}`
 - ✅ `GET /accounts?limit=50&offset=0`
 - ❌ `GET /accounts/{accountId}/disable`
 - ❌ `GET /accounts/{accountId}` that updates `lastAccessedAt`
 
-#### POST
+### use-post-for-create-search-and-commands
+<RuleHeader
+  id="use-post-for-create-search-and-commands"
+  level="MUST"
+  title="Use POST for Create, Search, and Command Requests"
+  externalDocs={[{ label: "RFC 9110 — POST", href: "https://www.rfc-editor.org/rfc/rfc9110#name-post" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `POST /accounts
+POST /accounts/search
+POST /accounts/{accountId}/disable-requests`,
+    },
+  ]}
+/>
 
 - For resource creation, a successful `POST /accounts` MUST return `201 Created` with a `Location` header pointing to the new resource.
-- For search operations needing a request body, use `POST /accounts/search` with GET-like semantics — it MUST NOT create a resource and MUST be safe to retry.
+- For search operations needing a request body, use `POST /accounts/search` with GET-like semantics. It MUST NOT create a resource and MUST be safe to retry.
 - For commands modeling a real-world action, create a request resource: `POST /accounts/{accountId}/disable-requests`.
 - ❌ `POST /accounts/{id}` to update (use PATCH or PUT instead)
 - ❌ `POST /accounts/{id}/get` (just use GET)
 
-#### PUT
+### use-put-for-full-replacement
+<RuleHeader
+  id="use-put-for-full-replacement"
+  level="MUST"
+  title="Use PUT for Full Replacement"
+  externalDocs={[{ label: "RFC 9110 — PUT", href: "https://www.rfc-editor.org/rfc/rfc9110#name-put" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `PUT /accounts/{accountId}
+Content-Type: application/json`,
+    },
+  ]}
+/>
 
 PUT replaces the entire resource representation. Missing fields are reset, not left unchanged. Use PATCH for partial updates.
 
 - ✅ `PUT /accounts/{accountId}` with full representation
 - ❌ `PUT /accounts/{accountId}` with only changed fields
 
-#### PATCH
+### use-delete-for-removal
+<RuleHeader
+  id="use-delete-for-removal"
+  level="MUST"
+  title="Use DELETE for Hard or Soft Removal"
+  externalDocs={[{ label: "RFC 9110 — DELETE", href: "https://www.rfc-editor.org/rfc/rfc9110#name-delete" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `DELETE /accounts/{accountId}`,
+    },
+  ]}
+/>
 
-- You MUST document the patch format: a resource-specific patch schema, JSON Merge Patch, or JSON Patch.
-- You MUST define null semantics — does sending `null` clear the field, or is it invalid? See [#define-patch-semantics].
-- ✅ `PATCH /accounts/{accountId}` with `{ "status": "DISABLED" }`
-- ✅ `PATCH /accounts/{accountId}` with JSON Patch ops (if documented)
-
-#### DELETE
-
-DELETE removes a resource or performs a documented soft-delete.
+DELETE removes a resource or performs a documented soft delete.
 
 - ✅ `DELETE /accounts/{accountId}` → `204 No Content` for hard delete
 - ✅ `DELETE /accounts/{accountId}` → documented soft-delete response (see [#define-soft-delete])
 - ❌ `GET /accounts/{accountId}/delete`
+
+For PATCH, see [#define-patch-semantics].
 
 ### honor-method-semantics
 <RuleHeader
@@ -241,23 +309,65 @@ Content-Type: application/json`,
   ]}
 />
 
+Error responses MUST use Problem Details (RFC 9457) with media type `Content-Type: application/problem+json`.
+
+- Required fields are `type`, `title`, `status`, `detail`, and `instance`.
+- Recommended extensions are `errors[]` for field-level validation, `code` for stable application-specific identifiers, and `correlationId` for support and debugging (see [#return-request-ids]).
+- If application-specific error codes are used, they MUST be documented, stable, and MUST NOT replace HTTP status codes.
+
+### document-operation-responses
+<RuleHeader
+  id="document-operation-responses"
+  level="MUST"
+  title="Document Success and Error Responses"
+  externalDocs={[{ label: "OpenAPI Specification", href: "https://spec.openapis.org/oas/latest.html" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `responses:
+  "200":
+    description: OK
+  "400":
+    $ref: "#/components/responses/BadRequest"
+  "404":
+    $ref: "#/components/responses/NotFound"`,
+    },
+  ]}
+/>
+
 At minimum, every operation should make these things obvious to callers:
 
 - which success responses can happen,
 - which error responses can happen,
-- what the shared Problem Details shape looks like,
-- and what a real error payload looks like.
+- what response schema each status returns,
+- and what real success and error payloads look like.
 
 - Every operation MUST define success responses (status code + schema + examples) and error responses (status code + standardized schema + examples).
-- Error responses MUST use Problem Details (RFC 9457) with media type `Content-Type: application/problem+json`.
-- For each operation, define the common success responses (2xx) and the expected error responses (400/401/403/404/409/412/429/5xx) where applicable. Use OpenAPI `default` only for truly unexpected server errors.
-- Required fields are `type`, `title`, `status`, `detail`, and `instance`.
-- Recommended extensions are `errors[]` for field-level validation, `code` for stable application-specific identifiers, and `correlationId` for support and debugging (see [#return-request-ids]).
-- If application-specific error codes are used, they MUST be documented, stable, and MUST NOT replace HTTP status codes.
-- Reuse one shared `ProblemDetails` schema across SailPoint APIs so clients can share error handling logic.
+- For each operation, define the common success responses (2xx) and the expected error responses (400/401/403/404/409/412/429/5xx) where applicable.
+- Use OpenAPI `default` only for truly unexpected server errors.
 - Include at least one accurate error example per operation. Never include secrets or real customer data.
-- Register new problem types in the SailPoint problem catalog at [`https://developer.sailpoint.com/problems`](https://developer.sailpoint.com/problems). The `type` URI on every Problem Details response MUST resolve to a catalog entry; do not invent ad-hoc `type` URIs that are not published.
-- Examples MUST reflect the published SailPoint error contract where it prescribes field names, extension objects, or `type` URI patterns. The RFC 9457 baseline fields (`type`, `title`, `status`, `detail`, `instance`) plus common extensions (`errors`, `code`, `correlationId`) are the floor — extend or substitute to match the catalog when it differs.
+
+### register-problem-types
+<RuleHeader
+  id="register-problem-types"
+  level="MUST"
+  title="Register Problem Details Types"
+  externalDocs={[{ label: "RFC 9457 — Problem Details for HTTP APIs", href: "https://www.rfc-editor.org/rfc/rfc9457" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "type": "https://developer.sailpoint.com/problems/validation-error",
+  "title": "Validation error",
+  "status": 400
+}`,
+    },
+  ]}
+/>
+
+- Register new problem types in the SailPoint problem catalog at [`https://developer.sailpoint.com/problems`](https://developer.sailpoint.com/problems).
+- The `type` URI on every Problem Details response MUST resolve to a catalog entry; do not invent ad-hoc `type` URIs that are not published.
+- Examples MUST reflect the published SailPoint error contract where it prescribes field names, extension objects, or `type` URI patterns. The RFC 9457 baseline fields (`type`, `title`, `status`, `detail`, `instance`) plus common extensions (`errors`, `code`, `correlationId`) are the floor. Extend or substitute to match the catalog when it differs.
 
 #### Examples
 
@@ -290,7 +400,23 @@ At minimum, every operation should make these things obvious to callers:
 }
 ```
 
-##### Reusable OpenAPI schema
+### share-problem-details-schema
+<RuleHeader
+  id="share-problem-details-schema"
+  level="MUST"
+  title="Share a ProblemDetails Schema"
+  externalDocs={[{ label: "OpenAPI Specification", href: "https://spec.openapis.org/oas/latest.html" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `components:
+  schemas:
+    ProblemDetails:
+      type: object
+      required: [type, title, status]`,
+    },
+  ]}
+/>
 
 Declare a single `ProblemDetails` schema in `components/schemas` and reference it from every operation's error responses:
 
@@ -391,19 +517,36 @@ Retry-After: 5`,
   ]}
 />
 
-Operations expected to exceed roughly 5 seconds MUST use the async job pattern:
+Operations expected to exceed roughly 5 seconds MUST use the async job pattern. The initiating operation returns quickly, and a separate job resource carries progress and outcome details.
 
 - Return `202 Accepted`.
-- Include `Location` and `Retry-After`.
-- Expose a status resource with `id`, `status`, timestamps, and `result` or `error`.
-- Document how clients poll and what terminal states mean.
+- Include `Location` pointing to the status resource.
+- Include `Retry-After` when you can provide useful polling guidance.
 
 1. Client sends the initiating request (typically POST).
 2. Server returns `202 Accepted` with a `Location` header pointing to a status resource and a `Retry-After` header.
 3. Client polls the status resource.
 4. When the job finishes, the status resource includes the result or a link to the result resource.
 
-#### Status resource shape
+### define-async-job-resource
+<RuleHeader
+  id="define-async-job-resource"
+  level="MUST"
+  title="Define the Async Job Resource"
+  externalDocs={[{ href: "https://google.aip.dev/151", label: "Google AIP-151: Long-Running Operations" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "id": "job-abc-123",
+  "status": "IN_PROGRESS",
+  "createdAt": "2026-03-05T10:00:00Z",
+  "completedAt": null,
+  "progress": 42
+}`,
+    },
+  ]}
+/>
 
 The status resource MUST include at minimum:
 
@@ -426,6 +569,20 @@ The status resource MUST include at minimum:
 - `progress`: optional completion percentage (0-100)
 - `result`: outcome or link to created resource (nullable)
 - `error`: Problem Details on failure (nullable, see [#use-problem-details])
+
+### document-async-polling
+<RuleHeader
+  id="document-async-polling"
+  level="MUST"
+  title="Document Async Polling and Completion"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110#section-15.3.3", label: "RFC 9110 §15.3.3 — 202 Accepted" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `GET /accounts/imports/job-abc-123`,
+    },
+  ]}
+/>
 
 #### Initiation
 
@@ -494,6 +651,7 @@ GET /accounts/imports/job-abc-123
 - If `Retry-After` is absent, clients SHOULD use exponential backoff starting at 1-2 seconds.
 - When the job creates a resource, include a link to that resource in `result`.
 - Servers SHOULD retain completed job status for a documented period (at least 24 hours recommended).
+- Document every terminal state, including whether `FAILED` jobs can be retried and how long clients can read completed job resources.
 
 Follow the operationId convention: `create<Thing>Job`, `get<Thing>Job`, `list<Thing>Jobs` (see [#use-camelcase-operationids]).
 
@@ -1148,12 +1306,28 @@ Note: `409` and `412` are "retry after corrective action" — the client can ret
 }
 ```
 
-#### Client implementation guidance
+### document-client-retry-backoff
+<RuleHeader
+  id="document-client-retry-backoff"
+  level="SHOULD"
+  title="Document Client Retry Backoff"
+  externalDocs={[{ href: "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/", label: "AWS Builders' Library: Timeouts, Retries, and Backoff" }]}
+  examples={[
+    {
+      lang: "text",
+      code: `Use exponential backoff with full jitter.
+Respect Retry-After when present.
+Stop after a documented retry cap.`,
+    },
+  ]}
+/>
 
-- SHOULD use exponential backoff with jitter.
-- MUST respect `Retry-After` headers when present — the server value overrides the client's calculated delay.
-- SHOULD cap the maximum retry count (3–5 retries is typical) and the maximum per-attempt delay.
-- SHOULD log every retry attempt with the status code and attempt number.
+Client guidance SHOULD make retry behavior safe and predictable:
+
+- Clients SHOULD use exponential backoff with jitter.
+- Clients MUST respect `Retry-After` headers when present — the server value overrides the client's calculated delay.
+- Clients SHOULD cap the maximum retry count (3–5 retries is typical) and the maximum per-attempt delay.
+- Clients SHOULD log every retry attempt with the status code and attempt number.
 
 Reference backoff algorithm:
 

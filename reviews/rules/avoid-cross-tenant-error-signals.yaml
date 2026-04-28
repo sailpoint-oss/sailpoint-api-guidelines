@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "avoid-cross-tenant-error-signals",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#avoid-cross-tenant-error-signals",
+    "url": "/docs/rules/security-and-authorization#avoid-cross-tenant-error-signals"
+  },
+  "currentTitle": "Avoid Cross-Tenant Error Signals",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

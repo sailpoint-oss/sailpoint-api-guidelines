@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "use-delete-for-removal",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#use-delete-for-removal",
+    "url": "/docs/rules/http-semantics#use-delete-for-removal"
+  },
+  "currentTitle": "Use DELETE for Hard or Soft Removal",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

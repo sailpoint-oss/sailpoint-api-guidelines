@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "document-experimental-support",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#document-experimental-support",
+    "url": "/docs/rules/lifecycle-and-compatibility#document-experimental-support"
+  },
+  "currentTitle": "Document Experimental Support Expectations",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "prevent-stored-content-injection",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#prevent-stored-content-injection",
+    "url": "/docs/rules/security-and-authorization#prevent-stored-content-injection"
+  },
+  "currentTitle": "Prevent Stored Content Injection",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

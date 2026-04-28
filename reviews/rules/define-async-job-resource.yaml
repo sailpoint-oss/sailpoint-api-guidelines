@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "define-async-job-resource",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#define-async-job-resource",
+    "url": "/docs/rules/http-semantics#define-async-job-resource"
+  },
+  "currentTitle": "Define the Async Job Resource",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

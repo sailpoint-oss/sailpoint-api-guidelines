@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "share-problem-details-schema",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#share-problem-details-schema",
+    "url": "/docs/rules/http-semantics#share-problem-details-schema"
+  },
+  "currentTitle": "Share a ProblemDetails Schema",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

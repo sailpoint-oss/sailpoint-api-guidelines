@@ -149,8 +149,35 @@ OAuth scopes control what the *token* can do; user capabilities control what the
   ]}
 />
 
-- Every OpenAPI document MUST declare only `https` in its `servers` list — plain HTTP URLs MUST NOT appear.
-- APIs MUST NOT accept unencrypted HTTP connections in any environment, including staging and sandbox.
+- APIs MUST require HTTPS/TLS for every endpoint and environment, including staging and sandbox.
+- The OpenAPI contract and runtime behavior must both communicate the HTTPS-only contract.
+
+### declare-https-servers
+<RuleHeader
+  id="declare-https-servers"
+  level="MUST"
+  title="Declare HTTPS Servers Only"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `servers:
+  - url: https://api.sailpoint.com/v3
+    description: Production`,
+    },
+  ]}
+/>
+
+Every OpenAPI document MUST declare only `https` in its `servers` list. Plain HTTP URLs MUST NOT appear.
+
+### enforce-tls-baseline
+<RuleHeader
+  id="enforce-tls-baseline"
+  level="MUST"
+  title="Enforce a TLS Baseline"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc8446", label: "RFC 8446 — TLS 1.3" }]}
+/>
+
 - TLS 1.2 MUST be supported at minimum; TLS 1.3 SHOULD be preferred.
 - Weak cipher suites (RC4, DES, 3DES, export-grade ciphers) MUST NOT be enabled.
 - HSTS (`Strict-Transport-Security`) headers SHOULD be returned.
@@ -222,11 +249,40 @@ RateLimit-Reset: 45`,
   ]}
 />
 
+Rate limits MUST be enforced consistently for every API or endpoint group that declares them.
+
+- ❌ Silently dropping requests without returning a response.
+- ❌ Using `503 Service Unavailable` for rate limiting (use `429`).
+- ❌ Enforcing rate limits without documenting them.
+
+### document-rate-limit-policy
+<RuleHeader
+  id="document-rate-limit-policy"
+  level="MUST"
+  title="Document Rate Limit Policy"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9235", label: "RFC 9235 — RateLimit Fields" }]}
+/>
+
 - Rate limits MUST be documented for every API or endpoint group that enforces them.
 - Documentation MUST state the scope (per-tenant, per-client, or per-endpoint), the limit value, the time window, and whether limits are burst or sustained.
 - Include this in the API user manual (see [#document-user-manual]) and/or OpenAPI operation descriptions.
 
-#### Response headers
+### expose-rate-limit-headers
+<RuleHeader
+  id="expose-rate-limit-headers"
+  level="SHOULD"
+  title="Expose RateLimit Headers"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9235", label: "RFC 9235 — RateLimit Fields" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `HTTP/1.1 200 OK
+RateLimit-Limit: 100
+RateLimit-Remaining: 87
+RateLimit-Reset: 45`,
+    },
+  ]}
+/>
 
 When enforcing rate limits, return `429 Too Many Requests` with a `Retry-After` header when a client is throttled (see [#use-429-rate-limits]). Services SHOULD also return these headers on every response so clients can self-regulate:
 
@@ -261,10 +317,6 @@ Content-Type: application/problem+json
   "instance": "/accounts"
 }
 ```
-
-- ❌ Silently dropping requests without returning a response.
-- ❌ Using `503 Service Unavailable` for rate limiting (use `429`).
-- ❌ Enforcing rate limits without documenting them.
 
 **Related rules**: [#use-429-rate-limits] for 429 format, [#use-problem-details] error body, [#document-user-manual] user manual coverage.
 
@@ -323,25 +375,72 @@ additionalProperties: false`,
   ]}
 />
 
-APIs SHOULD validate and sanitize all client-provided input beyond schema conformance, with particular attention to injection risks.
+APIs SHOULD validate and sanitize all client-provided input beyond schema conformance. Treat each input surface according to the risk it creates.
 
-#### Filter and query expression safety
+### validate-query-expressions
+<RuleHeader
+  id="validate-query-expressions"
+  level="SHOULD"
+  title="Validate Query Expressions Safely"
+  externalDocs={[{ href: "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html", label: "OWASP: Input Validation Cheat Sheet" }]}
+  examples={[
+    {
+      lang: "text",
+      code: `Allowed filter fields: status, createdAt, modifiedAt
+Allowed operators: eq, ne, gt, gte, lt, lte, in`,
+    },
+  ]}
+/>
 
 - Treat filter parsing like SQL parsing: use parameterized evaluation — never string-concatenate filter values into backend queries.
 - SHOULD validate that field names match the documented allowlist.
 - SHOULD reject expressions with unexpected operators or nesting depth.
 - SHOULD set a maximum expression length.
 
-#### Stored content safety
+### prevent-stored-content-injection
+<RuleHeader
+  id="prevent-stored-content-injection"
+  level="SHOULD"
+  title="Prevent Stored Content Injection"
+  externalDocs={[{ href: "https://owasp.org/www-community/attacks/xss/", label: "OWASP: Cross Site Scripting" }]}
+/>
 
 - For fields that accept freeform text and are later displayed in UIs (e.g., `name`, `description`), SHOULD encode or sanitize values on output to prevent stored XSS.
 - Do not rely solely on input-side stripping — output encoding is the reliable defense.
 
-#### General input validation
+### enforce-schema-input-constraints
+<RuleHeader
+  id="enforce-schema-input-constraints"
+  level="SHOULD"
+  title="Enforce Schema Input Constraints"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `properties:
+  name:
+    type: string
+    maxLength: 128
+  status:
+    type: string
+    enum: [ACTIVE, DISABLED]
+additionalProperties: false`,
+    },
+  ]}
+/>
 
 - SHOULD enforce maximum lengths on all string fields (document them in the schema via `maxLength`).
 - SHOULD validate that enumerated fields contain only documented values.
 - SHOULD reject request bodies that contain unknown properties when the schema forbids additional properties.
+
+### validate-file-uploads
+<RuleHeader
+  id="validate-file-uploads"
+  level="SHOULD"
+  title="Validate File Uploads"
+  externalDocs={[{ href: "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html", label: "OWASP: File Upload Cheat Sheet" }]}
+/>
+
 - For file upload endpoints, SHOULD validate content type, file size, and filename.
 
 **Related rules**: [#auth-before-parse] authenticate before processing, [#document-filters] filter parameter format, [#use-problem-details] error responses for rejected input.
@@ -360,18 +459,50 @@ APIs SHOULD validate and sanitize all client-provided input beyond schema confor
   ]}
 />
 
-- API responses MUST only contain data belonging to the requesting tenant.
-- Tenant scope MUST be derived from the authenticated context (token claims, session), never from client-supplied parameters alone.
-- Every query, cache lookup, and response assembly step MUST enforce tenant boundaries.
+API responses MUST only contain data belonging to the requesting tenant. Every query, cache lookup, and response assembly step MUST enforce tenant boundaries.
 
-#### Error message safety
+### derive-tenant-from-auth-context
+<RuleHeader
+  id="derive-tenant-from-auth-context"
+  level="MUST"
+  title="Derive Tenant Scope from Auth Context"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]}
+/>
+
+Tenant scope MUST be derived from the authenticated context (token claims, session), never from client-supplied parameters alone.
+
+### avoid-cross-tenant-error-signals
+<RuleHeader
+  id="avoid-cross-tenant-error-signals"
+  level="MUST"
+  title="Avoid Cross-Tenant Error Signals"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]}
+  examples={[
+    {
+      lang: "text",
+      code: `404 Not Found — Resource not found.`,
+    },
+  ]}
+/>
 
 Error messages MUST NOT leak information about other tenants. A `404` for a resource belonging to a different tenant MUST be indistinguishable from a `404` for a genuinely nonexistent resource.
 
 - ✅ `404 Not Found` — "Resource not found."
 - ❌ `403 Forbidden` — "You do not have access to tenant X's resource."
 
-#### Cache isolation
+### scope-cache-keys-by-tenant
+<RuleHeader
+  id="scope-cache-keys-by-tenant"
+  level="MUST"
+  title="Scope Cache Keys by Tenant"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]}
+  examples={[
+    {
+      lang: "text",
+      code: `cache_key = f"{tenant_id}:{resource_type}:{resource_id}"`,
+    },
+  ]}
+/>
 
 Cache keys MUST include tenant context. A shared cache without tenant scoping is a direct path to cross-tenant data leakage.
 
@@ -379,7 +510,13 @@ Cache keys MUST include tenant context. A shared cache without tenant scoping is
 cache_key = f"{tenant_id}:{resource_type}:{resource_id}"
 ```
 
-#### Implicit scoping on list endpoints
+### scope-list-results-by-tenant
+<RuleHeader
+  id="scope-list-results-by-tenant"
+  level="MUST"
+  title="Scope List Results by Tenant"
+  externalDocs={[{ href: "https://owasp.org/www-project-api-security/", label: "OWASP API Security Top 10" }]}
+/>
 
 List and search endpoints MUST implicitly scope results to the authenticated tenant (see [#document-default-query]). Clients MUST NOT need to pass a `tenantId` filter to avoid seeing other tenants' data.
 

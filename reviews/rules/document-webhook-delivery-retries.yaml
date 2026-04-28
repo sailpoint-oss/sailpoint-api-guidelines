@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "document-webhook-delivery-retries",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#document-webhook-delivery-retries",
+    "url": "/docs/rules/operations-and-quality#document-webhook-delivery-retries"
+  },
+  "currentTitle": "Document Webhook Delivery Retries",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

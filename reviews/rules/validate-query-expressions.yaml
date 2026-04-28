@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "validate-query-expressions",
+  "source": {
+    "doc": "content/docs/rules/security-and-authorization.mdx",
+    "anchor": "#validate-query-expressions",
+    "url": "/docs/rules/security-and-authorization#validate-query-expressions"
+  },
+  "currentTitle": "Validate Query Expressions Safely",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

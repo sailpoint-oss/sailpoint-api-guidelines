@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "provide-webhook-subscriptions",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#provide-webhook-subscriptions",
+    "url": "/docs/rules/operations-and-quality#provide-webhook-subscriptions"
+  },
+  "currentTitle": "Provide Webhook Subscription APIs",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

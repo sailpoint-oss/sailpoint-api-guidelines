@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "ignore-unknown-response-fields",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#ignore-unknown-response-fields",
+    "url": "/docs/rules/lifecycle-and-compatibility#ignore-unknown-response-fields"
+  },
+  "currentTitle": "Ignore Unknown Response Fields",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

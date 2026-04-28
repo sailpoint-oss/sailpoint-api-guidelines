@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "align-error-correlation-id",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#align-error-correlation-id",
+    "url": "/docs/rules/operations-and-quality#align-error-correlation-id"
+  },
+  "currentTitle": "Align Error correlationId with X-Request-Id",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

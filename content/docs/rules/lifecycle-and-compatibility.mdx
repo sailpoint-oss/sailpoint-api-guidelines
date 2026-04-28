@@ -38,7 +38,13 @@ Within the same major version, changes MUST remain backward compatible.
 
 When in doubt, treat a visible behavior change as breaking and require a migration plan.
 
-#### Change matrix
+### classify-compatibility-by-layer
+<RuleHeader
+  id="classify-compatibility-by-layer"
+  level="MUST"
+  title="Classify Compatibility by Contract Layer"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]}
+/>
 
 Classify every change at each layer it affects: HTTP/REST behavior, OpenAPI specification, SDK generation, and documentation. A change that is non-breaking at the HTTP layer can still be breaking at the SDK layer; both matter. `Conditional` means the change may be safe for some consumers but breaking for others — default to conservative handling unless you have evidence the impacted clients are tolerant.
 
@@ -70,7 +76,13 @@ Classify every change at each layer it affects: HTTP/REST behavior, OpenAPI spec
 | Change auth scheme or add a required OAuth scope | BREAKING | Clients using the old scheme or scope are rejected. |
 | Remove an auth requirement or a required scope | Non-breaking (usually) | Less restrictive. |
 
-##### Enums
+### treat-enum-changes-as-breaking
+<RuleHeader
+  id="treat-enum-changes-as-breaking"
+  level="MUST"
+  title="Treat Enum Changes Conservatively"
+  externalDocs={[{ href: "https://google.aip.dev/126", label: "Google AIP-126: Enumerations" }]}
+/>
 
 | Change | HTTP/REST | SDK | Reasoning |
 | --- | --- | --- | --- |
@@ -80,7 +92,13 @@ Classify every change at each layer it affects: HTTP/REST behavior, OpenAPI spec
 
 Policy: treat adding enum values as BREAKING for organizational change management. The SDK layer makes this effectively unavoidable for typed-language consumers (see [#mark-enum-extensibility] for how to declare intent).
 
-##### OpenAPI specification
+### protect-openapi-sdk-contracts
+<RuleHeader
+  id="protect-openapi-sdk-contracts"
+  level="MUST"
+  title="Protect OpenAPI and SDK Contracts"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+/>
 
 | Change | Classification | Reasoning |
 | --- | --- | --- |
@@ -172,13 +190,61 @@ Changes that look additive can still break clients if they tighten validation or
   ]}
 />
 
-Clients MUST be prepared for compatible server extensions:
+Clients MUST be prepared for compatible server extensions. The child rules below separate the three common resilience checks.
 
-- **Ignore unknown fields** in responses. If the server adds `newField`, existing parsing MUST keep working.
-- **Tolerate new enum values.** If a client receives an unrecognized value, it MUST NOT crash. Map unrecognized values to `UNKNOWN` or treat them as a safe default. See [#mark-enum-extensibility] for how APIs annotate enum extensibility.
-- **Handle undocumented HTTP status codes.** If a client receives `429` or `503`, it SHOULD follow retry/backoff guidance rather than failing with an unhandled exception.
+### ignore-unknown-response-fields
+<RuleHeader
+  id="ignore-unknown-response-fields"
+  level="MUST"
+  title="Ignore Unknown Response Fields"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#versioning", label: "Microsoft REST API Guidelines: Versioning" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{
+  "id": "abc",
+  "newFieldClientDoesNotKnow": true
+}`,
+    },
+  ]}
+/>
+
+Clients MUST ignore unknown fields in responses. If the server adds `newField`, existing parsing MUST keep working.
+
+### tolerate-unknown-enum-values
+<RuleHeader
+  id="tolerate-unknown-enum-values"
+  level="MUST"
+  title="Tolerate Unknown Enum Values"
+  externalDocs={[{ href: "https://google.aip.dev/126", label: "Google AIP-126: Enumerations" }]}
+  examples={[
+    {
+      lang: "json",
+      code: `{ "status": "ACTIVE_PENDING_REVIEW" }`,
+    },
+  ]}
+/>
+
+If a client receives an unrecognized enum value, it MUST NOT crash. Map unrecognized values to `UNKNOWN` or treat them as a safe default. See [#mark-enum-extensibility] for how APIs annotate enum extensibility.
 
 For SDK teams: avoid generated enums that throw on unknown values. Prefer string unions or safe mapping with an `UNKNOWN` case.
+
+### handle-undocumented-status-codes
+<RuleHeader
+  id="handle-undocumented-status-codes"
+  level="SHOULD"
+  title="Handle Undocumented HTTP Status Codes"
+  externalDocs={[{ href: "https://www.rfc-editor.org/rfc/rfc9110", label: "RFC 9110 — HTTP Semantics" }]}
+  examples={[
+    {
+      lang: "http",
+      code: `HTTP/1.1 503 Service Unavailable
+Retry-After: 30`,
+    },
+  ]}
+/>
+
+If a client receives an undocumented status code, it SHOULD handle the status class correctly. For `429`, `500`, `502`, `503`, and `504`, follow retry/backoff guidance rather than failing with an unhandled exception.
 
 ### constrain-inputs
 <RuleHeader
@@ -561,11 +627,7 @@ tags:
   ]}
 />
 
-If an API, endpoint, or field is **experimental** (sometimes labeled preview in older docs), it MUST be clearly labeled and have an explicit path out of that state.
-
-#### Labeling
-
-Experimental status MUST be clearly visible in developer docs and machine-readable in OpenAPI:
+If an API, endpoint, or field is **experimental** (sometimes labeled preview in older docs), it MUST be clearly labeled in developer docs and machine-readable in OpenAPI:
 
 ```yaml
 info:
@@ -573,24 +635,39 @@ info:
 # or at tag/operation/schema granularity
 ```
 
-#### Stability expectations
+### document-experimental-support
+<RuleHeader
+  id="document-experimental-support"
+  level="MUST"
+  title="Document Experimental Support Expectations"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
+/>
 
 - Experimental contracts MAY change in ways that would be considered breaking for generally available (GA) APIs.
 - Teams MUST still aim for compatibility and MUST document any known churn areas.
 - Teams MUST publish changelogs for experimental changes.
-
-#### Support expectations
-
 - Teams MUST document the support model (SLA and response expectations) for experimental APIs.
 - Teams MUST document the intended audience and any enrollment or whitelist requirements.
 
-#### Migration to GA
+### define-experimental-ga-path
+<RuleHeader
+  id="define-experimental-ga-path"
+  level="SHOULD"
+  title="Define the Experimental Path to GA"
+  externalDocs={[{ href: "https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md", label: "Microsoft REST API Guidelines" }]}
+/>
 
 - Every experimental API SHOULD have a clear path to GA with defined exit criteria.
 - Teams SHOULD provide an expected timeline or review date.
 - Teams SHOULD explain how experimental consumers will be notified of GA.
 
-#### Compatibility boundaries
+### isolate-experimental-contracts
+<RuleHeader
+  id="isolate-experimental-contracts"
+  level="MUST"
+  title="Isolate Experimental Contract Elements"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+/>
 
 - Do not mix GA and experimental semantics under the same endpoint without clear labeling.
 - If only parts of a schema are experimental (individual fields), label at the field level and document the behaviors explicitly.

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "keep-get-safe",
+  "source": {
+    "doc": "content/docs/rules/http-semantics.mdx",
+    "anchor": "#keep-get-safe",
+    "url": "/docs/rules/http-semantics#keep-get-safe"
+  },
+  "currentTitle": "Keep GET Safe and Side-Effect Free",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

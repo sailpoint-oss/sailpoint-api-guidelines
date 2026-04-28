@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "provide-readiness-check",
+  "source": {
+    "doc": "content/docs/rules/operations-and-quality.mdx",
+    "anchor": "#provide-readiness-check",
+    "url": "/docs/rules/operations-and-quality#provide-readiness-check"
+  },
+  "currentTitle": "Provide a Readiness Check",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

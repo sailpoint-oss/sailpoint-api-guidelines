@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "tolerate-unknown-enum-values",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#tolerate-unknown-enum-values",
+    "url": "/docs/rules/lifecycle-and-compatibility#tolerate-unknown-enum-values"
+  },
+  "currentTitle": "Tolerate Unknown Enum Values",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

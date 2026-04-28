@@ -17,6 +17,14 @@
       "url": "/docs/rules/lifecycle-and-compatibility#agree-sunset-timelines"
     },
     {
+      "id": "align-error-correlation-id",
+      "title": "Align Error correlationId with X-Request-Id",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#align-error-correlation-id"
+    },
+    {
       "id": "api-first",
       "title": "Follow API-First",
       "level": "SHOULD",
@@ -31,6 +39,14 @@
       "category": "Security & Authorization",
       "categorySlug": "security-and-authorization",
       "url": "/docs/rules/security-and-authorization#auth-before-parse"
+    },
+    {
+      "id": "avoid-cross-tenant-error-signals",
+      "title": "Avoid Cross-Tenant Error Signals",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#avoid-cross-tenant-error-signals"
     },
     {
       "id": "avoid-nesting",
@@ -57,6 +73,14 @@
       "url": "/docs/rules/resource-modeling-and-urls#canonical-urls"
     },
     {
+      "id": "classify-compatibility-by-layer",
+      "title": "Classify Compatibility by Contract Layer",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#classify-compatibility-by-layer"
+    },
+    {
       "id": "classify-retryability",
       "title": "Classify Error Retryability",
       "level": "MUST",
@@ -73,6 +97,14 @@
       "url": "/docs/rules/lifecycle-and-compatibility#constrain-inputs"
     },
     {
+      "id": "declare-https-servers",
+      "title": "Declare HTTPS Servers Only",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#declare-https-servers"
+    },
+    {
       "id": "define-array-params",
       "title": "Define Collection Formats for Header and Query Parameters",
       "level": "MUST",
@@ -81,12 +113,28 @@
       "url": "/docs/rules/requests-and-querying#define-array-params"
     },
     {
+      "id": "define-async-job-resource",
+      "title": "Define the Async Job Resource",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#define-async-job-resource"
+    },
+    {
       "id": "define-defaults",
       "title": "Define Defaults for Optional Properties",
       "level": "MUST",
       "category": "Payload Conventions",
       "categorySlug": "payload-conventions",
       "url": "/docs/rules/payload-conventions#define-defaults"
+    },
+    {
+      "id": "define-experimental-ga-path",
+      "title": "Define the Experimental Path to GA",
+      "level": "SHOULD",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#define-experimental-ga-path"
     },
     {
       "id": "define-number-formats",
@@ -129,6 +177,22 @@
       "url": "/docs/rules/resource-modeling-and-urls#define-soft-delete"
     },
     {
+      "id": "define-webhook-event-envelope",
+      "title": "Define a Webhook Event Envelope",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#define-webhook-event-envelope"
+    },
+    {
+      "id": "derive-tenant-from-auth-context",
+      "title": "Derive Tenant Scope from Auth Context",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#derive-tenant-from-auth-context"
+    },
+    {
       "id": "describe-api",
       "title": "Provide a Detailed API Description",
       "level": "MUST",
@@ -169,6 +233,14 @@
       "url": "/docs/rules/operations-and-quality#design-webhooks"
     },
     {
+      "id": "document-async-polling",
+      "title": "Document Async Polling and Completion",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#document-async-polling"
+    },
+    {
       "id": "document-caching",
       "title": "Document Caching Behavior",
       "level": "SHOULD",
@@ -177,12 +249,28 @@
       "url": "/docs/rules/http-semantics#document-caching"
     },
     {
+      "id": "document-client-retry-backoff",
+      "title": "Document Client Retry Backoff",
+      "level": "SHOULD",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#document-client-retry-backoff"
+    },
+    {
       "id": "document-default-query",
       "title": "Document Implicit Filters and Default Sorting",
       "level": "MUST",
       "category": "Requests & Querying",
       "categorySlug": "requests-and-querying",
       "url": "/docs/rules/requests-and-querying#document-default-query"
+    },
+    {
+      "id": "document-experimental-support",
+      "title": "Document Experimental Support Expectations",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#document-experimental-support"
     },
     {
       "id": "document-filters",
@@ -207,6 +295,22 @@
       "category": "Security & Authorization",
       "categorySlug": "security-and-authorization",
       "url": "/docs/rules/security-and-authorization#document-licenses"
+    },
+    {
+      "id": "document-operation-responses",
+      "title": "Document Success and Error Responses",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#document-operation-responses"
+    },
+    {
+      "id": "document-rate-limit-policy",
+      "title": "Document Rate Limit Policy",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#document-rate-limit-policy"
     },
     {
       "id": "document-size-limits",
@@ -241,6 +345,14 @@
       "url": "/docs/rules/api-contract-and-documentation#document-user-manual"
     },
     {
+      "id": "document-webhook-delivery-retries",
+      "title": "Document Webhook Delivery Retries",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#document-webhook-delivery-retries"
+    },
+    {
       "id": "encode-binary",
       "title": "Encode Embedded Binary Safely",
       "level": "MUST",
@@ -255,6 +367,30 @@
       "category": "Security & Authorization",
       "categorySlug": "security-and-authorization",
       "url": "/docs/rules/security-and-authorization#enforce-rate-limits"
+    },
+    {
+      "id": "enforce-schema-input-constraints",
+      "title": "Enforce Schema Input Constraints",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#enforce-schema-input-constraints"
+    },
+    {
+      "id": "enforce-tls-baseline",
+      "title": "Enforce a TLS Baseline",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#enforce-tls-baseline"
+    },
+    {
+      "id": "expose-rate-limit-headers",
+      "title": "Expose RateLimit Headers",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#expose-rate-limit-headers"
     },
     {
       "id": "follow-api-guidelines",
@@ -281,12 +417,28 @@
       "url": "/docs/rules/payload-conventions#handle-null-values"
     },
     {
+      "id": "handle-undocumented-status-codes",
+      "title": "Handle Undocumented HTTP Status Codes",
+      "level": "SHOULD",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#handle-undocumented-status-codes"
+    },
+    {
       "id": "honor-method-semantics",
       "title": "Honor Method Properties",
       "level": "MUST",
       "category": "HTTP Semantics",
       "categorySlug": "http-semantics",
       "url": "/docs/rules/http-semantics#honor-method-semantics"
+    },
+    {
+      "id": "ignore-unknown-response-fields",
+      "title": "Ignore Unknown Response Fields",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#ignore-unknown-response-fields"
     },
     {
       "id": "include-api-metadata",
@@ -305,12 +457,28 @@
       "url": "/docs/rules/requests-and-querying#include-pagination-links"
     },
     {
+      "id": "isolate-experimental-contracts",
+      "title": "Isolate Experimental Contract Elements",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#isolate-experimental-contracts"
+    },
+    {
       "id": "isolate-tenant-data",
       "title": "Enforce Tenant Data Isolation in Responses",
       "level": "MUST",
       "category": "Security & Authorization",
       "categorySlug": "security-and-authorization",
       "url": "/docs/rules/security-and-authorization#isolate-tenant-data"
+    },
+    {
+      "id": "keep-get-safe",
+      "title": "Keep GET Safe and Side-Effect Free",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#keep-get-safe"
     },
     {
       "id": "limit-resource-types",
@@ -362,11 +530,27 @@
     },
     {
       "id": "meet-doc-quality",
-      "title": "Publish an OpenAPI Specification (Meet Doc Quality Levels)",
+      "title": "Meet Documentation Quality Levels",
       "level": "MUST",
       "category": "Operations & Quality",
       "categorySlug": "operations-and-quality",
       "url": "/docs/rules/operations-and-quality#meet-doc-quality"
+    },
+    {
+      "id": "meet-doc-quality-level-1",
+      "title": "Meet Documentation Quality Level 1",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#meet-doc-quality-level-1"
+    },
+    {
+      "id": "meet-doc-quality-level-2",
+      "title": "Meet Documentation Quality Level 2",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#meet-doc-quality-level-2"
     },
     {
       "id": "model-nullability",
@@ -513,12 +697,60 @@
       "url": "/docs/rules/http-semantics#prefer-idempotent-writes"
     },
     {
+      "id": "prevent-stored-content-injection",
+      "title": "Prevent Stored Content Injection",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#prevent-stored-content-injection"
+    },
+    {
+      "id": "protect-openapi-sdk-contracts",
+      "title": "Protect OpenAPI and SDK Contracts",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#protect-openapi-sdk-contracts"
+    },
+    {
       "id": "provide-health-checks",
       "title": "Provide Health Check Endpoints",
       "level": "SHOULD",
       "category": "Operations & Quality",
       "categorySlug": "operations-and-quality",
       "url": "/docs/rules/operations-and-quality#provide-health-checks"
+    },
+    {
+      "id": "provide-liveness-check",
+      "title": "Provide a Liveness Check",
+      "level": "SHOULD",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#provide-liveness-check"
+    },
+    {
+      "id": "provide-readiness-check",
+      "title": "Provide a Readiness Check",
+      "level": "SHOULD",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#provide-readiness-check"
+    },
+    {
+      "id": "provide-webhook-subscriptions",
+      "title": "Provide Webhook Subscription APIs",
+      "level": "SHOULD",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#provide-webhook-subscriptions"
+    },
+    {
+      "id": "register-problem-types",
+      "title": "Register Problem Details Types",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#register-problem-types"
     },
     {
       "id": "require-accurate-examples",
@@ -585,6 +817,38 @@
       "url": "/docs/rules/security-and-authorization#sanitize-inputs"
     },
     {
+      "id": "scope-cache-keys-by-tenant",
+      "title": "Scope Cache Keys by Tenant",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#scope-cache-keys-by-tenant"
+    },
+    {
+      "id": "scope-list-results-by-tenant",
+      "title": "Scope List Results by Tenant",
+      "level": "MUST",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#scope-list-results-by-tenant"
+    },
+    {
+      "id": "share-problem-details-schema",
+      "title": "Share a ProblemDetails Schema",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#share-problem-details-schema"
+    },
+    {
+      "id": "sign-webhook-deliveries",
+      "title": "Sign Webhook Deliveries",
+      "level": "MUST",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#sign-webhook-deliveries"
+    },
+    {
       "id": "specify-audience",
       "title": "Specify API Audience",
       "level": "MUST",
@@ -641,6 +905,22 @@
       "url": "/docs/rules/requests-and-querying#support-offset-pagination"
     },
     {
+      "id": "support-response-compression",
+      "title": "Support Standard Response Compression",
+      "level": "SHOULD",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#support-response-compression"
+    },
+    {
+      "id": "support-trace-context",
+      "title": "Support W3C Trace Context",
+      "level": "SHOULD",
+      "category": "Operations & Quality",
+      "categorySlug": "operations-and-quality",
+      "url": "/docs/rules/operations-and-quality#support-trace-context"
+    },
+    {
       "id": "timebox-experiments",
       "title": "Time-Box Experimental APIs",
       "level": "MUST",
@@ -655,6 +935,22 @@
       "category": "Lifecycle & Compatibility",
       "categorySlug": "lifecycle-and-compatibility",
       "url": "/docs/rules/lifecycle-and-compatibility#tolerate-extensions"
+    },
+    {
+      "id": "tolerate-unknown-enum-values",
+      "title": "Tolerate Unknown Enum Values",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#tolerate-unknown-enum-values"
+    },
+    {
+      "id": "treat-enum-changes-as-breaking",
+      "title": "Treat Enum Changes Conservatively",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#treat-enum-changes-as-breaking"
     },
     {
       "id": "treat-objects-extensible",
@@ -751,6 +1047,14 @@
       "category": "Requests & Querying",
       "categorySlug": "requests-and-querying",
       "url": "/docs/rules/requests-and-querying#use-consistent-query-format"
+    },
+    {
+      "id": "use-delete-for-removal",
+      "title": "Use DELETE for Hard or Soft Removal",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#use-delete-for-removal"
     },
     {
       "id": "use-domain-names",
@@ -857,12 +1161,28 @@
       "url": "/docs/rules/api-contract-and-documentation#use-positive-booleans"
     },
     {
+      "id": "use-post-for-create-search-and-commands",
+      "title": "Use POST for Create, Search, and Command Requests",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#use-post-for-create-search-and-commands"
+    },
+    {
       "id": "use-problem-details",
       "title": "Define a Standard Error Contract in OpenAPI (Problem Details)",
       "level": "MUST",
       "category": "HTTP Semantics",
       "categorySlug": "http-semantics",
       "url": "/docs/rules/http-semantics#use-problem-details"
+    },
+    {
+      "id": "use-put-for-full-replacement",
+      "title": "Use PUT for Full Replacement",
+      "level": "MUST",
+      "category": "HTTP Semantics",
+      "categorySlug": "http-semantics",
+      "url": "/docs/rules/http-semantics#use-put-for-full-replacement"
     },
     {
       "id": "use-resource-urls",
@@ -975,6 +1295,22 @@
       "category": "API Contract & Documentation",
       "categorySlug": "api-contract-and-documentation",
       "url": "/docs/rules/api-contract-and-documentation#use-us-english"
+    },
+    {
+      "id": "validate-file-uploads",
+      "title": "Validate File Uploads",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#validate-file-uploads"
+    },
+    {
+      "id": "validate-query-expressions",
+      "title": "Validate Query Expressions Safely",
+      "level": "SHOULD",
+      "category": "Security & Authorization",
+      "categorySlug": "security-and-authorization",
+      "url": "/docs/rules/security-and-authorization#validate-query-expressions"
     }
   ]
 }
