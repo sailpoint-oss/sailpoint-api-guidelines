@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "ruleId": "limit-pre-ga-endpoint-labels",
+  "source": {
+    "doc": "content/docs/rules/lifecycle-and-compatibility.mdx",
+    "anchor": "#limit-pre-ga-endpoint-labels",
+    "url": "/docs/rules/lifecycle-and-compatibility#limit-pre-ga-endpoint-labels"
+  },
+  "currentTitle": "Limit Preview, Beta, and Experimental Endpoint Labels to 90 Days",
+  "status": "pending",
+  "decision": {
+    "changeType": "none",
+    "proposedTitle": null,
+    "proposedText": null,
+    "rationale": null,
+    "compatNotes": null
+  },
+  "reviewNotes": []
+}

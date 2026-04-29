@@ -481,6 +481,14 @@
       "url": "/docs/rules/http-semantics#keep-get-safe"
     },
     {
+      "id": "limit-pre-ga-endpoint-labels",
+      "title": "Limit Preview, Beta, and Experimental Endpoint Labels to 90 Days",
+      "level": "MUST",
+      "category": "Lifecycle & Compatibility",
+      "categorySlug": "lifecycle-and-compatibility",
+      "url": "/docs/rules/lifecycle-and-compatibility#limit-pre-ga-endpoint-labels"
+    },
+    {
       "id": "limit-resource-types",
       "title": "Limit Resource Types",
       "level": "SHOULD",

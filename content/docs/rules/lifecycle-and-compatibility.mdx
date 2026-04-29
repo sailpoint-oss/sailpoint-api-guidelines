@@ -753,6 +753,32 @@ If `x-extensible` is not present, clients SHOULD assume the enum is **open** (ex
 
 ## Experimental Lifecycle
 
+### limit-pre-ga-endpoint-labels
+<RuleHeader
+  id="limit-pre-ga-endpoint-labels"
+  level="MUST"
+  title="Limit Preview, Beta, and Experimental Endpoint Labels to 90 Days"
+  externalDocs={[{ href: "https://spec.openapis.org/oas/latest.html", label: "OpenAPI Specification" }]}
+  examples={[
+    {
+      lang: "yaml",
+      code: `paths:
+  /accounts/search:
+    post:
+      x-stability: beta
+      x-sailpoint-stability-started: 2026-04-01
+      x-sailpoint-stability-expires: 2026-06-30`,
+    },
+  ]}
+/>
+
+Endpoints MUST NOT remain marked as preview, beta, or experimental for longer than 90 days from first publication.
+
+- Record the first publication date, owner, and expiration or decision date in the OpenAPI contract and developer docs.
+- Before the 90-day deadline, teams MUST promote the endpoint toward GA, replace it with a new documented contract, remove it, or publish an approved exception with a new explicit decision date.
+- The rule applies regardless of label spelling (`preview`, `beta`, `experimental`) or where the label appears: path, operation, tag, docs, changelog, or access-gating mechanism.
+- Do not reset the 90-day clock by renaming the label, moving the same behavior to another endpoint, or changing the opt-in mechanism without a substantive contract decision.
+
 ### timebox-experiments
 <RuleHeader
   id="timebox-experiments"
@@ -775,7 +801,7 @@ If an API requires an experimental opt-in mechanism, it MUST have a documented e
 
 - Document the exact opt-in mechanism and spelling in the contract and docs. If access depends on a special header, show the exact header name and expected value in examples.
 - Record when the experimental period started, who owns it, and the target decision date to promote, replace, or remove it.
-- Experimental state MUST NOT stay open-ended. Set an expiration no more than 180 days from first publication unless an exception is explicitly approved and documented.
+- Experimental state MUST NOT stay open-ended. Endpoint-level preview, beta, or experimental labels MUST expire no more than 90 days from first publication (see [#limit-pre-ga-endpoint-labels]) unless an exception is explicitly approved and documented.
 - When the deadline is reached, teams MUST either promote the behavior toward GA (or another documented stability level), publish an approved extension, or remove the experimental path.
 - Do not require undocumented experimental markers for behavior that otherwise looks stable.
 
