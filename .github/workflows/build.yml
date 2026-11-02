@@ -1,43 +1,53 @@
 name: Build
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Build the site on every pull request and push to main.
+# Deploy to GitHub Pages only on push to main (that is, after a merge).
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   push:
-    branches: [ master ]
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build_docs:    
+  build_docs:
     name: Build documentation
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      # Docker and jq are preinstalled on ubuntu-latest, so `make all` runs as-is.
       - name: Build
         run: |
-          make check-rules > check-rule-ids.log
+          make check-rules
           make all
 
-      - name: Get Github Token
-        id: get-gh-token
-        if: ${{ github.ref == 'refs/heads/master' }}
-        uses: vadeg/github-app-token-action@v0.0.1
+      - name: Upload Pages artifact
+        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+        uses: actions/upload-pages-artifact@v3
         with:
-          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
-          application_id: ${{ secrets.APP_ID }}
+          path: ./docs
 
-      - name: Create Zally Issues
-        if: ${{ github.ref == 'refs/heads/master' }}
-        env:
-          GH_TOKEN: ${{ steps.get-gh-token.outputs.gh_access_token }}
-        run: |
-          scripts/create-zally-issue.sh
+  deploy:
+    name: Deploy to GitHub Pages
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    needs: build_docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-      - name: Deploy to GitHub Pages
-        if: ${{ github.ref == 'refs/heads/master' }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

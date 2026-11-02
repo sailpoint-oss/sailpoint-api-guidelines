@@ -35,12 +35,45 @@ make it discoverable for the appropriate group via our https://developer.sailpoi
 [#302]
 == {MUST} provide detailed API description
 	
-Within the API specification, you must provide sufficient information in 
-the description of the API to facilitate proper usage.  This may include:
+Within the API specification, you must give each operation a description with enough information for a consumer to use it correctly.
+Include the following when they apply:
 
-* API scope, purpose, and use cases
-* Major edge cases
-* Major dependencies
+* Purpose and use cases: what the operation does and when a consumer uses it
+* Major edge cases: behavior that a consumer does not expect, for example duplicate requests or asynchronous processing
+* Major dependencies: other APIs or configuration that the operation relies on, with links to them
+
+Example:
+
+[source,yaml]
+----
+paths:
+  /access-requests/v1:
+    post:
+      operationId: createAccessRequestV1
+      summary: Submit access request
+      security:
+        - userAuth:
+            - idn:access-request:manage
+            - idn:access-request-self:manage
+      description: >-
+        Use this API to submit an access request for one or more identities.
+        The request follows the approval process that is configured for the requested access.
+        You can request roles, access profiles, and entitlements.
+
+
+        Access requests are processed asynchronously. A successful response means that the
+        request is queued for processing, not that the access is granted. Because of this,
+        the API does not return an error if you submit a duplicate request, or if you request
+        access that is already pending, approved, or rejected.
+
+
+        Before you submit a request, use the
+        [List Access Request Status](https://developer.sailpoint.com/docs/api/list-access-request-status-v-1)
+        API to check for existing requests for the same access items.
+        The Access Request Segments in the user context of the API token limit what you can request.
+        Refer to [Get Access Request Configuration](https://developer.sailpoint.com/docs/api/get-access-request-config-v-2)
+        for the options that control requests on behalf of other users.
+----
 
 
 [#102]
