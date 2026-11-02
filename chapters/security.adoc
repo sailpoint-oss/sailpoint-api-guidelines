@@ -96,7 +96,7 @@ get:
 ----
 
 [#321]
-== {MUST} define user levels (capabilities) needed by an endpoint
+== {MUST} define user levels (capabilities) needed by an endpoint icon:check-square[text="Test" role="lime"]
 
 Each endpoint that specifies *userAuth* as one of the allowed security types must also document the user levels required to access the endpoint. See the https://documentation.sailpoint.com/saas/help/common/users/user_level_matrix.html[user level matrix, role=external, window=_blank] for more information.
 
@@ -141,6 +141,19 @@ If an API collection requires additional product licenses to enable the feature,
 
 
 [#225]
-== {MUST} follow naming convention for permissions (scopes)
+== {MUST} follow naming convention for permissions (scopes) icon:check-square[text="Test" role="lime"]
 
-TBD
+A scope has three parts, separated by colons: `<product>:<resource>:<access>`.
+
+* `<product>` uses lowercase letters only, for example `idn`.
+* `<resource>` uses lowercase letters and hyphens, for example `access-profile`.
+* `<access>` uses lowercase letters only, for example `read` or `manage`.
+
+Each scope must match this pattern:
+
+[source]
+----
+^[a-z]+:[a-z-]+:[a-z]+$
+----
+
+Examples: `idn:access-profile:read`, `idn:task-definition:manage`.

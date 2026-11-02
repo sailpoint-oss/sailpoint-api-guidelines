@@ -68,7 +68,9 @@ It is important to provide extra documentation for our developers to reduce the 
 [#303]
 == {MUST} describe every parameter and property icon:check-square[text="Test" role="lime"]
 
-Every query/path parameter and request/response property in the API specification must have a description
+Every query/path parameter and request/response property in the API specification must have a description.
+
+A parameter description must be at least 8 characters long.
 
 [#304]
 == {MUST} provide an example for every parameter and property icon:check-square[text="Test" role="lime"]
@@ -79,8 +81,18 @@ However, take care to not use personally identifiable information or secrets in 
 
 Every operation (POST, PUT, PATCH, etc) may define one or more operation level examples.
 
+A parameter can give its example in `example`, `schema.example` or `examples`.
+
+These properties do not need their own example:
+
+* a property with `nullable: true`
+* an array property whose `items` schema has an example
+
 [#305]
 == {SHOULD} keep operation summaries at five or less words icon:check-square[text="Test" role="lime"]
+
+Every operation must have a `summary`. A missing summary is an error.
+The five-word limit is a recommendation. The linter shows a warning when a summary has more than five words.
 
 Certain tools, like Postman, have a limit on how many words can be displayed within the operation summary.  
 It is helpful for consumers to have short summaries that describe the operation at its most basic level to improve readability for consumers.
@@ -125,6 +137,7 @@ Use this guide when creating your operationIds. Your operationId must start with
 
 * approve
 * cancel
+* close
 * complete
 * create
 * delete
@@ -133,9 +146,13 @@ Use this guide when creating your operationIds. Your operationId must start with
 * export
 * hide
 * import
+* load
 * move
 * ping
+* process
+* publish
 * reject
+* reload
 * reset
 * search
 * send
@@ -144,12 +161,14 @@ Use this guide when creating your operationIds. Your operationId must start with
 * start
 * submit
 * sync
+* test
 * unlock
 * unregister
 * update
 
 *PUT* methods
 
+* overwrite
 * put
 * set
 
@@ -162,6 +181,8 @@ Use this guide when creating your operationIds. Your operationId must start with
 
 * delete
 * remove
+
+For operations in an API collection under `apis/`, the operationId must also end with the collection version. See <<407>>.
 
 [#402]
 == {MUST} provide a valid tag for each operation icon:check-square[text="Test" role="lime"]
@@ -242,6 +263,75 @@ parameters:
 ----
 
 *User-Defined Path Parameters* – If the path parameter represents a value entirely determined by the user (e.g., specifying a filename when downloading or saving a file), there is no need to retrieve a resource identifier from the system. Since these values are not tied to any existing API resource, defining `x-sailpoint-resource-operation-id` would not be meaningful or applicable.
+
+
+[#401]
+== {MUST} use only ASCII characters in API specifications icon:check-square[text="Test" role="lime"]
+
+API specification files must contain only ASCII characters.
+Non-ASCII characters, such as curly quotes, em-dashes and non-breaking spaces, break some code generators and documentation tools.
+
+Use the ASCII form instead. For example, use `'` and `"` instead of curly quotes, and use `-` instead of an em-dash.
+
+[#403]
+== {MUST} list root tags in alphabetical order icon:check-square[text="Test" role="lime"]
+
+The `tags` list in the root specification must be sorted in alphabetical order by `name`.
+A sorted list makes it easy to find a tag and to see when a tag is a duplicate.
+
+[source,yaml]
+----
+tags:
+  - name: Access Profiles
+  - name: Accounts
+  - name: Sources
+----
+
+[#405]
+== {MUST} not reference documents outside of the API version folder icon:check-square[text="Test" role="lime"]
+
+Path and schema files in a versioned folder (for example `v2024`, `v2025` or `v2026`) must only use `$ref` to files in the same version folder.
+A reference to another version folder couples the two versions. A change to one version can then change the other version without notice.
+
+If you need a schema from another version, copy it into your version folder.
+
+[#406]
+== {MUST} not use Docusaurus variable syntax in API specifications icon:check-square[text="Test" role="lime"]
+
+API specification files must not contain text in the form `${...}`.
+The developer portal uses Docusaurus, and Docusaurus reads `${...}` as a variable. If the variable is not defined, the documentation build fails.
+
+If you need to show a template value in a description or example, use a different form, for example `{{value}}` or `<value>`.
+
+[#407]
+== {MUST} end operationIds in an API collection with the collection version icon:check-square[text="Test" role="lime"]
+
+An operation in an API collection under `apis/` must have an `operationId` that ends with the collection version.
+The version comes from the `/vN` segment of the path that the collection `openapi.yaml` file maps to the path file.
+The suffix uses an uppercase `V` and the version number, for example `V1` or `V2`.
+
+[source,yaml]
+----
+# apis/transforms/openapi.yaml maps /transforms/v1 to this file
+get:
+  operationId: listTransformsV1
+----
+
+This rule is in addition to <<400>>.
+
+[#408]
+== {MUST} not use HTML in operation descriptions icon:check-square[text="Test" role="lime"]
+
+Operation descriptions must not contain HTML tags such as `<br>`, `<b>` or `<a>`.
+Use markdown instead. The developer portal and the SDK generators render markdown, but they do not render HTML in the same way.
+
+[source,yaml]
+----
+description: >-
+  Use this API to list sources.
+
+  See [Sources](https://developer.sailpoint.com/docs/api/v3/list-sources) for more information.
+----
 
 
 [#103]
