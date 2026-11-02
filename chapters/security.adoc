@@ -157,3 +157,53 @@ Each scope must match this pattern:
 ----
 
 Examples: `idn:access-profile:read`, `idn:task-definition:manage`.
+
+=== Choosing the `<access>` value
+
+Use a standard `<access>` value so that consumers can predict the scope that an operation needs.
+Most existing scopes use `read` or `manage`.
+
+[cols="1,3",options="header"]
+|===
+| `<access>` | Use it for
+
+| `read`
+| Operations that only read data, for example `GET` operations that get or list a resource.
+
+| `manage`
+| Operations that change data, for example `POST`, `PUT`, `PATCH`, and `DELETE`. A `manage` scope also gives read access to the same resource.
+|===
+
+If an operation does an action that is not create, read, update, or delete, and the action needs its own permission, you can use a specific verb.
+Use a verb that names the action, for example:
+
+* `execute`, for example `sp:launcher:execute`
+* `invoke`, for example `sp:connector:invoke`
+* `export` and `import`, for example `idn:efs:export`
+* `cancel`, for example `sp:provisioning-runs:cancel`
+
+Do not use the `<access>` values in the following table.
+They repeat `read` or `manage`, they name a persona instead of an action, or they do not tell the consumer what the scope allows.
+
+[cols="2,3",options="header"]
+|===
+| Do not use | Reason and replacement
+
+| `get`, `list`, `read-only`
+| These are the same as `read`. Use `read`.
+
+| `write`, `create`, `update`, `admin`
+| These are the same as `manage`, or they split `manage` without a clear need. Use `manage`.
+
+| `access`, `use`, `auth`, `event`, `external`, `process`
+| These do not name the permission that the scope gives. Use `read`, `manage`, or a verb that names the action.
+
+| `profile-manager`, `profile-reader`, `configuration-manager`, `workflow-operator`, `integration-partner`
+| These name a persona, not an action. Put the resource in `<resource>` and use `read` or `manage`, for example `nerm:profile:manage`.
+
+| Values with hyphens, for example `manage-state`, `read-config`, `user-invite`
+| These do not match the pattern above. Put the extra words in `<resource>`, for example `idn:entitlement-connection-state:manage`.
+
+| `all`, `default`
+| These are reserved for the platform scopes `sp:scopes:all` and `sp:scopes:default`.
+|===
