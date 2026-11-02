@@ -2,8 +2,8 @@
 
 Latest published version:
 https://sailpoint-oss.github.io/sailpoint-api-guidelines/[*HTML*],
-https://github.com/sailpoint-oss/sailpoint-api-guidelines/blob/main/docs/sailpoint-guidelines.pdf[*PDF*],
-https://github.com/sailpoint-oss/sailpoint-api-guidelines/blob/main/docs/sailpoint-guidelines.epub[*EPUB3*]
+https://sailpoint-oss.github.io/sailpoint-api-guidelines/sailpoint-guidelines.pdf[*PDF*],
+https://sailpoint-oss.github.io/sailpoint-api-guidelines/sailpoint-guidelines.epub[*EPUB3*]
 
 == Purpose
 
