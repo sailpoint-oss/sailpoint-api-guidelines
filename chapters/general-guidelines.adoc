@@ -320,6 +320,33 @@ tags:
   - name: Sources
 ----
 
+[#409]
+== {MUST} provide a description for every root tag
+
+Every tag in the `tags` list of the root specification must have a `description`.
+The developer portal and the SDK generators show the tag description as the introduction to the group of operations with that tag.
+
+The description must tell the consumer what the resource is and what they can do with the operations in the tag.
+If a concept is necessary to understand the resource, explain it with a short example.
+
+[source,yaml]
+----
+tags:
+  - name: Access Profiles
+    description: >-
+      Use this API to create and manage access profiles.
+
+
+      An access profile groups entitlements, which represent access rights on sources.
+      For example, an Active Directory source can have an 'Employees' entitlement and a
+      'Developers' entitlement. An administrator can create an 'AD Developers' access profile
+      that groups the two entitlements. Users can then request the access profile to get
+      both entitlements in one request.
+
+
+      Administrators can make access profiles requestable and add them to roles.
+----
+
 [#405]
 == {MUST} not reference documents outside of the API version folder icon:check-square[text="Test" role="lime"]
 
