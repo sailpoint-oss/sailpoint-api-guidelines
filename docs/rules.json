@@ -198,7 +198,7 @@
     },
     {
       "id": "#159",
-      "title": "MUST support pagination "
+      "title": "MUST support pagination icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#161",
@@ -286,7 +286,7 @@
     },
     {
       "id": "#189",
-      "title": "SHOULD add `Deprecation` and `Sunset` header to responses icon:check-square[text=\"Test\" role=\"lime\"]"
+      "title": "SHOULD add `Deprecation` and `Sunset` header to responses"
     },
     {
       "id": "#190",
@@ -318,7 +318,7 @@
     },
     {
       "id": "#219",
-      "title": "MUST provide API audience"
+      "title": "MUST provide API audience icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#220",
@@ -330,7 +330,7 @@
     },
     {
       "id": "#225",
-      "title": "MUST follow naming convention for permissions (scopes)"
+      "title": "MUST follow naming convention for permissions (scopes) icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#226",
@@ -454,7 +454,7 @@
     },
     {
       "id": "#321",
-      "title": "MUST define user levels (capabilities) needed by an endpoint"
+      "title": "MUST define user levels (capabilities) needed by an endpoint icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#322",
@@ -466,11 +466,11 @@
     },
     {
       "id": "#324",
-      "title": "MUST use proper description format for the `filters` query param"
+      "title": "MUST use proper description format for the `filters` query param icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#325",
-      "title": "MUST use proper description format for the `sorters` query param"
+      "title": "MUST use proper description format for the `sorters` query param icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
       "id": "#326",
@@ -481,12 +481,36 @@
       "title": "MUST provide a valid operationId in camelCase for each operation icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
+      "id": "#401",
+      "title": "MUST use only ASCII characters in API specifications icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
       "id": "#402",
       "title": "MUST provide a valid tag for each operation icon:check-square[text=\"Test\" role=\"lime\"]"
     },
     {
+      "id": "#403",
+      "title": "MUST list root tags in alphabetical order icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
       "id": "#404",
       "title": "MUST provide a valid operationId in camelCase under the key `x-sailpoint-resource-operation-id` for each path parameter icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
+      "id": "#405",
+      "title": "MUST not reference documents outside of the API version folder icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
+      "id": "#406",
+      "title": "MUST not use Docusaurus variable syntax in API specifications icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
+      "id": "#407",
+      "title": "MUST end operationIds in an API collection with the collection version icon:check-square[text=\"Test\" role=\"lime\"]"
+    },
+    {
+      "id": "#408",
+      "title": "MUST not use HTML in operation descriptions icon:check-square[text=\"Test\" role=\"lime\"]"
     }
   ]
 }

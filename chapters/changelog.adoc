@@ -16,3 +16,16 @@ To see a list of all changes, please have a look at the https://github.com/sailp
 [[rule-changes]]
 == Rule Changes
 
+* `2026-11`: Aligned the guidelines with the rules that the API linter checks:
+** Added <<401>>, <<403>>, <<405>>, <<406>>, <<407>> and <<408>>. The linter already checked these rules.
+** Filled in <<225>> with the scope pattern `^[a-z]+:[a-z-]+:[a-z]+$`.
+** <<151>>: listed the required response codes (2xx, 400, 401, 403, 429 and 500), and stated that they use the shared response files in `apis/shared/responses/`.
+** <<326>>: changed the link to the error response object from the deprecated `v3/schemas/ErrorResponseDto.yaml` to `apis/shared/schemas/errorresponsedto.yaml`.
+** <<159>>: every `GET` that returns an array must define `offset` and `limit`, and `limit` must define `minimum` and `maximum`.
+** <<303>>: parameter descriptions must be at least 8 characters long.
+** <<304>>: documented the example exemptions for nullable properties and for arrays with item examples.
+** <<305>>: every operation must have a `summary`.
+** <<317>>: a `required` list must not be empty.
+** <<400>>: added the approved verbs `close`, `load`, `process`, `publish`, `reload` and `test` for POST, and `overwrite` for PUT.
+** Added the Test icon to <<159>>, <<219>>, <<225>>, <<321>>, <<324>> and <<325>>, and removed it from <<189>>.
+

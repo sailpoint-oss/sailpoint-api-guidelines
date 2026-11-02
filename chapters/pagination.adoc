@@ -2,7 +2,7 @@
 = Pagination
 
 [#159]
-== {MUST} support pagination 
+== {MUST} support pagination icon:check-square[text="Test" role="lime"]
 
 Access to lists of data items must support pagination to protect the service
 against overload as well as for best client side iteration and batch processing
@@ -25,6 +25,25 @@ jumping to a specific page is far less used than navigation via {next}/{prev}
 page links.
 
 We currently prefer to use https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-results[Offset/Limit-based pagination].
+
+Every `GET` operation whose `200` `application/json` response is an array must define the `offset` and `limit` query parameters.
+The `limit` parameter schema must define `minimum` and `maximum`.
+
+[source,yaml]
+----
+parameters:
+  - in: query
+    name: limit
+    required: false
+    description: Max number of results to return.
+    schema:
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 250
+      default: 250
+    example: 250
+----
 
 **Note:** To provide a consistent look and feel of pagination patterns,
 you must stick to the common query parameter names defined in <<137>>.

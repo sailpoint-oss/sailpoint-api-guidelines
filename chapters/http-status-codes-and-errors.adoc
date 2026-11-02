@@ -15,6 +15,38 @@ and provide important information for service clients to handle standard as
 well as exceptional situations. 
 
 
+Every operation must define at least these responses:
+
+* one `2xx` success response
+* `400` Bad Request
+* `401` Unauthorized
+* `403` Forbidden
+* `429` Too Many Requests
+* `500` Internal Server Error
+
+Each error response must use the standard error response object. See <<326>>.
+
+Use `$ref` to the shared response files in `api-specs/src/main/yaml/apis/shared/responses/`.
+Do not use the files in `v3/responses/`. They are deprecated.
+If a status code that many collections use has no shared file, add one to `apis/shared/responses/`.
+
+[source,yaml]
+----
+responses:
+  '200':
+    description: OK
+  '400':
+    $ref: ../../shared/responses/400.yaml
+  '401':
+    $ref: ../../shared/responses/401.yaml
+  '403':
+    $ref: ../../shared/responses/403.yaml
+  '429':
+    $ref: ../../shared/responses/429.yaml
+  '500':
+    $ref: ../../shared/responses/500.yaml
+----
+
 **Hint:** In most cases it is not useful to document all technical errors,
 especially if they are not under control of the service provider. Thus unless
 a response code conveys application-specific functional semantics or is used
@@ -44,14 +76,14 @@ service client and provider performance.
 == {MUST} use a standard error response object
 
 All error responses must use the standard error response DTO object defined at 
-https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/v3/schemas/ErrorResponseDto.yaml.  
+https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/apis/shared/schemas/errorresponsedto.yaml.  
 This provides a consistent error response structure that can be easily consumed by clients.
 
 
 [#322]
 == {MAY} define application specific codes for the standard error response object
 
-If using the `detailCode` within the https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/v3/schemas/ErrorResponseDto.yaml, 
+If using the `detailCode` within the https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/apis/shared/schemas/errorresponsedto.yaml, 
 then the service owner is free to create their own logic for detail codes that will aid them in debugging issues with the service.
 
 

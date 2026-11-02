@@ -184,7 +184,7 @@ components:
 
 
 [#324]
-== {MUST} use proper description format for the `filters` query param
+== {MUST} use proper description format for the `filters` query param icon:check-square[text="Test" role="lime"]
 
 The OpenAPI specification does not provide dedicated properties for defining filters,
 so filters must be defined in the description of the `filters` query param.  Our users 
@@ -237,7 +237,7 @@ required: false
 
 
 [#325]
-== {MUST} use proper description format for the `sorters` query param
+== {MUST} use proper description format for the `sorters` query param icon:check-square[text="Test" role="lime"]
 
 The OpenAPI specification does not provide dedicated properties for defining sorter,
 so sorters must be defined in the description of the `sorters` query param.  Our users 
