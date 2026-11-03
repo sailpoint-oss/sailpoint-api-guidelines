@@ -381,7 +381,63 @@ would be a similar well defined option.
 [#154]
 == {MUST} define collection format of header and query parameters
 
-TBD
+A query or header parameter that accepts more than one value is a collection parameter.
+Define a collection parameter as an array, and set `style` and `explode` explicitly.
+Then the documentation, the SDKs and the service agree on how the client sends the values.
+
+Use `type: array` with `items` for a collection parameter.
+Do not use a `string` parameter that holds a comma-separated list.
+The standard collection parameters `filters` and `sorters` (see <<137>>) are exceptions, because their values are expressions.
+
+For a query parameter, use `style: form` and `explode: true`.
+The client repeats the parameter for each value.
+This is the OpenAPI default, and the current SailPoint APIs use it.
+
+[source,yaml]
+----
+parameters:
+  - in: query
+    name: eventTypes
+    required: false
+    style: form
+    explode: true
+    schema:
+      type: array
+      items:
+        type: string
+    example: [AccessAddedEvent, AccessRemovedEvent]
+----
+
+[source,http]
+----
+GET /historical-identities/v1/{id}/events?eventTypes=AccessAddedEvent&eventTypes=AccessRemovedEvent
+----
+
+For a header parameter, use `style: simple` and `explode: false`.
+The client sends the values in one header, separated by commas.
+This is the only style that OpenAPI allows for headers.
+
+[source,yaml]
+----
+parameters:
+  - in: header
+    name: x-sailpoint-features
+    required: false
+    style: simple
+    explode: false
+    schema:
+      type: array
+      items:
+        type: string
+----
+
+[source,http]
+----
+x-sailpoint-features: featureA,featureB
+----
+
+If the number of values has a limit, set `maxItems` on the array schema.
+If the values come from a fixed list, set `enum` on the `items` schema.
 
 
 [#236]

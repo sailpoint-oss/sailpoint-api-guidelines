@@ -18,11 +18,14 @@ well as exceptional situations.
 Every operation must define at least these responses:
 
 * one `2xx` success response
-* `400` Bad Request
+* `400` Bad Request, if the operation has a parameter or a request body
 * `401` Unauthorized
 * `403` Forbidden
 * `429` Too Many Requests
 * `500` Internal Server Error
+
+An operation with no parameters and no request body has no input that can be bad, so it does not need a `400` response.
+Path-level parameters count as parameters of the operation.
 
 Each error response must use the standard error response object. See <<326>>.
 
@@ -401,9 +404,13 @@ number of requests made within a given window for each named entity.
 
 
 [#176]
-== {MUST} support problem JSON
+== Retired: support problem JSON
 
-TBD
+This guideline is retired.
+It asked APIs to return errors as problem JSON (`application/problem+json`, https://datatracker.ietf.org/doc/html/rfc9457[RFC 9457]).
+SailPoint APIs return errors with the standard error response object as `application/json` instead.
+The SDKs depend on that shape.
+See <<326>> for the error format to use.
 
 
 [#177]

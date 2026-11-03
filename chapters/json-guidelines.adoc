@@ -111,6 +111,8 @@ unknown.
 All optional boolean properties must have a default value defined. If the property 
 is required, it is not required to have a default value.
 
+A PUT request body is an exception. In a PUT, a missing field keeps the stored value, so a default has no meaning there.
+
 
 [#311]
 == {SHOULD} avoid using qualifying verbs
@@ -165,29 +167,39 @@ For example, the following request/response for an account object uses the prope
 }
 ----
 
+[#410]
+== {MUST} not use `type` as a property or parameter name
+
+The name `type` is too generic. It does not tell the consumer which kind of type the value describes.
+It also collides with the `type` keyword of the schema, and many SDK languages reserve the word.
+Add the name of the resource or the concept to the name, for example `workflowType` or `triggerType`.
+
+This rule applies to:
+
+* the properties of request bodies, response bodies and component schemas.
+* path, query and header parameters.
+
+The `id` field of an object is not part of this rule. See <<313>>.
+
+* Discouraged: `"type": "EVENT"`
+* Recommended: `"triggerType": "EVENT"`
+
+[source,yaml]
+----
+parameters:
+  - in: query
+    name: workflowType
+    schema:
+      type: string
+----
+
 [#314]
-== {SHOULD} name references to foreign objects as <objectName>Ref
+== Retired: name references to foreign objects as <objectName>Ref
 
-* Discouraged: "launcher": "frank.dogs"
-* Recommended: "launcherRef": {"resource": "identities", "type": "ALIAS", "value": "frank.dogs"}
-
-Example
-[source,json]
-----
-{
-    "id": "2c9180857182305e0171993735622948",
-    "name": "Alison Ferguso",
-    "alias": "alison.ferguso",
-    "email": "alison.ferguso@acme-solar.com",
-    "status": "Active",
-    "managerRef": {
-        "type": "IDENTITY",
-        "id": "2c9180a46faadee4016fb4e018c20639",
-        "name": "Thomas Edison"
-    },
-    "attributes":[]
-}
-----
+This guideline is retired.
+It asked for a `Ref` suffix on each property that holds a reference object, for example `managerRef`.
+But <<315>> recommends a reference object without the suffix, for example `owner`, and the current APIs use both forms.
+To name a property that holds the ID of another object, follow <<313>>.
 
 
 [#315]
@@ -238,7 +250,7 @@ or a Role, the former case could be implemented as follows:
 ----
 
 [#316]
-== {MUST} define a default for optional values
+== {MUST} define a default for optional values icon:check-square[text="Test" role="lime"]
 
 All properties must define a default value for optional properties.  This must documented in the specification so clients 
 know what value will be used should they ignore a property.

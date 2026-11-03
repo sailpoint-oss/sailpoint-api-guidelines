@@ -130,7 +130,7 @@ specific parameter.
 
 
 [#110]
-== {MUST} always return JSON objects as top-level data structures
+== {MUST} always return JSON objects as top-level data structures icon:check-square[text="Test" role="lime"]
 
 In a response body, you must always return a JSON object (and not e.g. an
 array) as a top level data structure to support future extensibility. JSON
@@ -140,6 +140,32 @@ backwards compatibility. See <<161>> for an example.
 
 Maps (see <<216>>), even though technically objects, are also forbidden as top
 level data structures, since they don't support compatible, future extensions.
+
+For a list operation, put the list in an `items` array in the response object:
+
+[source,json]
+----
+{
+  "items": [
+    { "id": "2c9180835d2e5168015d32f890ca1581", "name": "Workflow A" },
+    { "id": "2c9180835d2e5168015d32f890ca1582", "name": "Workflow B" }
+  ]
+}
+----
+
+Many existing list operations return a top-level array.
+A change to the shape of an existing response breaks clients (see <<106>>), so these operations keep the array.
+The API linter reports them. Turn off the rule on each existing operation with the `x-sailpoint-lint-ignore` extension, and say what to do in the next version:
+
+[source,yaml]
+----
+get:
+  operationId: listWorkflows
+  x-sailpoint-lint-ignore:
+    path-list-operations-must-return-object: This existing list operation returns a top-level array, and a change breaks clients. In the next version of this API, return an object with an items array.
+----
+
+Each new list operation must return an object.
 
 
 [#111]

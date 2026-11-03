@@ -27,5 +27,11 @@ To see a list of all changes, please have a look at the https://github.com/sailp
 ** <<305>>: every operation must have a `summary`.
 ** <<317>>: a `required` list must not be empty.
 ** <<400>>: added the approved verbs `close`, `load`, `process`, `publish`, `reload` and `test` for POST, and `overwrite` for PUT.
-** Added the Test icon to <<159>>, <<219>>, <<225>>, <<321>>, <<324>> and <<325>>, and removed it from <<189>>.
+** Added the Test icon to <<110>>, <<159>>, <<219>>, <<225>>, <<316>>, <<321>>, <<324>> and <<325>>, and removed it from <<189>>.
+** <<110>>: a list operation must return an object with an `items` array. An existing list operation that returns an array turns off the rule with `x-sailpoint-lint-ignore`.
+** <<154>>: filled in the collection format of query and header parameters.
+** <<151>>: an operation with no parameters and no request body does not need a `400` response.
+** <<310>>: a boolean in a PUT request body does not need a default.
+** Retired <<176>> (problem JSON). Error responses use the format in <<326>>.
+** Retired <<314>> (`Ref` suffix on reference objects), because it conflicts with the example in <<315>>.
 

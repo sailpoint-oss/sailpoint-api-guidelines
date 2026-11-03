@@ -39,7 +39,7 @@ TBD
 You should use standard media types (defined in {media-types}[media type registry] 
 of Internet Assigned Numbers Authority (IANA)) as `content-type` (or `accept`) header 
 information. More specifically, for JSON payload you should use the standard media type 
-`application/json` (or `application/problem+json` for <<176>>).
+`application/json`.
 
 You should avoid using custom media types like `application/x.sailpoint.article+json`. 
 Custom media types beginning with `x` bring no advantage compared to the

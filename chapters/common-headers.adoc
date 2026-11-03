@@ -14,22 +14,26 @@ explicitly mention its support in your OpenAPI definition.
 
 
 [#132]
-== {SHOULD} use uppercase separate words with hyphens for HTTP headers
+== {MUST} use lowercase kebab-case for response header names
 
-This convention is followed by most standard headers e.g. as defined in 
-{RFC-2616}[RFC 2616] and {RFC-4229}[RFC 4229]. Examples:
+Write each response header name in lowercase, with a hyphen between words.
+This rule applies to standard headers and to proprietary headers. Examples:
 
 [source,http]
 ----
-If-Modified-Since
-Accept-Encoding
-Content-ID
-Language
+location
+retry-after
+x-total-count
+x-ratelimit-remaining
 ----
 
-Note, HTTP standard defines headers as case-insensitive ({RFC-7230}#page-22[RFC 7230, p.22]). 
-However, for sake of readability and consistency you should follow the convention when 
-using standard or proprietary headers. Exceptions are common abbreviations like `ID`. 
+HTTP header names are case-insensitive ({RFC-7230}#page-22[RFC 7230, p.22]).
+But HTTP/2 sends all header names in lowercase, and a message with an uppercase header name is malformed
+(https://datatracker.ietf.org/doc/html/rfc9113#section-8.2.2[RFC 9113, section 8.2.2]).
+Write the names in the OpenAPI definition as the client receives them.
+
+* Discouraged: `X-Total-Count`, `Location`, `x_total_count`
+* Recommended: `x-total-count`, `location`
 
 
 [#178]
