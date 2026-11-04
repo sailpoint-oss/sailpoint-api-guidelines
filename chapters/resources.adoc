@@ -61,6 +61,32 @@ but as little as possible. A great way to support the last 10% is to allow
 clients to specify their needs for more/less information by supporting
 filtering and <<157, embedding>>.
 
+In this example, the access profile holds the fields that most clients need.
+It refers to the owner and the source by `type`, `id` and `name`.
+It does not embed the full owner identity or the full source configuration.
+
+[source,json]
+----
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "Engineering Access",
+  "description": "Access for the engineering team",
+  "enabled": true,
+  "owner": {
+    "type": "IDENTITY",
+    "id": "2c9180835d2e5168015d32f890ca1582",
+    "name": "Jane Doe"
+  },
+  "source": {
+    "type": "SOURCE",
+    "id": "2c9180835d2e5168015d32f890ca1583",
+    "name": "Active Directory"
+  },
+  "created": "2024-03-12T15:04:05Z",
+  "modified": "2024-05-01T09:30:00Z"
+}
+----
+
 
 [#141]
 == {SHOULD} keep URLs verb-free
@@ -72,6 +98,9 @@ e.g., instead of having the verb _cancel_ in the url, think of sending a
 message to cancel an order to the _cancellations_ letter box on the server
 side.
 
+* Discouraged: `GET /getIdentities`, `POST /createAccessProfile`, `POST /access-requests/{accessRequestId}/cancel`
+* Recommended: `GET /identities`, `POST /access-profiles`, `POST /access-requests/{accessRequestId}/cancellations`
+
 
 [#142]
 == {MUST} use domain-specific resource names
@@ -82,6 +111,11 @@ the functionality and basic semantics of your resources. It also reduces the
 need for further documentation outside the API definition. For example,
 "sales-order-items" is superior to "order-items" in that it clearly indicates
 which business object it represents. Along these lines, "items" is too general.
+
+* Discouraged: `/profiles`, `/requests`, `/items`
+* Recommended: `/access-profiles`, `/identity-profiles`, `/access-requests`
+
+The name `/profiles` does not tell if the resource is an access profile or an identity profile.
 
 
 [#228]
@@ -158,6 +192,18 @@ Numerical, sequential IDs are considered a security risk because malicious actor
 enumerate through the IDs to obtain unauthorized information.  API producers must 
 use GUIDs or natural keys that aren’t sequential.
 
+* Discouraged: `/identities/1`, `/identities/2`, `/identities/3`
+* Recommended: `/identities/2c9180835d2e5168015d32f890ca1581`
+
+[source,yaml]
+----
+id:
+  type: string
+  description: The unique ID of the identity.
+  readOnly: true
+  example: 2c9180835d2e5168015d32f890ca1581
+----
+
 
 [#146]
 == {SHOULD} limit number of resource types
@@ -175,3 +221,9 @@ collection resource of the subresource entities. You should use <= 3
 sub-resource (nesting) levels -- more levels increase API complexity and url
 path length. (Remember, some popular web browsers do not support URLs of more
 than 2000 characters.)
+
+* Discouraged: `/sources/{sourceId}/accounts/{accountId}/entitlements/{entitlementId}/access-profiles/{accessProfileId}/owners`
+* Recommended: `/entitlements/{entitlementId}/access-profiles` and `/access-profiles/{accessProfileId}`
+
+The discouraged path has four sub-resource levels.
+Entitlements and access profiles have their own unique IDs, so expose them as top-level resources (see <<145>>).

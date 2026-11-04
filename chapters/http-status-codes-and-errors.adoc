@@ -82,12 +82,67 @@ All error responses must use the standard error response DTO object defined at
 https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/apis/shared/schemas/errorresponsedto.yaml.  
 This provides a consistent error response structure that can be easily consumed by clients.
 
+[source,yaml]
+----
+responses:
+  '400':
+    description: Client Error - Returned if the request body is invalid.
+    content:
+      application/json:
+        schema:
+          $ref: ../../shared/schemas/errorresponsedto.yaml
+----
+
+An error response body then looks like this:
+
+[source,json]
+----
+{
+  "detailCode": "400.1 Bad Request Content",
+  "trackingId": "e7eab60924f64aa284175b9fa3309599",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "The request was syntactically correct but its content is semantically invalid."
+    }
+  ],
+  "causes": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "The property name is required."
+    }
+  ]
+}
+----
+
+* Discouraged: `{ "error": "JWT validation failed: JWT is expired" }`, `{ "message": "Rate Limit Exceeded" }`, an `application/problem+json` body
+* Recommended: an `application/json` body with `detailCode`, `trackingId` and `messages`, as in the example above
+
 
 [#322]
 == {MAY} define application specific codes for the standard error response object
 
 If using the `detailCode` within the https://github.com/sailpoint/cloud-api-client-common/blob/master/api-specs/src/main/yaml/apis/shared/schemas/errorresponsedto.yaml, 
 then the service owner is free to create their own logic for detail codes that will aid them in debugging issues with the service.
+
+In this example, the service team made the code `400.1.2` for a filter on a field that the service does not support.
+
+[source,json]
+----
+{
+  "detailCode": "400.1.2 Unsupported filter field",
+  "trackingId": "e7eab60924f64aa284175b9fa3309599",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "The filter field lastLoginTime is not supported."
+    }
+  ]
+}
+----
 
 
 [#323]
@@ -98,6 +153,72 @@ These examples must accurately reflect what can be returned by the endpoint.  De
 multiple endpoints may be used as long as they accurately reflect what can be returned by the endpoint.  If a 
 default example doesn’t accurately reflect what can be returned by an endpoint, then that endpoint must 
 override the default example with one that is accurate.
+
+* Discouraged: a `400` example about an invalid request body on a `GET` operation that has no request body
+* Recommended: a `400` example about the query parameter that the `GET` operation rejects, for example an unsupported `filters` field
+
+In this example, each response of the operation has an example that matches what the operation returns.
+
+[source,yaml]
+----
+responses:
+  '200':
+    description: OK - Returns the workflow.
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/Workflow.yaml
+        examples:
+          workflow:
+            summary: A disabled workflow
+            value:
+              id: 2c9180835d2e5168015d32f890ca1581
+              name: Send Email
+              enabled: false
+              created: '2026-01-15T09:30:00Z'
+  '400':
+    description: Client Error - Returned if a query parameter is invalid.
+    content:
+      application/json:
+        schema:
+          $ref: ../../shared/schemas/errorresponsedto.yaml
+        examples:
+          '400':
+            summary: An unsupported filters field
+            value:
+              detailCode: 400.1.2 Unsupported filter field
+              trackingId: e7eab60924f64aa284175b9fa3309599
+              messages:
+                - locale: en-US
+                  localeOrigin: DEFAULT
+                  text: The filter field lastLoginTime is not supported.
+  '404':
+    description: Not Found - Returned if the workflow does not exist.
+    content:
+      application/json:
+        schema:
+          $ref: ../../shared/schemas/errorresponsedto.yaml
+        examples:
+          '404':
+            summary: The workflow does not exist
+            value:
+              detailCode: 404 Not found
+              trackingId: b21b1f7ce4da4d639f2c62a57171b427
+              messages:
+                - locale: en-US
+                  localeOrigin: DEFAULT
+                  text: The workflow 2c9180835d2e5168015d32f890ca1581 was not found.
+  '401':
+    $ref: ../../shared/responses/401.yaml
+  '403':
+    $ref: ../../shared/responses/403.yaml
+  '429':
+    $ref: ../../shared/responses/429.yaml
+  '500':
+    $ref: ../../shared/responses/500.yaml
+----
+
+The shared `403` and `500` responses have examples that are accurate for this operation. So the operation uses them as they are.
 
 
 [#150]
@@ -125,6 +246,9 @@ common sense information and the risk of inconsistent definitions. Only if the
 HTTP status code is not in the list below or its usage requires additional
 information aside the well defined semantic, the API specification must provide
 a clear description of the HTTP status code in the response.
+
+* Discouraged: `420` (Enhance Your Calm) for a rate limit, a new code such as `461` for an invalid filter, `200` with an error object in the body
+* Recommended: `429` for a rate limit, `400` for an invalid filter, a `4xx` or `5xx` code for each error
 
 
 [[success-codes]]
@@ -292,6 +416,20 @@ for a list of response codes that SailPoint prefers to use.
 
 If you encounter a scenario where two or more response codes are appropriate, prefer to use the response code that preserves the security of the system and does not hand out too much information to unauthorized users.
 
+[cols="50%,25%,25%",options="header",]
+|=======================================================================
+|Situation |Discouraged |Recommended
+|The workflow in the path does not exist. |`400` |`404`
+|A workflow with the same name already exists. |`400` |`409`
+|The `if-match` entity tag does not match the current workflow. |`400` |`412`
+|The request has a body but no `content-type` header. |`400` |`415`
+|A service that the operation calls is not available. |`500` |`503`
+|=======================================================================
+
+In this example, both `403` and `404` are correct.
+A user asks for a workflow that the user does not have access to.
+Return `404`. Then the response does not tell the user that the workflow exists.
+
 
 [#152]
 == {MUST} use code 207 for batch or bulk requests
@@ -402,6 +540,60 @@ returned on every request and not just on a 429, which implies the
 service implementing the API is carrying sufficient state to track the
 number of requests made within a given window for each named entity.
 
+This `429` response uses the `retry-after` header.
+The client waits 30 seconds before the next request.
+
+[source,http]
+----
+HTTP/1.1 429 Too Many Requests
+content-type: application/json
+retry-after: 30
+
+{
+  "detailCode": "429 Too Many Requests",
+  "trackingId": "e7eab60924f64aa284175b9fa3309599",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "Rate limit exceeded. Wait 30 seconds and try again."
+    }
+  ]
+}
+----
+
+This `429` response uses the `x-ratelimit` headers.
+The client can send 100 requests in each window. The window resets in 45 seconds.
+The example shows only the headers. The body is the same as in the example above.
+
+[source,http]
+----
+HTTP/1.1 429 Too Many Requests
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 0
+x-ratelimit-reset: 45
+----
+
+The OpenAPI definition of the `429` response declares the header:
+
+[source,yaml]
+----
+'429':
+  description: Too Many Requests - Returned if the client sent too many requests. The retry-after header tells how many seconds to wait.
+  headers:
+    retry-after:
+      description: The number of seconds to wait before the next request.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      example: 30
+  content:
+    application/json:
+      schema:
+        $ref: ../../shared/schemas/errorresponsedto.yaml
+----
+
 
 [#176]
 == Retired: support problem JSON
@@ -420,3 +612,38 @@ Stack traces contain implementation details that are not part of an API,
 and on which clients should never rely. Moreover, stack traces can leak
 sensitive information that partners and third parties are not allowed to
 receive and may disclose insights about vulnerabilities to attackers.
+
+This response body exposes a stack trace:
+
+[source,json]
+----
+{
+  "detailCode": "500.0 Internal Fault",
+  "trackingId": "b21b1f7ce4da4d639f2c62a57171b427",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "java.lang.NullPointerException: Cannot invoke \"String.length()\" because \"name\" is null\n\tat com.sailpoint.workflow.WorkflowService.create(WorkflowService.java:142)"
+    }
+  ]
+}
+----
+
+This response body gives a general message and a `trackingId`.
+The service team uses the `trackingId` to find the stack trace in the service logs.
+
+[source,json]
+----
+{
+  "detailCode": "500.0 Internal Fault",
+  "trackingId": "b21b1f7ce4da4d639f2c62a57171b427",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "An internal fault occurred."
+    }
+  ]
+}
+----

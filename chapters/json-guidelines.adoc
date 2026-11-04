@@ -17,6 +17,20 @@ ones about values.
 Names of arrays should be pluralized to indicate that they contain multiple values.
 This implies in turn that object names should be singular.
 
+* Discouraged: `"entitlement": [ ... ]`, `"owners": { ... }`
+* Recommended: `"entitlements": [ ... ]`, `"owner": { ... }`
+
+[source,json]
+----
+{
+  "owner": { "id": "2c9180835d2e5168015d32f890ca1581", "name": "Jane Doe" },
+  "entitlements": [
+    { "id": "2c9180835d2e5168015d32f890ca1582", "name": "Admin" },
+    { "id": "2c9180835d2e5168015d32f890ca1583", "name": "Reader" }
+  ]
+}
+----
+
 
 [#118]
 == {MUST} property names must be ASCII camelCase
@@ -27,6 +41,19 @@ Property names are restricted to ASCII strings.  The first character must be a l
 
 * If “ID” appears as the first word, then it is entirely lowercase (ex. “id”).
 * If “ID” appears after the first word, then the “I” is capitalized and the “d” is lowercase (ex. “userId”).
+
+* Discouraged: `new_client_table`, `NewClientTable`, `new-client-table`, `userID`, `ID`
+* Recommended: `newClientTable`, `userId`, `id`
+
+[source,json]
+----
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "userId": "2c9180835d2e5168015d32f890ca1582",
+  "displayName": "Jane Doe",
+  "lastLoginTime": "2019-08-24T14:15:22Z"
+}
+----
 
 
 [#240]
@@ -41,6 +68,22 @@ This approach allows to clearly distinguish values from properties or other elem
 **Exception:** This rule does not apply for case sensitive values sourced from outside 
 API definition scope, e.g. for language codes from {ISO-639-1}[ISO 639-1], or when 
 declaring possible values for a <<137,rule 137>> [`sort` parameter].
+
+* Discouraged: `pending`, `inProgress`, `In-Progress`
+* Recommended: `PENDING`, `IN_PROGRESS`
+
+[source,yaml]
+----
+components:
+  schemas:
+    RequestStatus:
+      type: string
+      enum:
+        - PENDING
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELED
+----
 
 [#216]
 == {SHOULD} define maps using `additionalProperties`
@@ -104,6 +147,20 @@ or statuses - for example accepted_terms_and_conditions with true or
 false can be replaced with terms_and_conditions with values yes, no and
 unknown.
 
+* Discouraged: `"acceptedTermsAndConditions": null`
+* Recommended: `"termsAndConditions": "UNKNOWN"`
+
+[source,yaml]
+----
+termsAndConditions:
+  type: string
+  description: Tells if the user accepted the terms and conditions.
+  enum:
+    - "YES"
+    - "NO"
+    - UNKNOWN
+----
+
 
 [#310]
 == {MUST} define a default value for boolean properties icon:check-square[text="Test" role="lime"]
@@ -112,6 +169,22 @@ All optional boolean properties must have a default value defined. If the proper
 is required, it is not required to have a default value.
 
 A PUT request body is an exception. In a PUT, a missing field keeps the stored value, so a default has no meaning there.
+
+In this example, `enabled` is optional and has a default. `locked` is required, so it does not need a default.
+
+[source,yaml]
+----
+Account:
+  type: object
+  required:
+    - locked
+  properties:
+    enabled:
+      type: boolean
+      default: true
+    locked:
+      type: boolean
+----
 
 
 [#311]
@@ -250,10 +323,76 @@ or a Role, the former case could be implemented as follows:
 ----
 
 [#316]
-== {MUST} define a default for optional values icon:check-square[text="Test" role="lime"]
+== {MUST} define a default for optional input values icon:check-square[text="Test" role="lime"]
 
-All properties must define a default value for optional properties.  This must documented in the specification so clients 
-know what value will be used should they ignore a property.
+Each optional input value must define a default value.
+The default tells the client which value the service uses when the client leaves out the value.
+
+This rule applies to:
+
+* optional query and header parameters.
+* optional properties of a request body.
+
+This rule does not apply to output values, that is, the properties of a response body.
+The service always sets an output value, so a default has no meaning there.
+Do not add a default to a response property.
+
+A required input value does not need a default.
+A PUT request body is also an exception, because in a PUT, a missing field keeps the stored value. See <<310>>.
+
+This query parameter is optional, so it defines a default:
+
+[source,yaml]
+----
+parameters:
+  - in: query
+    name: limit
+    required: false
+    schema:
+      type: integer
+      minimum: 0
+      maximum: 250
+      default: 250
+----
+
+In this request body, `priority` is optional and defines a default. `name` is required, so it does not need a default:
+
+[source,yaml]
+----
+WorkflowCreateRequest:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+    priority:
+      type: string
+      enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+      default: MEDIUM
+----
+
+This response body does not define defaults:
+
+[source,yaml]
+----
+Workflow:
+  type: object
+  properties:
+    id:
+      type: string
+    name:
+      type: string
+    priority:
+      type: string
+      enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+----
 
 
 [#317]
@@ -269,6 +408,40 @@ For path and query parameters, see https://swagger.io/docs/specification/describ
 Generally, query parameters should be optional, but there are cases where a query parameter is required.  In these cases, 
 make sure to set the “required” attribute for the query parameters to true.
 
+[source,yaml]
+----
+Workflow:
+  type: object
+  required:
+    - name
+    - ownerId
+  properties:
+    name:
+      type: string
+    ownerId:
+      type: string
+    description:
+      type: string
+----
+
+[source,yaml]
+----
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+  - in: query
+    name: offset
+    required: false
+    schema:
+      type: integer
+----
+
+* Discouraged: `required: []`, `required: null`
+* Recommended: a list with at least one property name, or no `required` attribute
+
 
 [#123]
 == {MUST} use same semantics for `null` and absent properties
@@ -281,11 +454,32 @@ TBD
 
 If a property or parameter can return `null`, then it must have the `nullable: true` OpenAPI property.
 
+[source,yaml]
+----
+description:
+  type: string
+  nullable: true
+  example: null
+----
+
+The property can then hold `null` in a response:
+
+[source,json]
+----
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "description": null
+}
+----
+
 
 [#124]
 == {MUST} not use `null` for empty arrays
 
 Empty array values can unambiguously be represented as the empty list, `[]`.
+
+* Discouraged: `"entitlements": null`
+* Recommended: `"entitlements": []`
 
 
 [#126]
@@ -324,6 +518,21 @@ represent a timestamp as 1460062925, 1460062925000 or 1460062925.000. Date
 strings, though more verbose and requiring more effort to parse, avoid this
 ambiguity.
 
+* Discouraged: `"created": 1460062925`, `"created": "05/28/2015 14:07"`, `"created": "2015-05-28T14:07:17+00:00"`
+* Recommended: `"created": "2015-05-28T14:07:17Z"`
+
+[source,yaml]
+----
+created:
+  type: string
+  format: date-time
+  example: "2015-05-28T14:07:17Z"
+birthDate:
+  type: string
+  format: date
+  example: "2015-05-28"
+----
+
 
 [#127]
 == {SHOULD} define time durations and intervals properties conform to ISO 8601
@@ -331,3 +540,20 @@ ambiguity.
 Schema based JSON properties that are by design durations and intervals could
 be strings formatted as recommended by {ISO-8601}[ISO 8601]
 ({RFC-3339}#appendix-A[Appendix A of RFC 3339 contains a grammar] for durations).
+
+* Discouraged: `"timeout": 90`, `"timeout": "90s"`, `"timeout": "1h30m"`
+* Recommended: `"timeout": "PT1H30M"`
+
+Examples of ISO 8601 durations and intervals:
+
+* `PT30S`: 30 seconds
+* `P1DT12H`: 1 day and 12 hours
+* `2015-05-28T14:00:00Z/PT2H`: an interval of 2 hours that starts at the date-time
+
+[source,yaml]
+----
+timeout:
+  type: string
+  description: The maximum run time, as an ISO 8601 duration.
+  example: PT1H30M
+----

@@ -12,6 +12,17 @@ to allow for API management:
 - `#/info/description` containing a proper description of the API
 - `#/info/x-audience` intended target audience of the API (<<219, see rule 219>>)
 
+[source,yaml]
+----
+openapi: 3.0.3
+info:
+  title: Access Requests
+  version: "v1"
+  description: >-
+    Use this API to submit access requests for identities and to see the status of the requests.
+  x-audience: external-public
+----
+
 [NOTE]
 ====
 We’ll automatically generate `#/info/contact/*` when creating the public Open API spec.

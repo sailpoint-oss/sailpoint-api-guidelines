@@ -26,6 +26,20 @@ As a consequence, a JSON payload must
 * contain only {RFC-7493}#section-2.3[unique member names] (no duplicate
   names).
 
+* Discouraged: a top-level array, for example `[ { "id": "2c9180835d2e5168015d32f890ca1581" } ]`
+* Discouraged: duplicate member names, for example `{ "name": "Admin", "name": "Administrator" }`
+* Recommended: a top-level object with unique member names
+
+[source,json]
+----
+{
+  "items": [
+    { "id": "2c9180835d2e5168015d32f890ca1581", "name": "Admin" },
+    { "id": "2c9180835d2e5168015d32f890ca1582", "name": "Reader" }
+  ]
+}
+----
+
 
 [#168]
 == {MAY} pass non-JSON media types using data specific standard formats
@@ -44,6 +58,30 @@ information. More specifically, for JSON payload you should use the standard med
 You should avoid using custom media types like `application/x.sailpoint.article+json`. 
 Custom media types beginning with `x` bring no advantage compared to the
 standard media type for JSON, and make automated processing more difficult.
+
+* Discouraged: `content-type: application/x.sailpoint.article+json`
+* Recommended: `content-type: application/json`, or `content-type: application/json-patch+json` for a JSON Patch request body
+
+[source,yaml]
+----
+patch:
+  operationId: updateAccessProfile
+  requestBody:
+    required: true
+    content:
+      application/json-patch+json:
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonPatchOperation'
+  responses:
+    '200':
+      description: The updated access profile.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccessProfile'
+----
 
 
 [#239]
@@ -99,6 +137,35 @@ You *should* use these formats, whenever applicable.
 *Remark:* Please note that this list of standard data formats is not exhaustive 
 and everyone is encouraged to propose additions.
 
+This schema uses standard formats for its string and integer properties:
+
+[source,yaml]
+----
+Identity:
+  type: object
+  properties:
+    email:
+      type: string
+      format: email
+      example: jane.doe@example.com
+    created:
+      type: string
+      format: date-time
+      example: '2024-03-12T15:04:05Z'
+    locale:
+      type: string
+      format: bcp47
+      example: en-US
+    country:
+      type: string
+      format: iso-3166
+      example: US
+    loginCount:
+      type: integer
+      format: int32
+      example: 42
+----
+
 
 [#169]
 == {MUST} use standard date and time formats
@@ -109,12 +176,18 @@ and everyone is encouraged to propose additions.
 
 Read more about date and time format in <<126>>.
 
+* Discouraged: `"created": "03/12/2024 3:04 PM"`, `"created": 1710255845`
+* Recommended: `"created": "2024-03-12T15:04:05Z"`
+
 
 [[http-headers]]
 === HTTP headers
 
 Http headers including the proprietary headers use the
 {RFC-7231}#section-7.1.1.1[HTTP date format defined in RFC 7231].
+
+* Discouraged: `last-modified: 2024-03-12T15:04:05Z`
+* Recommended: `last-modified: Tue, 12 Mar 2024 15:04:05 GMT`
 
 
 [#128]
@@ -132,6 +205,19 @@ codes:
    information for language usage, like region (using {ISO-3166-1-a2}[ISO 3166-1]), 
    variant, script and others.
 * Currency codes:  {ISO-4217}[ISO 4217] three letter currency codes
+
+* Discouraged: `"country": "UK"`, `"language": "English"`, `"currency": "£"`
+* Recommended: `"country": "GB"`, `"language": "en"`, `"currency": "GBP"`
+
+[source,json]
+----
+{
+  "country": "GB",
+  "language": "en",
+  "locale": "en-GB",
+  "currency": "GBP"
+}
+----
 
 
 [#171]

@@ -300,6 +300,37 @@ to {RFC-7231}[RFC 7231]:
 | {TRACE}   | {YES} | {YES}      | {NO}
 |====================================================
 
+* Discouraged: `GET /v3/workflows/2c9180835d2e5168015d32f890ca1581?enabled=false` that disables the workflow. A safe method changes the server state.
+* Recommended: `PATCH /v3/workflows/2c9180835d2e5168015d32f890ca1581` with a body that sets `enabled` to `false`.
+
+{DELETE} is idempotent. In this example, the second request returns a different status code.
+But the server state is the same after one request or two requests.
+
+[source,http]
+----
+DELETE /v3/workflows/2c9180835d2e5168015d32f890ca1581 HTTP/1.1
+
+HTTP/1.1 204 No Content
+
+
+DELETE /v3/workflows/2c9180835d2e5168015d32f890ca1581 HTTP/1.1
+
+HTTP/1.1 404 Not Found
+content-type: application/json
+
+{
+  "detailCode": "404 Not found",
+  "trackingId": "b21b1f7ce4da4d639f2c62a57171b427",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "The workflow 2c9180835d2e5168015d32f890ca1581 was not found."
+    }
+  ]
+}
+----
+
 [#229]
 == {SHOULD} consider to design `POST` and `PATCH` idempotent
 
@@ -353,6 +384,65 @@ If you mainly aim to support safe retries, we suggest to apply <<182,
 conditional key>> and <<231,secondary key>> pattern before the <<230,
 Idempotency Key>> pattern.
 
+This example uses the conditional key pattern on a {PATCH}.
+The client reads the workflow and gets its entity tag.
+Then the client sends the entity tag in the `if-match` header.
+
+[source,http]
+----
+GET /v3/workflows/2c9180835d2e5168015d32f890ca1581 HTTP/1.1
+
+HTTP/1.1 200 OK
+content-type: application/json
+etag: "5"
+
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "Send Email",
+  "enabled": true
+}
+
+
+PATCH /v3/workflows/2c9180835d2e5168015d32f890ca1581 HTTP/1.1
+content-type: application/json-patch+json
+if-match: "5"
+
+[
+  { "op": "replace", "path": "/enabled", "value": false }
+]
+
+HTTP/1.1 200 OK
+content-type: application/json
+etag: "6"
+
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "Send Email",
+  "enabled": false
+}
+----
+
+If a different client changed the workflow first, the entity tag does not match.
+The server does not apply the change and returns {412}:
+
+[source,http]
+----
+HTTP/1.1 412 Precondition Failed
+content-type: application/json
+
+{
+  "detailCode": "412 Precondition Failed",
+  "trackingId": "e7eab60924f64aa284175b9fa3309599",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "The workflow changed after you read it. Get the workflow again and retry the change."
+    }
+  ]
+}
+----
+
 
 [#231]
 == {MAY} use secondary key for idempotent `POST` design
@@ -376,6 +466,76 @@ subsequent retries should fail with status code {409} (conflict). We suggest
 to avoid {200} here unless you make sure, that the delivered resource is the
 original one implementing a well defined behavior. Using {204} without content
 would be a similar well defined option.
+
+In this example, `cartId` is the secondary key of an order.
+The server allows only one order for each cart.
+
+[source,yaml]
+----
+Order:
+  type: object
+  required:
+    - cartId
+  properties:
+    id:
+      type: string
+      readOnly: true
+      description: The order ID. The server creates it.
+      example: 2c9180835d2e5168015d32f890ca1581
+    cartId:
+      type: string
+      description: The ID of the shopping cart for this order. Each cart can have only one order.
+      example: 2c9180835d2e5168015d32f890ca1582
+----
+
+The first request creates the order:
+
+[source,http]
+----
+POST /v3/orders HTTP/1.1
+content-type: application/json
+
+{
+  "cartId": "2c9180835d2e5168015d32f890ca1582"
+}
+
+HTTP/1.1 201 Created
+content-type: application/json
+location: https://tenant.api.identitynow.com/v3/orders/2c9180835d2e5168015d32f890ca1581
+
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "cartId": "2c9180835d2e5168015d32f890ca1582"
+}
+----
+
+A retry with the same `cartId` does not create a second order.
+The server returns {409}:
+
+[source,http]
+----
+POST /v3/orders HTTP/1.1
+content-type: application/json
+
+{
+  "cartId": "2c9180835d2e5168015d32f890ca1582"
+}
+
+HTTP/1.1 409 Conflict
+content-type: application/json
+
+{
+  "detailCode": "409 Conflict",
+  "trackingId": "e7eab60924f64aa284175b9fa3309599",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "An order for cart 2c9180835d2e5168015d32f890ca1582 already exists."
+    }
+  ]
+}
+----
 
 
 [#154]

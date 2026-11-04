@@ -35,6 +35,20 @@ is not covered by these rules. If client implementations update their
 generation process to a new version of the API definition, it has to be
 expected that code changes are necessary.
 
+A team wants to show the full name of an identity under a new name.
+
+* Discouraged: rename `name` to `displayName` in the response. Clients that read `name` stop working.
+* Recommended: keep `name` and add `displayName` as a new property.
+
+[source,json]
+----
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "jane.doe",
+  "displayName": "Jane Doe"
+}
+----
+
 
 [#107]
 == {SHOULD} prefer compatible extensions
@@ -55,6 +69,26 @@ services in a backward-compatible way:
   not be prepared to handle it. However, enum ranges can be extended when used
   for input parameters.
 * Support redirection in case an URL has to change {301} (Moved Permanently).
+
+* Discouraged: add `ownerId` to the `required` list of an existing request body.
+* Recommended: add `ownerId` as an optional property. Do not add it to `required`.
+
+[source,yaml]
+----
+SourceCreateRequest:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      description: Name of the source.
+      example: Active Directory
+    ownerId:
+      type: string
+      description: ID of the identity that owns the source. This property is new and optional.
+      example: 2c9180835d2e5168015d32f890ca1581
+----
 
 
 [#108]
@@ -83,6 +117,20 @@ providers:
   {RFC-7231}#section-6[RFC 7231 Section 6]).
 * Follow the redirect when the server returns HTTP status code {301} (Moved
   Permanently).
+
+A client reads this response. The API definition does not have `riskScore` yet, and `SUSPENDED` is a new value of `status`.
+The client ignores `riskScore` and keeps it if it sends the object back in a {PUT} request.
+The client uses its default behavior for the unknown `SUSPENDED` value.
+
+[source,json]
+----
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "Jane Doe",
+  "status": "SUSPENDED",
+  "riskScore": 42
+}
+----
 
 
 [#109]
@@ -127,6 +175,51 @@ In specific situations, where a (known) input field is not needed anymore, it
 either can stay in the API definition with "not used anymore" description or
 can be removed from the API definition as long as the server ignores this
 specific parameter.
+
+In this example, the client sends `descripton`, a misspelled property name.
+The server does not ignore it. It returns {400} with the standard error response object (see <<326>>).
+
+[source,http]
+----
+POST /v3/sources HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Active Directory",
+  "descripton": "Corporate directory"
+}
+----
+
+[source,http]
+----
+HTTP/1.1 400 Bad Request
+content-type: application/json
+
+{
+  "detailCode": "400.1 Bad Request Content",
+  "trackingId": "e7eab60924f64aa284175b9fa3309599",
+  "messages": [
+    {
+      "locale": "en-US",
+      "localeOrigin": "DEFAULT",
+      "text": "The request contains an unknown property: descripton."
+    }
+  ],
+  "causes": []
+}
+----
+
+Define exact constraints for each input property:
+
+[source,yaml]
+----
+name:
+  type: string
+  description: Name of the source.
+  minLength: 1
+  maxLength: 128
+  example: Active Directory
+----
 
 
 [#110]
@@ -199,6 +292,33 @@ Note that this guideline concentrates on default extensibility and does not
 exclude the use of `additionalProperties` with a schema as a value, which might
 be appropriate in some circumstances, e.g. see <<216>>.
 
+Discouraged:
+
+[source,yaml]
+----
+Source:
+  type: object
+  additionalProperties: false
+  properties:
+    name:
+      type: string
+      description: Name of the source.
+      example: Active Directory
+----
+
+Recommended:
+
+[source,yaml]
+----
+Source:
+  type: object
+  properties:
+    name:
+      type: string
+      description: Name of the source.
+      example: Active Directory
+----
+
 [#113]
 == {SHOULD} avoid versioning
 
@@ -218,6 +338,11 @@ these three ways:
 * create a new API version supported in parallel with the old API by the same
   microservice
 
+A team wants to return the manager of each account.
+
+* Discouraged: create `/v4/accounts` only to add a `manager` property.
+* Recommended: add an optional `manager` property to the `/v3/accounts` response. This is a compatible change (see <<107>>).
+
 [#115]
 == {MUST} use URI versioning
 
@@ -227,7 +352,20 @@ SailPoint uses URI versioning with the following structure:
 
 Ex. /v3, /v4, etc.
 
-Note: Beta APIs fall under /beta.  
+Note: Beta APIs fall under /beta.
+
+* Discouraged: `/accounts?version=3`, `/api/v3/accounts`, `/version3/accounts`, an `accept: application/vnd.sailpoint.v3+json` header
+* Recommended: `/v3/accounts`, `/beta/accounts`
+
+[source,yaml]
+----
+servers:
+  - url: https://{tenant}.api.identitynow.com/v3
+    variables:
+      tenant:
+        default: sailpoint
+        description: Name of the tenant.
+----
 
 [#307]
 == {MUST} follow versioned API requirements
@@ -260,6 +398,28 @@ Non-breaking changes may be added to an existing live version.  Here are some ex
 * Net new resources
 * New query parameters and filterable/sortable fields (as long as they are optional and the existing behavior is preserved if the new parameters are not passed)
 
+In this example, `description` is optional in the live `/v3` version.
+
+[source,yaml]
+----
+SourceCreateRequest:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      description: Name of the source.
+      example: Active Directory
+    description:
+      type: string
+      description: Description of the source.
+      example: Corporate directory
+----
+
+* Discouraged: add `description` to `required` in `/v3`. Requests without `description` start to fail. This is a breaking change.
+* Recommended: keep `description` optional in `/v3`. Add a new optional property, such as `ownerId`, if you need more data.
+
 [#308]
 == {MUST} follow beta API requirements
 
@@ -269,4 +429,24 @@ Non-breaking changes may be added to an existing live version.  Here are some ex
 * Breaking changes must be announced ahead of time to all stakeholders
 * Can be internal or external.
 * This is expected to be a stable, usable API that is available for external and internal integration.
+
+* Discouraged: `/v3/sim-integrations` for an API that is still in beta, `/sim-integrations-beta`
+* Recommended: `/beta/sim-integrations`
+
+[source,yaml]
+----
+servers:
+  - url: https://{tenant}.api.identitynow.com/beta
+    variables:
+      tenant:
+        default: sailpoint
+        description: Name of the tenant.
+paths:
+  /sim-integrations:
+    get:
+      operationId: listSimIntegrations
+      summary: List SIM integrations
+      tags:
+        - SIM Integrations
+----
 

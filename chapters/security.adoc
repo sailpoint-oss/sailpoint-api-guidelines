@@ -139,6 +139,21 @@ get:
 
 If an API collection requires additional product licenses to enable the feature, then each required license must be documented in the API collection description.
 
+[source,yaml]
+----
+openapi: 3.0.3
+info:
+  title: Non-Employee Lifecycle Management
+  version: "v1"
+  description: >-
+    Use this API to manage non-employee records and the sources that hold them.
+
+
+    This API collection requires the Non-Employee Risk Management add-on license.
+    Contact your SailPoint account manager to get the license.
+  x-audience: external-public
+----
+
 
 [#225]
 == {MUST} follow naming convention for permissions (scopes) icon:check-square[text="Test" role="lime"]
