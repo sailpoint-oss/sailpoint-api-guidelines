@@ -35,4 +35,11 @@ To see a list of all changes, please have a look at the https://github.com/sailp
 ** <<316>>: only optional input values (query parameters, header parameters and request body properties) need a default. Response properties must not define a default.
 ** Retired <<176>> (problem JSON). Error responses use the format in <<326>>.
 ** Retired <<314>> (`Ref` suffix on reference objects), because it conflicts with the example in <<315>>.
+** <<101>>: specification files must use OpenAPI 3. Swagger 2 is not supported.
+** <<147>>: a path can have a maximum of 3 resource levels, the main resource included.
+** <<187>>: a deprecated operation or parameter explains the deprecation in `x-deprecated-description`.
+** <<228>>: filled in the allowed characters for path parameter values.
+** <<238>>: the formats in the table are mandatory. Added `binary`, `comma-separated`, `duration` and `uri-reference`.
+** <<239>>: embedded binary data in JSON uses `base64` with `format: byte`, and not `format: binary`.
+** <<178>>: do not define `Content-Type`, `Accept` or `Authorization` as a header parameter.
 

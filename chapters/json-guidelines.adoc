@@ -229,14 +229,13 @@ For example, the following request/response for an account object uses the prope
     "attributes": { },
     "authoritative": true,
     "description": "string",
-    "disabled": true,
+    "enabled": false,
     "locked": true,
     "nativeIdentity": "string",
     "systemAccount": true,
     "uncorrelated": true,
     "uuid": "string",
-    "manuallyCorrelated": true,
-    "hasEntitlements": true
+    "manuallyCorrelated": true
 }
 ----
 

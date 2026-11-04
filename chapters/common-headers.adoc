@@ -100,6 +100,30 @@ content-disposition: attachment; filename="identities-report.csv"
 * Discouraged: `content-type: application/json` on a CSV body, a `content-length` that is not the body size, `content-language: english`
 * Recommended: `content-type: text/csv`, a `content-length` that is the body size in bytes, `content-language: en-US`
 
+Do not define the `Content-Type`, `Accept` or `Authorization` header as a parameter (`in: header`) in the API specification.
+OpenAPI 3 ignores these header parameters. Define them in the correct place instead:
+
+* `Content-Type`: the media type keys of `requestBody.content`
+* `Accept`: the media type keys of the `content` of each response
+* `Authorization`: the `security` of the operation (see <<104>>)
+
+* Discouraged: a parameter with `in: header` and `name: Content-Type`
+* Recommended: a `requestBody` with `content: application/json`
+
+[source,yaml]
+----
+post:
+  operationId: createWorkflowV1
+  security:
+    - userAuth: [idn:workflow:manage]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/WorkflowCreateRequest.yaml
+----
+
 
 [#180]
 == {SHOULD} use `Location` header instead of `Content-Location` header

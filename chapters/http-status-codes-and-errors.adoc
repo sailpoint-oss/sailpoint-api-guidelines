@@ -54,18 +54,19 @@ responses:
 especially if they are not under control of the service provider. Thus unless
 a response code conveys application-specific functional semantics or is used
 in a none standard way that requires additional explanation, multiple error
-response specifications can be combined using the following pattern:
+response specifications can be combined using the following pattern.
+The `default` response uses the standard error response object (see <<326>>):
 
 [source,yaml]
 ----
 responses:
   ...
   default:
-    description: error occurred - see status code and problem object for more information.
+    description: An error occurred. See the status code and the error response object for more information.
     content:
-      "application/problem+json":
+      application/json:
         schema:
-          $ref: 'https://sailpoint-oss.github.io/sailpoint-api-guidelines/problem-1.0.1.yaml#/Problem'
+          $ref: ../../shared/schemas/errorresponsedto.yaml
 ----
 
 API designers should also think about a **troubleshooting board** as part of

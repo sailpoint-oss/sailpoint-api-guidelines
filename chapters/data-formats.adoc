@@ -85,14 +85,30 @@ patch:
 
 
 [#239]
-=== {MUST} encode embedded binary data in `base64url`
+=== {MUST} encode embedded binary data in `base64`
 
 Exposing binary data using an alternative media type is generally preferred.
 See <<168,the rule above>>.
 
 If an alternative content representation is not desired then binary data should
-be embedded into the JSON document as a `base64url`-encoded string property
-following {RFC-7493}#section-4.4[RFC 7493 Section 4.4].
+be embedded into the JSON document as a `base64`-encoded string property with `format: byte`.
+Do not use `format: binary` in a JSON payload. Use `format: binary` only for a
+payload that is not JSON, for example `multipart/form-data` or `application/octet-stream`.
+
+* Discouraged: a property in an `application/json` body with `type: string` and `format: binary`
+* Recommended: a property in an `application/json` body with `type: string` and `format: byte`
+
+[source,yaml]
+----
+Attachment:
+  type: object
+  properties:
+    content:
+      type: string
+      format: byte
+      description: Content of the file, encoded in base64.
+      example: dGVzdA==
+----
 
 
 [#238]
@@ -102,7 +118,7 @@ https://json-schema.org/understanding-json-schema/reference/string.html#format[J
 and https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types[OpenAPI] 
 define several data formats, e.g. `date`, `time`, `email`, and `url`, based on ISO and IETF standards.
 The following table lists these formats including additional formats useful in an e-commerce environment. 
-You *should* use these formats, whenever applicable.
+You *must* use these formats, whenever applicable. You must not use a format that is not in this table.
 
 [cols="10%,25%,25%,40%",options="header",]
 |=====================================================================
@@ -114,9 +130,12 @@ You *should* use these formats, whenever applicable.
 | `number` | <<171, `double`>> | {IEEE-754-2008}[IEEE 754-2008] | `3.141592653589793`
 | `number` | <<171, `decimal`>> |  | `3.141592653589793238462643383279`
 | `string` | <<170, `bcp47`>> | {BCP47}[BCP 47] | `"en-DE"`
+| `string` | `binary` |  | file content in a `multipart/form-data` or `application/octet-stream` payload (see <<239>>)
 | `string` | `byte` | {RFC-7493}[RFC 7493] | `"dGVzdA=="`
+| `string` | `comma-separated` |  | `"name,-created"` (see <<325>>)
 | `string` | <<126, `date`>> | {RFC-3339}[RFC 3339] | `"2019-07-30"`
 | `string` | <<126, `date-time`>> | {RFC-3339}[RFC 3339] |`"2019-07-30T06:43:40.252Z"`
+| `string` | `duration` | {RFC-3339}[RFC 3339] Appendix A (ISO 8601) | `"P1DT12H"`
 | `string` | `email` | {RFC-5322}[RFC 5322] | `"example@sailpoint.de"`
 | `string` | `gtin-13` | {GTIN}[GTIN] | `"5710798389878"`
 | `string` | `hostname` | {RFC-1034}[RFC 1034] | `"www.sailpoint.de"`
@@ -130,12 +149,13 @@ You *should* use these formats, whenever applicable.
 | `string` | `regex` | {ECMA-262}[ECMA 262] | `"^[a-z0-9]+$"`
 | `string` | <<126, `time`>> | {RFC-3339}[RFC 3339] | `"06:43:40.252Z"`
 | `string` | `uri` | {RFC-3986}[RFC 3986] | `"https://www.sailpoint.de/"`
+| `string` | `uri-reference` | {RFC-3986}[RFC 3986] | `"/v3/sources/2c9180835d2e5168015d32f890ca1581"`
 | `string` | `uri-template` | {RFC-6570}[RFC 6570] | `"/users/\{id\}"`
 | `string` | `uuid` | {RFC-4122}[RFC 4122] | `"e2ab873e-b295-11e9-9c02-..."`
 |=====================================================================
 
-*Remark:* Please note that this list of standard data formats is not exhaustive 
-and everyone is encouraged to propose additions.
+*Remark:* The API linter rejects a format that is not in this table.
+If you need another format, contact the Developer Relations team to add it to this table and to the linter.
 
 This schema uses standard formats for its string and integer properties:
 
@@ -283,7 +303,7 @@ name: filters
 schema:
   type: string
 description: >-
-  Filter results using the standard syntax described in [V3 API Standard Collection Parameters](https://developer.sailpoint.com/idn/api/standard-collection-parameters#filtering-results)
+  Filter results using the standard syntax described in [API Standard Collection Parameters](https://developer.sailpoint.com/docs/api/standard-collection-parameters#filtering-results)
 
 
   Filtering is supported for the following fields and operators:
@@ -317,7 +337,7 @@ required: false
 - Always bold the property name using two asterisks before and after the name.
 - Only document one property per line.
 - Always italicize the operators by using a single asterisk before an after the list of operators.
-- Only use the operators https://developer.sailpoint.com/idn/api/standard-collection-parameters#filter-syntax[listed here]. If you are introducing a new operator not in the list, please contact the Developer Relations team to update the list.
+- Only use the operators https://developer.sailpoint.com/docs/api/standard-collection-parameters#filter-syntax[listed here]. If you are introducing a new operator not in the list, please contact the Developer Relations team to update the list.
 - Always use a comma and a space to separate operators.
 - Do not add any additional text in the description, such as examples, clarifications, etc.
 
@@ -337,7 +357,7 @@ schema:
   type: string
   format: comma-separated
 description: >-
-  Sort results using the standard syntax described in [V3 API Standard Collection Parameters](https://developer.sailpoint.com/idn/api/standard-collection-parameters#sorting-results)
+  Sort results using the standard syntax described in [API Standard Collection Parameters](https://developer.sailpoint.com/docs/api/standard-collection-parameters#sorting-results)
 
 
   Sorting is supported for the following fields: **name, created, modified**

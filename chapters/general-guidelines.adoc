@@ -24,7 +24,7 @@ You should follow the <<api-first, API First Principle>>, more specifically:
 == {MUST} provide API specification using OpenAPI
 
 We use the https://swagger.io/specification/[OpenAPI specification, role=external, window=_blank] as the standard to define API specification files.  
-OpenAPI 3.0 must be supported, but you MAY support other versions, like Swagger 2.
+The specification file must use OpenAPI 3. Swagger 2 is not supported.
 
 The API specification files should be subject to version control using a source code management system.
 
@@ -250,7 +250,7 @@ get:
 
 Use this guide when creating your operationIds. Your operationId must start with one of the approved values for each method.
 
-*GET* methods that return an array
+*GET* methods that return a list: a top-level array, or an object with an `items` array (see <<110>>)
 
 * compare
 * export
@@ -258,7 +258,7 @@ Use this guide when creating your operationIds. Your operationId must start with
 * list
 * search
 
-*GET* methods that return a single result
+*GET* methods that return a single result, that is, any other response
 
 * get
 * search
@@ -377,7 +377,7 @@ This rule does not apply in the following cases:
 ----
 parameters:
   - in: path
-    name: type
+    name: objectType
     schema:
       type: string
       enum:

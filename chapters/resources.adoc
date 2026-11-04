@@ -119,9 +119,30 @@ The name `/profiles` does not tell if the resource is an access profile or an id
 
 
 [#228]
-== {MUST} use URL-friendly resource identifiers: [a-zA-Z0-9:._\-/]*
+== {MUST} use URL-friendly resource identifiers: [a-zA-Z0-9:._\-/]* icon:check-square[text="Test" role="lime"]
 
-TBD
+A resource identifier that is a path parameter must use only these characters:
+`a-z`, `A-Z`, `0-9`, colon (`:`), period (`.`), underscore (`_`), hyphen (`-`) and slash (`/`).
+Other characters, for example a space or `@`, must be percent-encoded in the URL.
+Clients, gateways and servers encode and decode them in different ways, so the request can fail or reach the wrong resource.
+
+The API linter checks the example of each path parameter.
+
+* Discouraged: `example: Active Directory`, `example: jane.doe@example.com`
+* Recommended: `example: 2c9180835d2e5168015d32f890ca1581`, `example: ACCESS_PROFILE`
+
+[source,yaml]
+----
+parameters:
+  - in: path
+    name: sourceId
+    required: true
+    description: ID of the source to get.
+    schema:
+      type: string
+    example: 2c9180835d2e5168015d32f890ca1581
+    x-sailpoint-resource-operation-id: listSources
+----
 
 
 [#143]
@@ -218,12 +239,12 @@ There are main resources (with root url paths) and sub-resources (or _nested_
 resources with non-root urls paths). Use sub-resources if their life cycle is
 (loosely) coupled to the main resource, i.e. the main resource works as
 collection resource of the subresource entities. You should use <= 3
-sub-resource (nesting) levels -- more levels increase API complexity and url
-path length. (Remember, some popular web browsers do not support URLs of more
+resource levels in a path, the main resource included. More levels increase API complexity and url
+path length. Path parameters and version segments such as `v1` or `v2025` do not count as levels. (Remember, some popular web browsers do not support URLs of more
 than 2000 characters.)
 
 * Discouraged: `/sources/{sourceId}/accounts/{accountId}/entitlements/{entitlementId}/access-profiles/{accessProfileId}/owners`
 * Recommended: `/entitlements/{entitlementId}/access-profiles` and `/access-profiles/{accessProfileId}`
 
-The discouraged path has four sub-resource levels.
+The discouraged path has five resource levels: `sources`, `accounts`, `entitlements`, `access-profiles` and `owners`.
 Entitlements and access profiles have their own unique IDs, so expose them as top-level resources (see <<145>>).
