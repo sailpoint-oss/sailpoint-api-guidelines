@@ -19,6 +19,9 @@ by many rules throughout these guidelines, e.g.:
 Although this is not HATEOAS, it should not prevent you from designing
 proper link relationships in your APIs as stated in rules below.
 
+* Discouraged: `POST /identity-service` with the body `{ "operation": "DELETE_IDENTITY", "identityId": "2c9180835d2e5168015d32f890ca1581" }`, which always returns `200 OK` and puts errors in the body
+* Recommended: `DELETE /identities/2c9180835d2e5168015d32f890ca1581`, which returns `204 No Content`, or `404 Not Found` if the identity does not exist
+
 
 [#217]
 == {SHOULD} use full, absolute URI
@@ -31,6 +34,22 @@ complexity. It also requires clarity on the base URI, which might not be given
 when using features like embedding subresources. The primary advantage of
 non-absolute URI is reduction of the payload size, which is better achievable
 by following the recommendation to use gzip compression.
+
+* Discouraged: `"href": "/v3/identities/2c9180835d2e5168015d32f890ca1582"`, `"href": "../identities/2c9180835d2e5168015d32f890ca1582"`
+* Recommended: `"href": "https://myorg.api.identitynow.com/v3/identities/2c9180835d2e5168015d32f890ca1582"`
+
+[source,json]
+----
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "Engineering Access",
+  "owner": {
+    "href": "https://myorg.api.identitynow.com/v3/identities/2c9180835d2e5168015d32f890ca1582",
+    "id": "2c9180835d2e5168015d32f890ca1582",
+    "name": "Jane Doe"
+  }
+}
+----
 
 
 [#164]
@@ -65,10 +84,10 @@ The name of an attribute holding such a `HttpLink` object specifies the
 relation between the object that contains the link and the linked
 resource. Implementations should use names from the {link-relations}[IANA
 Link Relation Registry] whenever appropriate. As IANA link relation
-names use hyphen-case notation, while this guide enforces snake_case
-notation for attribute names, hyphens in IANA names have to be replaced
-with underscores (e.g. the IANA link relation type `version-history`
-would become the attribute `version_history`)
+names use hyphen-case notation, while this guide enforces camelCase
+notation for attribute names (see <<118>>), IANA names have to be converted
+to camelCase (e.g. the IANA link relation type `version-history`
+would become the attribute `versionHistory`)
 
 Specific link objects may extend the basic link type with additional
 attributes, to give additional information related to the linked
@@ -109,3 +128,35 @@ For flexibility and precision, we prefer links to be directly embedded in the
 JSON payload instead of being attached using the uncommon link header syntax.
 As a result, the use of the {RFC-8288}#section-3[`Link` Header defined by RFC
 8288] in conjunction with JSON media types is forbidden.
+
+Discouraged: the link is in a `link` header.
+
+[source,http]
+----
+HTTP/1.1 200 OK
+content-type: application/json
+link: <https://myorg.api.identitynow.com/v3/identities?offset=250&limit=250>; rel="next"
+
+{
+  "items": [
+    { "id": "2c9180835d2e5168015d32f890ca1581", "name": "Jane Doe" }
+  ]
+}
+----
+
+Recommended: the link is in the JSON payload.
+
+[source,http]
+----
+HTTP/1.1 200 OK
+content-type: application/json
+
+{
+  "items": [
+    { "id": "2c9180835d2e5168015d32f890ca1581", "name": "Jane Doe" }
+  ],
+  "next": {
+    "href": "https://myorg.api.identitynow.com/v3/identities?offset=250&limit=250"
+  }
+}
+----

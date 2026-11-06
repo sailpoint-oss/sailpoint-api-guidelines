@@ -11,7 +11,7 @@ just a few hundred entries.
 
 There are two well known page iteration techniques:
 
-* https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-results[Offset/Limit-based
+* https://developer.sailpoint.com/docs/api/standard-collection-parameters#paginating-results[Offset/Limit-based
   pagination]: numeric offset identifies the first page entry
 * https://dev.twitter.com/overview/api/cursoring[Cursor/Limit-based] — aka
   key-based — pagination: a unique key element identifies the first page entry
@@ -24,9 +24,10 @@ https://www.smashingmagazine.com/2016/03/pagination-infinite-scrolling-load-more
 jumping to a specific page is far less used than navigation via {next}/{prev}
 page links.
 
-We currently prefer to use https://developer.sailpoint.com/idn/api/standard-collection-parameters#paginating-results[Offset/Limit-based pagination].
+We currently prefer to use https://developer.sailpoint.com/docs/api/standard-collection-parameters#paginating-results[Offset/Limit-based pagination].
 
-Every `GET` operation whose `200` `application/json` response is an array must define the `offset` and `limit` query parameters.
+Every `GET` operation whose `200` `application/json` response is a list must define the `offset` and `limit` query parameters.
+A list is a top-level array, or an object with an `items` array (see <<110>>).
 The `limit` parameter schema must define `minimum` and `maximum`.
 
 [source,yaml]

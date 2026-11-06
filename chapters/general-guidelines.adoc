@@ -24,12 +24,25 @@ You should follow the <<api-first, API First Principle>>, more specifically:
 == {MUST} provide API specification using OpenAPI
 
 We use the https://swagger.io/specification/[OpenAPI specification, role=external, window=_blank] as the standard to define API specification files.  
-OpenAPI 3.0 must be supported, but you MAY support other versions, like Swagger 2.
+The specification file must use OpenAPI 3. Swagger 2 is not supported.
 
 The API specification files should be subject to version control using a source code management system.
 
 You <<192, must>> publish the component API specification with the deployment of the implementing service, and, hence, 
 make it discoverable for the appropriate group via our https://developer.sailpoint.com/[API Portal, role=external, window=_blank].
+
+Start each specification file with the OpenAPI 3.0 version:
+
+[source,yaml]
+----
+openapi: 3.0.3
+info:
+  title: Access Requests
+  version: "v1"
+  description: Use this API to submit and manage access requests.
+  x-audience: external-public
+paths: {}
+----
 
 
 [#302]
@@ -92,6 +105,13 @@ The user manual must be published online, e.g. via our documentation hosting
 platform service. Please do not forget to include a link to the API user 
 manual into the API specification using the #/externalDocs/url property.
 
+[source,yaml]
+----
+externalDocs:
+  description: Learn how to request access for identities.
+  url: https://developer.sailpoint.com/docs/api/access-requests
+----
+
 [NOTE]
 ====
 This manual does not have to be created by engineering, but could be created by a documentation team, Developer Relations or by community effort.
@@ -104,6 +124,33 @@ It is important to provide extra documentation for our developers to reduce the 
 Every query/path parameter and request/response property in the API specification must have a description.
 
 A parameter description must be at least 8 characters long.
+
+* Discouraged: `description: ID`, or no `description`
+* Recommended: `description: ID of the identity to get.`
+
+[source,yaml]
+----
+parameters:
+  - in: path
+    name: identityId
+    required: true
+    description: ID of the identity to get.
+    schema:
+      type: string
+    example: 2c9180835d2e5168015d32f890ca1581
+    x-sailpoint-resource-operation-id: listIdentities
+----
+
+[source,yaml]
+----
+Identity:
+  type: object
+  properties:
+    name:
+      type: string
+      description: Display name of the identity.
+      example: Jane Doe
+----
 
 [#304]
 == {MUST} provide an example for every parameter and property icon:check-square[text="Test" role="lime"]
@@ -121,6 +168,54 @@ These properties do not need their own example:
 * a property with `nullable: true`
 * an array property whose `items` schema has an example
 
+Use a value that looks real:
+
+* Discouraged: `example: string`, `example: abc`, a real email address, a real API token
+* Recommended: `example: 2c9180835d2e5168015d32f890ca1581`, `example: "2023-03-01T13:00:00Z"`
+
+[source,yaml]
+----
+parameters:
+  - in: query
+    name: limit
+    required: false
+    description: Maximum number of results to return.
+    schema:
+      type: integer
+      minimum: 0
+      maximum: 250
+      default: 250
+    example: 100
+----
+
+[source,yaml]
+----
+AccessRequest:
+  type: object
+  properties:
+    id:
+      type: string
+      description: ID of the access request.
+      example: 2c9180835d2e5168015d32f890ca1581
+    created:
+      type: string
+      format: date-time
+      description: Date and time when the request was created.
+      example: "2023-03-01T13:00:00Z"
+    comment:
+      type: string
+      nullable: true
+      description: Comment from the requester.
+    accessItemIds:
+      type: array
+      description: IDs of the requested access items.
+      items:
+        type: string
+        example: 2c9180835d2e5168015d32f890ca1582
+----
+
+`comment` has `nullable: true`, and the `items` schema of `accessItemIds` has an example. So these properties do not need their own example.
+
 [#305]
 == {SHOULD} keep operation summaries at five or less words icon:check-square[text="Test" role="lime"]
 
@@ -129,6 +224,9 @@ The five-word limit is a recommendation. The linter shows a warning when a summa
 
 Certain tools, like Postman, have a limit on how many words can be displayed within the operation summary.  
 It is helpful for consumers to have short summaries that describe the operation at its most basic level to improve readability for consumers.
+
+* Discouraged: `summary: Get a list of all of the access profiles in the tenant`
+* Recommended: `summary: List access profiles`
 
 [#400]
 == {MUST} provide a valid operationId in camelCase for each operation icon:check-square[text="Test" role="lime"]
@@ -152,7 +250,7 @@ get:
 
 Use this guide when creating your operationIds. Your operationId must start with one of the approved values for each method.
 
-*GET* methods that return an array
+*GET* methods that return a list: a top-level array, or an object with an `items` array (see <<110>>)
 
 * compare
 * export
@@ -160,7 +258,7 @@ Use this guide when creating your operationIds. Your operationId must start with
 * list
 * search
 
-*GET* methods that return a single result
+*GET* methods that return a single result, that is, any other response
 
 * get
 * search
@@ -279,7 +377,7 @@ This rule does not apply in the following cases:
 ----
 parameters:
   - in: path
-    name: type
+    name: objectType
     schema:
       type: string
       enum:
@@ -306,6 +404,9 @@ Non-ASCII characters, such as curly quotes, em-dashes and non-breaking spaces, b
 
 Use the ASCII form instead. For example, use `'` and `"` instead of curly quotes, and use `-` instead of an em-dash.
 
+* Discouraged: `description: Returns the identity’s accounts.`
+* Recommended: `description: Returns the identity's accounts.`
+
 [#403]
 == {MUST} list root tags in alphabetical order icon:check-square[text="Test" role="lime"]
 
@@ -320,6 +421,33 @@ tags:
   - name: Sources
 ----
 
+[#409]
+== {MUST} provide a description for every root tag
+
+Every tag in the `tags` list of the root specification must have a `description`.
+The developer portal and the SDK generators show the tag description as the introduction to the group of operations with that tag.
+
+The description must tell the consumer what the resource is and what they can do with the operations in the tag.
+If a concept is necessary to understand the resource, explain it with a short example.
+
+[source,yaml]
+----
+tags:
+  - name: Access Profiles
+    description: >-
+      Use this API to create and manage access profiles.
+
+
+      An access profile groups entitlements, which represent access rights on sources.
+      For example, an Active Directory source can have an 'Employees' entitlement and a
+      'Developers' entitlement. An administrator can create an 'AD Developers' access profile
+      that groups the two entitlements. Users can then request the access profile to get
+      both entitlements in one request.
+
+
+      Administrators can make access profiles requestable and add them to roles.
+----
+
 [#405]
 == {MUST} not reference documents outside of the API version folder icon:check-square[text="Test" role="lime"]
 
@@ -328,6 +456,11 @@ A reference to another version folder couples the two versions. A change to one 
 
 If you need a schema from another version, copy it into your version folder.
 
+In this example, the path file is in the `v2025` folder:
+
+* Discouraged: `$ref: '../../v2024/schemas/Account.yaml'`
+* Recommended: `$ref: '../schemas/Account.yaml'`
+
 [#406]
 == {MUST} not use Docusaurus variable syntax in API specifications icon:check-square[text="Test" role="lime"]
 
@@ -335,6 +468,9 @@ API specification files must not contain text in the form `${...}`.
 The developer portal uses Docusaurus, and Docusaurus reads `${...}` as a variable. If the variable is not defined, the documentation build fails.
 
 If you need to show a template value in a description or example, use a different form, for example `{{value}}` or `<value>`.
+
+* Discouraged: `description: Send the request to https://${tenant}.api.identitynow.com.`
+* Recommended: `description: Send the request to https://{{tenant}}.api.identitynow.com.`
 
 [#407]
 == {MUST} end operationIds in an API collection with the collection version icon:check-square[text="Test" role="lime"]
@@ -369,3 +505,20 @@ description: >-
 
 [#103]
 == {MUST} write APIs using U.S. English
+
+Use U.S. English spelling in names, enum values, descriptions and examples.
+
+* Discouraged: `colour`, `organisation`, `authorise`, `CANCELLED`, `licence`
+* Recommended: `color`, `organization`, `authorize`, `CANCELED`, `license`
+
+[source,yaml]
+----
+RequestStatus:
+  type: string
+  description: Status of the access request. The requester can cancel a pending request.
+  enum:
+    - PENDING
+    - APPROVED
+    - CANCELED
+  example: CANCELED
+----

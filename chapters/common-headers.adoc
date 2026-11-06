@@ -12,24 +12,54 @@ but not widely known.
 Use https://datatracker.ietf.org/doc/html/rfc2616#section-4.2[this list] and
 explicitly mention its support in your OpenAPI definition.
 
+In this example, the operation supports the standard `accept-language` request header and the `content-language` response header.
+The OpenAPI definition declares both headers.
+
+[source,yaml]
+----
+/v3/workflows/{id}:
+  get:
+    parameters:
+      - in: header
+        name: accept-language
+        required: false
+        description: The language for the text in the response, as a BCP 47 language tag.
+        schema:
+          type: string
+        example: en-US
+    responses:
+      '200':
+        description: OK - Returns the workflow.
+        headers:
+          content-language:
+            description: The language of the text in the response body, as a BCP 47 language tag.
+            schema:
+              type: string
+            example: en-US
+----
+
 
 [#132]
-== {SHOULD} use uppercase separate words with hyphens for HTTP headers
+== {MUST} use lowercase kebab-case for response header names
 
-This convention is followed by most standard headers e.g. as defined in 
-{RFC-2616}[RFC 2616] and {RFC-4229}[RFC 4229]. Examples:
+Write each response header name in lowercase, with a hyphen between words.
+This rule applies to standard headers and to proprietary headers. Examples:
 
 [source,http]
 ----
-If-Modified-Since
-Accept-Encoding
-Content-ID
-Language
+location
+retry-after
+x-total-count
+x-ratelimit-remaining
 ----
 
-Note, HTTP standard defines headers as case-insensitive ({RFC-7230}#page-22[RFC 7230, p.22]). 
-However, for sake of readability and consistency you should follow the convention when 
-using standard or proprietary headers. Exceptions are common abbreviations like `ID`. 
+HTTP header names are case-insensitive ({RFC-7230}#page-22[RFC 7230, p.22]).
+But HTTP/2 sends all header names in lowercase, and a message with an uppercase header name is malformed
+(https://datatracker.ietf.org/doc/html/rfc9113#section-8.2.2[RFC 9113, section 8.2.2]).
+Write the names in the OpenAPI definition as the client receives them.
+
+* Discouraged: `X-Total-Count`, `Location`, `x_total_count`
+* Recommended: `x-total-count`, `location`
 
 
 [#178]
@@ -53,6 +83,47 @@ limited to:
   of the requested resource representation is delivered with the body.
 * {Content-Type} indicates the media type of the body content.
 
+In this example, the response body is a CSV file.
+The `content-*` headers give the media type, the size in bytes and the proposed file name.
+
+[source,http]
+----
+GET /v3/reports/2c9180835d2e5168015d32f890ca1581/file HTTP/1.1
+accept: text/csv
+
+HTTP/1.1 200 OK
+content-type: text/csv
+content-length: 2048
+content-disposition: attachment; filename="identities-report.csv"
+----
+
+* Discouraged: `content-type: application/json` on a CSV body, a `content-length` that is not the body size, `content-language: english`
+* Recommended: `content-type: text/csv`, a `content-length` that is the body size in bytes, `content-language: en-US`
+
+Do not define the `Content-Type`, `Accept` or `Authorization` header as a parameter (`in: header`) in the API specification.
+OpenAPI 3 ignores these header parameters. Define them in the correct place instead:
+
+* `Content-Type`: the media type keys of `requestBody.content`
+* `Accept`: the media type keys of the `content` of each response
+* `Authorization`: the `security` of the operation (see <<104>>)
+
+* Discouraged: a parameter with `in: header` and `name: Content-Type`
+* Recommended: a `requestBody` with `content: application/json`
+
+[source,yaml]
+----
+post:
+  operationId: createWorkflowV1
+  security:
+    - userAuth: [idn:workflow:manage]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../schemas/WorkflowCreateRequest.yaml
+----
+
 
 [#180]
 == {SHOULD} use `Location` header instead of `Content-Location` header
@@ -66,6 +137,29 @@ the {Content-Location} specific ambiguities and complexities.
 
 More details in RFC 7231 {RFC-7231}#section-7.1.2[7.1.2 Location],
 {RFC-7231}#section-3.1.4.2[3.1.4.2 Content-Location]
+
+* Discouraged: a `201` response with `content-location: https://tenant.api.identitynow.com/v3/workflows/2c9180835d2e5168015d32f890ca1581`
+* Recommended: a `201` response with `location: https://tenant.api.identitynow.com/v3/workflows/2c9180835d2e5168015d32f890ca1581`
+
+[source,http]
+----
+POST /v3/workflows HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Send Email"
+}
+
+HTTP/1.1 201 Created
+content-type: application/json
+location: https://tenant.api.identitynow.com/v3/workflows/2c9180835d2e5168015d32f890ca1581
+
+{
+  "id": "2c9180835d2e5168015d32f890ca1581",
+  "name": "Send Email",
+  "enabled": false
+}
+----
 
 
 [#179]

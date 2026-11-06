@@ -62,6 +62,26 @@ We see API's base path as a part of deployment variant configuration.
 Therefore, this information has to be declared in the
 https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#server-object[server object].
 
+* Discouraged: `https://{tenant}.api.identitynow.com/api/v3/sources`
+* Recommended: `https://{tenant}.api.identitynow.com/v3/sources`
+
+Declare the base path in the server object, not in the paths:
+
+[source,yaml]
+----
+servers:
+  - url: https://{tenant}.api.identitynow.com/v3
+    description: The production API server.
+    variables:
+      tenant:
+        default: sailpoint
+        description: The name of your tenant.
+paths:
+  /sources:
+    get:
+      operationId: listSources
+----
+
 
 [#136]
 == {MUST} use normalized paths without empty path segments and trailing slashes
@@ -101,7 +121,7 @@ paginating, you must stick to the following naming conventions:
 Pagination
 
 * `limit`: Integer that specifies the maximum number of results to return. If not specified a default limit will be used.
-* `offest`: Integer that specifies the offset of the first result from the beginning of the collection
+* `offset`: Integer that specifies the offset of the first result from the beginning of the collection
 * `count`: Boolean that indicates whether a total count will be returned, factoring in any filter parameters, in the X-Total-Count response header.
 
 `filters`: an item will only be included in the returned array if the filters expression evaluates 
@@ -112,13 +132,38 @@ spec what operations and fields are supported.
 character, which indicates the sort is descending based on the value of that field. Otherwise, the sort 
 is ascending.  Each endpoint that implements sorters must clearly define which fields are supported.
 
-See https://developer.sailpoint.com/docs/standard_collection_parameters.html#standard-collection-parameters
+See https://developer.sailpoint.com/docs/api/standard-collection-parameters
 for implementation details for each of the above parameters. 
 
 Note:  Additional query parameters are allowed, but effort should be made to fit them within the five listed above.
+
+This request asks for the second page of 50 accounts, with a total count.
+It filters by name and sorts by name, then by creation date in descending order.
+The `filters` value is URL-encoded. Decoded, it is `name sw "Admin"`.
+
+[source,http]
+----
+GET /accounts?limit=50&offset=50&count=true&filters=name%20sw%20%22Admin%22&sorters=name,-created HTTP/1.1
+
+HTTP/1.1 200 OK
+content-type: application/json
+x-total-count: 1250
+
+{
+  "items": [
+    { "id": "2c9180835d2e5168015d32f890ca1581", "name": "Admin-East", "created": "2024-03-12T15:04:05Z" },
+    { "id": "2c9180835d2e5168015d32f890ca1582", "name": "Admin-West", "created": "2024-02-01T08:00:00Z" }
+  ]
+}
+----
 
 
 [#319]
 == {MUST} Customer org name must never appear in the path of public APIs
 
 The customer organization is provided in the session context that is generated on the back end, and therefore does not need to be in the URL.
+
+* Discouraged: `/orgs/{orgName}/sources`, `/acme/identities`
+* Recommended: `/sources`, `/identities`
+
+The tenant name in the host name, for example `https://acme.api.identitynow.com`, is not part of the path.
